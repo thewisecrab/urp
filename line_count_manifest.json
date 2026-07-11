@@ -1,7 +1,7 @@
 {
   "arbitrary_line_count_target": false,
   "file_count": 222,
-  "generated_at": "2026-07-11T08:24:21.202886+00:00",
+  "generated_at": "2026-07-11T08:32:44.241811+00:00",
   "line_counts": {
     ".github/ISSUE_TEMPLATE/bug_report.yml": 64,
     ".github/ISSUE_TEMPLATE/config.yml": 8,
@@ -12,7 +12,7 @@
     ".github/workflows/codeql.yaml": 34,
     ".github/workflows/dependency-review.yaml": 17,
     ".github/workflows/docs.yaml": 49,
-    ".github/workflows/release.yaml": 113,
+    ".github/workflows/release.yaml": 123,
     ".github/workflows/scorecard.yaml": 32,
     ".github/workflows/secret-scan.yaml": 24,
     ".gitleaks.toml": 10,
@@ -227,5 +227,5 @@
     "typescript/tsconfig.json": 18
   },
   "schema_version": "urp.line-count.v2",
-  "total_lines": 32962
+  "total_lines": 32972
 }
