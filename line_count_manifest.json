@@ -1,7 +1,7 @@
 {
   "arbitrary_line_count_target": false,
   "file_count": 222,
-  "generated_at": "2026-07-11T08:12:57.999784+00:00",
+  "generated_at": "2026-07-11T08:20:07.770638+00:00",
   "line_counts": {
     ".github/ISSUE_TEMPLATE/bug_report.yml": 64,
     ".github/ISSUE_TEMPLATE/config.yml": 8,
@@ -211,7 +211,7 @@
     "tests/benchmarks/test_benchmark_smoke.py": 48,
     "tests/conformance/__init__.py": 1,
     "tests/conformance/test_hardening.py": 218,
-    "tests/conformance/test_security_and_adapters.py": 580,
+    "tests/conformance/test_security_and_adapters.py": 583,
     "tests/integration/__init__.py": 1,
     "tests/integration/test_live_examples.py": 64,
     "tests/integration/test_runtime.py": 1350,
@@ -227,5 +227,5 @@
     "typescript/tsconfig.json": 18
   },
   "schema_version": "urp.line-count.v2",
-  "total_lines": 32959
+  "total_lines": 32962
 }
