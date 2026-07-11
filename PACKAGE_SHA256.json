@@ -1,5 +1,5 @@
 {
-  "content_digest": "8558b6161536d8998569d34ffb7839c8df230fa9db923b638cb15d701ee04855",
+  "content_digest": "7928f1d3f87f3e497a56f8c9efc79b27998c416887dedbb6a8d30ac598037ad7",
   "content_digest_algorithm": "sha256(stable-json(files))",
   "excluded_roots": [
     ".DS_Store",
@@ -401,7 +401,7 @@
       "size": 30262
     },
     "docs/assets/URP-White-Paper-v1.0.pdf": {
-      "sha256": "bdd15c5c450d90ae299eaf5e02cd04ecba363dd67868e1989c7534d084370870",
+      "sha256": "931d2d0e2896841e262f63175e3b528d54d68284580f7ca81d0ec0cc1759bf13",
       "size": 57785
     },
     "docs/assets/stylesheets/extra.css": {
@@ -489,7 +489,7 @@
       "size": 2066
     },
     "line_count_manifest.json": {
-      "sha256": "448c0d49ee656eeaf8f3c2dc4712913dba1adcfd56fb07c55e851a3aa4561d17",
+      "sha256": "874df9ee8eebf2aeab9b0dcd9b253cfdcb79baf033f13c06fde6554603e0c85b",
       "size": 9925
     },
     "mkdocs.yml": {
@@ -497,11 +497,11 @@
       "size": 3590
     },
     "output/pdf/URP-White-Paper-v1.0.pdf": {
-      "sha256": "bdd15c5c450d90ae299eaf5e02cd04ecba363dd67868e1989c7534d084370870",
+      "sha256": "931d2d0e2896841e262f63175e3b528d54d68284580f7ca81d0ec0cc1759bf13",
       "size": 57785
     },
     "package_manifest.json": {
-      "sha256": "83149ce17f8a4c593f26c853f48a64dc4e46703a3fd6fabd2c3a70ff7f514297",
+      "sha256": "e12c05d2e266842b62ffa081665243b7919e943cfe3fe61821e27238b1774676",
       "size": 2004
     },
     "plugins/README.md": {
@@ -637,8 +637,8 @@
       "size": 129
     },
     "pyproject.toml": {
-      "sha256": "aee64f715592445b42e18f86ce0323f2ff9ecca115c24b5eaf718888af85b289",
-      "size": 2037
+      "sha256": "2e4fb3010c2fad13cc5cef16fede4727e7fa602d586149009b4ed3d7fab3d553",
+      "size": 2066
     },
     "python/urp/__init__.py": {
       "sha256": "af92fd71033c14f39e98c7464f3de255c91d9407623fdefa45da8dda7013cf08",
@@ -893,7 +893,7 @@
       "size": 51
     },
     "requirements-publication.txt": {
-      "sha256": "7de92632d4fa9e4c4f0e44269d53e81e0f0b63aef4bfed926e25eb91390046e5",
+      "sha256": "c592736560f01e1975f6095a5caa401547fb5732a1740d17065b6eecfa87cd7e",
       "size": 51
     },
     "research/research_sources.yaml": {
@@ -1041,7 +1041,7 @@
       "size": 436
     }
   },
-  "generated_at": "2026-07-11T08:20:19.828883+00:00",
+  "generated_at": "2026-07-11T08:23:09.229562+00:00",
   "manifest_version": "urp.release.v2",
   "provenance": {
     "archive_policy": "archive/source_packages is preserved in the repository but excluded from the active release manifest",
@@ -1049,7 +1049,7 @@
     "git": {
       "available": true,
       "branch": "main",
-      "commit": "0d01d0d689c98b8f0544eb43e5c1d6818add08f2",
+      "commit": "10067967fe60534157767948bcc7f5a5c0054443",
       "dirty": false
     },
     "platform": "macOS-26.5.1-arm64-arm-64bit-Mach-O",
