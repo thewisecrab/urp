@@ -1,5 +1,5 @@
 {
-  "content_digest": "3392ef6e931a0370736cfed0e3ea0233ff685d56f088e0ebb3ea552b82f44e1e",
+  "content_digest": "8558b6161536d8998569d34ffb7839c8df230fa9db923b638cb15d701ee04855",
   "content_digest_algorithm": "sha256(stable-json(files))",
   "excluded_roots": [
     ".DS_Store",
@@ -129,8 +129,8 @@
       "size": 435
     },
     "LICENSE": {
-      "sha256": "bbb5e3ba8d5488eba45b10b467ffc281d9a2ecc0c90a5c3364f0ad4832ebbf78",
-      "size": 9079
+      "sha256": "cfc7749b96f63bd31c3c42b5c471bf756814053e847c10f3eb003417bc523d30",
+      "size": 11358
     },
     "Makefile": {
       "sha256": "c0840d2be740a8a218be8d33c8f754580874df238658f502d125be0eff1523a5",
@@ -489,7 +489,7 @@
       "size": 2066
     },
     "line_count_manifest.json": {
-      "sha256": "5825ef7de5e608d23622e9008435090e45038066a40a50090e20e25c1c536441",
+      "sha256": "448c0d49ee656eeaf8f3c2dc4712913dba1adcfd56fb07c55e851a3aa4561d17",
       "size": 9925
     },
     "mkdocs.yml": {
@@ -501,7 +501,7 @@
       "size": 57785
     },
     "package_manifest.json": {
-      "sha256": "64f84484d6d62fd2116859b26d5e79379194aca95affc94b3ffe7a6c61f64043",
+      "sha256": "83149ce17f8a4c593f26c853f48a64dc4e46703a3fd6fabd2c3a70ff7f514297",
       "size": 2004
     },
     "plugins/README.md": {
@@ -981,8 +981,8 @@
       "size": 10756
     },
     "tests/conformance/test_security_and_adapters.py": {
-      "sha256": "4d66883bfb25707d3fb10499a419491dc8646658a4738dbf618cbd5b539f5a8b",
-      "size": 28408
+      "sha256": "1f5c33fa7298127cf12a5e152999cb0bf9b4a90e936142bfe28e916fcc5223c6",
+      "size": 28662
     },
     "tests/integration/__init__.py": {
       "sha256": "01ba4719c80b6fe911b091a7c05124b64eeece964e09c058ef8f9805daca546b",
@@ -1041,7 +1041,7 @@
       "size": 436
     }
   },
-  "generated_at": "2026-07-11T08:13:13.098479+00:00",
+  "generated_at": "2026-07-11T08:20:19.828883+00:00",
   "manifest_version": "urp.release.v2",
   "provenance": {
     "archive_policy": "archive/source_packages is preserved in the repository but excluded from the active release manifest",
@@ -1049,7 +1049,7 @@
     "git": {
       "available": true,
       "branch": "main",
-      "commit": "f29b0ba759ad85c504c21f6829cffe9265a3e008",
+      "commit": "0d01d0d689c98b8f0544eb43e5c1d6818add08f2",
       "dirty": false
     },
     "platform": "macOS-26.5.1-arm64-arm-64bit-Mach-O",
