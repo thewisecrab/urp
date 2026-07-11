@@ -561,12 +561,15 @@ class SecurityAndConformanceTests(unittest.TestCase):
         root = Path(__file__).resolve().parents[2]
         pyproject = (root / "pyproject.toml").read_text(encoding="utf-8")
         ci = (root / ".github/workflows/ci.yaml").read_text(encoding="utf-8")
+        license_text = (root / "LICENSE").read_text(encoding="utf-8")
         self.assertIn("PyYAML", pyproject)
         self.assertIn('python3 -m pip install -e ".[dev]"', ci)
         self.assertIn("npm ci", ci)
         self.assertIn("working-directory: typescript", ci)
         self.assertIn("npm pack --dry-run", ci)
         self.assertIn("go test -race ./...", ci)
+        self.assertIn("(except as stated in this section) patent license", license_text)
+        self.assertIn("APPENDIX: How to apply the Apache License to your work.", license_text)
 
     def test_api_specs_parse_and_have_typed_operations(self):
         result = validate_api_specs(Path(__file__).resolve().parents[2])
