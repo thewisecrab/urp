@@ -1,0 +1,14 @@
+* text=auto eol=lf
+
+*.pdf binary
+*.png binary
+*.jpg binary
+*.jpeg binary
+*.webp binary
+
+archive/** linguist-vendored
+docs/assets/*.pdf linguist-generated
+output/** linguist-generated
+package_manifest.json linguist-generated
+line_count_manifest.json linguist-generated
+PACKAGE_SHA256.json linguist-generated

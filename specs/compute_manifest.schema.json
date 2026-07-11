@@ -1,0 +1,138 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://urp.dev/schemas/compute-manifest.schema.json",
+  "title": "URP AI Compute Manifest",
+  "type": "object",
+  "required": [
+    "request",
+    "contract",
+    "plan",
+    "result"
+  ],
+  "properties": {
+    "request": {
+      "type": "object",
+      "required": [
+        "request_hash",
+        "tenant",
+        "task_type",
+        "input_tokens"
+      ],
+      "properties": {
+        "request_hash": {
+          "type": "string"
+        },
+        "tenant": {
+          "type": "string"
+        },
+        "task_type": {
+          "type": "string"
+        },
+        "input_tokens": {
+          "type": "integer"
+        },
+        "input_hash": {
+          "type": "string"
+        },
+        "input_count": {
+          "type": "integer"
+        }
+      },
+      "additionalProperties": false
+    },
+    "contract": {
+      "type": "object",
+      "required": [
+        "quality_required",
+        "privacy_scope"
+      ],
+      "properties": {
+        "quality_required": {
+          "type": "string"
+        },
+        "latency_budget_ms": {
+          "type": "integer"
+        },
+        "freshness_required_seconds": {
+          "type": "integer"
+        },
+        "privacy_scope": {
+          "type": "string"
+        }
+      },
+      "additionalProperties": false
+    },
+    "plan": {
+      "type": "object",
+      "required": [
+        "cache_checked",
+        "selected_model"
+      ],
+      "properties": {
+        "cache_checked": {
+          "type": "boolean"
+        },
+        "tools_checked": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "context_tokens_before": {
+          "type": "integer"
+        },
+        "context_tokens_after": {
+          "type": "integer"
+        },
+        "context_applied": {
+          "type": "boolean"
+        },
+        "selected_model": {
+          "type": "string"
+        },
+        "fallback_model": {
+          "type": "string"
+        },
+        "vector_dimensions": {
+          "type": "integer"
+        },
+        "mode": {
+          "type": "string",
+          "enum": ["observe", "shadow", "enforce"]
+        }
+      },
+      "additionalProperties": false
+    },
+    "result": {
+      "type": "object",
+      "required": [
+        "accepted_by_verifier",
+        "fallback_used",
+        "cacheable_until",
+        "estimated_joules_avoided"
+      ],
+      "properties": {
+        "accepted_by_verifier": {
+          "type": "boolean"
+        },
+        "fallback_used": {
+          "type": "boolean"
+        },
+        "fallback_reason": {
+          "type": "string"
+        },
+        "large_model_called": {
+          "type": "boolean"
+        },
+        "cacheable_until": {
+          "type": ["string", "null"]
+        },
+        "estimated_joules_avoided": {
+          "type": "number"
+        }
+      },
+      "additionalProperties": false
+    }
+  },
+  "additionalProperties": false
+}

@@ -1,0 +1,62 @@
+syntax = "proto3";
+
+package urp.v1;
+
+message WorkUnit {
+  string id = 1;
+  string kind = 2;
+  string tenant = 3;
+  string namespace = 4;
+  string logical_ref = 5;
+  string requested_contract = 6;
+  map<string, string> metadata = 7;
+  string created_at = 8;
+}
+
+message PlanAction {
+  string type = 1;
+  bool required = 2;
+  string risk = 3;
+  map<string, string> params = 4;
+}
+
+message Plan {
+  string id = 1;
+  string work_unit_id = 2;
+  repeated PlanAction actions = 3;
+  string contract = 4;
+  string policy_bundle_id = 5;
+}
+
+message Manifest {
+  string manifest_id = 1;
+  string work_unit_id = 2;
+  string tenant = 3;
+  string kind = 4;
+  string contract = 5;
+  string state = 6;
+  string json = 7;
+}
+
+message LedgerEvent {
+  string event_id = 1;
+  string event_type = 2;
+  string tenant = 3;
+  string work_unit_id = 4;
+  string manifest_id = 5;
+  string json = 6;
+  string created_at = 7;
+}
+
+service WorkUnitService {
+  rpc CreateWorkUnit(WorkUnit) returns (WorkUnit);
+  rpc PlanWorkUnit(WorkUnit) returns (Plan);
+}
+
+service ManifestService {
+  rpc GetManifest(Manifest) returns (Manifest);
+}
+
+service LedgerService {
+  rpc AppendEvent(LedgerEvent) returns (LedgerEvent);
+}

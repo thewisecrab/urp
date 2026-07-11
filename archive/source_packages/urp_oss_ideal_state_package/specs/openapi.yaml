@@ -1,0 +1,56 @@
+openapi: 3.1.0
+info:
+  title: Universal Reduction Plane API
+  version: 0.1.0
+  description: Vendor-neutral API for resource manifests, policy simulation, AI routing, caches, conformance, and telemetry.
+servers:
+  - url: http://localhost:8080
+paths:
+  /v1/resources/plan:
+    post:
+      summary: Produce a reduction plan for a data or AI resource.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                resource_type: { type: string }
+                logical_id: { type: string }
+                contract: { type: string }
+                sample_base64: { type: string }
+      responses:
+        '200':
+          description: Plan response
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  plan_id: { type: string }
+                  transforms:
+                    type: array
+                    items: { type: string }
+                  fallback: { type: string }
+                  audit_required: { type: boolean }
+  /v1/resources/manifests:
+    post:
+      summary: Create a universal resource manifest.
+      responses:
+        '201': { description: Manifest created }
+  /v1/ai/route:
+    post:
+      summary: Route an AI request to cache, tool, small model, or large model fallback.
+      responses:
+        '200': { description: Routing decision }
+  /v1/policies/simulate:
+    post:
+      summary: Simulate policy effects without transforming resources.
+      responses:
+        '200': { description: Simulation result }
+  /v1/conformance/run:
+    post:
+      summary: Run adapter and transform conformance tests.
+      responses:
+        '202': { description: Conformance job accepted }

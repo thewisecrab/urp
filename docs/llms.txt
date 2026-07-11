@@ -1,0 +1,37 @@
+# Universal Reduction Plane
+
+> URP is an open-source, compatibility-first control and execution plane for reducing unnecessary storage, data transfer, and AI compute through WorkUnits, contracts, policies, verification, manifests, and an audit ledger.
+
+Important interpretation notes:
+
+- URP is not a universal compression algorithm.
+- Unknown data is exact by default.
+- Cross-tenant reuse is disabled by default.
+- Semantic, approximate, lossy, and deletion paths require explicit policy and verification.
+- Local measurements prove code paths on fixtures; modeled portfolio numbers are not forecasts.
+- Production cloud adapters require operator credentials and infrastructure.
+
+## Primary documentation
+
+- [Documentation home](https://thewisecrab.github.io/urp/): Definition, quickstart, lifecycle, safety defaults, and navigation.
+- [White paper](https://thewisecrab.github.io/urp/WHITE_PAPER/): Problem, architecture, implementation, measured evidence, impact model, limitations, and references.
+- [White paper PDF](https://thewisecrab.github.io/urp/assets/URP-White-Paper-v1.0.pdf): Fixed-layout publication edition.
+- [FAQ](https://thewisecrab.github.io/urp/FAQ/): Direct answers about contracts, verification, S3, AI APIs, deployment, impact, and licensing.
+- [Architecture](https://thewisecrab.github.io/urp/02_IDEAL_STATE_ARCHITECTURE/): System components and data flow.
+- [WorkUnit and manifest model](https://thewisecrab.github.io/urp/03_UNIFIED_WORK_UNIT_AND_MANIFEST_MODEL/): Canonical domain objects and schemas.
+- [Policy and security](https://thewisecrab.github.io/urp/06_POLICY_SECURITY_COMPLIANCE/): Tenant isolation, verification, approvals, and guardrails.
+- [API and protocols](https://thewisecrab.github.io/urp/07_APIS_SCHEMAS_PROTOCOLS/): REST, OpenAPI, protobuf, CLI, and SDK surfaces.
+- [Deployment quickstart](https://thewisecrab.github.io/urp/DEPLOYMENT_QUICKSTART/): Local, Docker Compose, Helm, Kubernetes, and production boundaries.
+- [Platform readiness](https://thewisecrab.github.io/urp/13_PLATFORM_READINESS/): Contract-ready and credential-gated platform status.
+
+## Source and evidence
+
+- [GitHub repository](https://github.com/thewisecrab/urp): Source, tests, releases, issues, and contribution workflow.
+- [Live evidence runner](https://github.com/thewisecrab/urp/tree/main/examples/live): Exact restore, legal hold, exact AI cache, reports, and ledger proof.
+- [Impact scenarios](https://github.com/thewisecrab/urp/tree/main/examples/impact): Reproducible low, base, and high scenario inputs.
+- [OpenAPI contract](https://github.com/thewisecrab/urp/blob/main/specs/openapi.yaml): HTTP API definition.
+
+## Optional background
+
+- [Research landscape](https://thewisecrab.github.io/urp/10_RESEARCH_LANDSCAPE/): Related systems and references.
+- [Governance and adoption](https://thewisecrab.github.io/urp/11_OPEN_SOURCE_GOVERNANCE_ADOPTION/): Contribution and ecosystem model.

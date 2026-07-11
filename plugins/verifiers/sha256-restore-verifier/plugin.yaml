@@ -1,0 +1,12 @@
+name: sha256-restore-verifier
+version: 0.1.0
+trust_level: core
+category: verifiers
+capabilities:
+  - verifier.sha256_restore
+  - verifier.exact_rehydration
+contracts:
+  - exact_bytes
+entrypoint: src/urp_plugin.py
+network_access: false
+default_enabled: true

@@ -1,0 +1,129 @@
+replicaCount: 1
+
+mode: observe
+
+runtime:
+  serviceName: control-plane
+  listen: 0.0.0.0:8080
+
+image:
+  repository: ghcr.io/thewisecrab/urp
+  pullPolicy: IfNotPresent
+  tag: "0.1.0"
+
+imagePullSecrets: []
+nameOverride: ""
+fullnameOverride: ""
+
+serviceAccount:
+  create: true
+  automount: false
+  annotations: {}
+  name: ""
+
+podAnnotations: {}
+podLabels: {}
+
+podSecurityContext:
+  runAsNonRoot: true
+  runAsUser: 10001
+  runAsGroup: 10001
+  fsGroup: 10001
+  fsGroupChangePolicy: OnRootMismatch
+  seccompProfile:
+    type: RuntimeDefault
+
+securityContext:
+  allowPrivilegeEscalation: false
+  readOnlyRootFilesystem: true
+  capabilities:
+    drop:
+      - ALL
+
+secrets:
+  create: false
+  existingSecret: urp-runtime
+  apiKey: ""
+  postgresDsn: ""
+  approvalSigningKey: ""
+  backupSigningKey: ""
+
+database:
+  enabled: true
+  secretKey: postgres-dsn
+
+service:
+  type: ClusterIP
+  port: 8080
+  annotations: {}
+
+ingress:
+  enabled: false
+  className: ""
+  annotations: {}
+  hosts:
+    - host: urp.example.invalid
+      paths:
+        - path: /
+          pathType: Prefix
+  tls: []
+
+resources:
+  requests:
+    cpu: 250m
+    memory: 256Mi
+  limits:
+    cpu: "1"
+    memory: 1Gi
+
+persistence:
+  enabled: true
+  existingClaim: ""
+  storageClass: ""
+  accessModes:
+    - ReadWriteOnce
+  size: 20Gi
+  annotations: {}
+
+probes:
+  startup:
+    failureThreshold: 30
+    periodSeconds: 2
+    timeoutSeconds: 2
+  readiness:
+    failureThreshold: 3
+    periodSeconds: 10
+    timeoutSeconds: 2
+  liveness:
+    failureThreshold: 3
+    periodSeconds: 20
+    timeoutSeconds: 2
+
+podDisruptionBudget:
+  enabled: false
+  minAvailable: 1
+
+autoscaling:
+  enabled: false
+  minReplicas: 2
+  maxReplicas: 10
+  targetCPUUtilizationPercentage: 70
+
+networkPolicy:
+  enabled: true
+  ingressFrom:
+    - namespaceSelector: {}
+  allowDns: true
+  allowPostgres: true
+  postgresPort: 5432
+  allowExternalHttps: false
+
+nodeSelector: {}
+tolerations: []
+affinity: {}
+topologySpreadConstraints: []
+
+terminationGracePeriodSeconds: 30
+
+extraEnv: []
+extraEnvFrom: []

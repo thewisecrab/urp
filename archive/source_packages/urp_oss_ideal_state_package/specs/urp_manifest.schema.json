@@ -1,0 +1,240 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://urp.dev/schemas/urp-manifest.schema.json",
+  "title": "URP Universal Resource Manifest",
+  "type": "object",
+  "required": [
+    "manifest_version",
+    "resource",
+    "contract",
+    "policy",
+    "segments",
+    "provenance"
+  ],
+  "properties": {
+    "manifest_version": {
+      "type": "string",
+      "pattern": "^v[0-9]+$"
+    },
+    "resource": {
+      "type": "object",
+      "required": [
+        "logical_id",
+        "resource_type",
+        "owner_tenant",
+        "created_at"
+      ],
+      "properties": {
+        "logical_id": {
+          "type": "string"
+        },
+        "resource_type": {
+          "type": "string"
+        },
+        "owner_tenant": {
+          "type": "string"
+        },
+        "content_type": {
+          "type": "string"
+        },
+        "original_size_bytes": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "created_at": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "source_platform": {
+          "type": "string"
+        }
+      }
+    },
+    "contract": {
+      "type": "object",
+      "required": [
+        "mode",
+        "reversibility",
+        "quality_bounds"
+      ],
+      "properties": {
+        "mode": {
+          "enum": [
+            "exact-byte",
+            "exact-logical",
+            "bounded-approximate",
+            "semantic-equivalent",
+            "summary",
+            "sketch",
+            "sample",
+            "tombstone",
+            "legal-hold",
+            "do-not-transform"
+          ]
+        },
+        "reversibility": {
+          "enum": [
+            "byte-identical",
+            "logical-identical",
+            "bounded-loss",
+            "not-reversible"
+          ]
+        },
+        "quality_bounds": {
+          "type": "object"
+        },
+        "freshness_slo_seconds": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "latency_slo_ms": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "audit_required": {
+          "type": "boolean"
+        }
+      }
+    },
+    "policy": {
+      "type": "object",
+      "properties": {
+        "policy_id": {
+          "type": "string"
+        },
+        "allowed_transforms": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "forbidden_transforms": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "dedupe_domain": {
+          "enum": [
+            "none",
+            "resource",
+            "tenant",
+            "organization",
+            "global-public"
+          ]
+        },
+        "retention": {
+          "type": "object"
+        },
+        "legal_hold": {
+          "type": "boolean"
+        },
+        "encryption_profile": {
+          "type": "string"
+        }
+      }
+    },
+    "segments": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": [
+          "logical_range",
+          "physical_ref",
+          "checksum",
+          "transform_stack"
+        ],
+        "properties": {
+          "logical_range": {
+            "type": "array",
+            "items": {
+              "type": "integer"
+            },
+            "minItems": 2,
+            "maxItems": 2
+          },
+          "physical_ref": {
+            "type": "string"
+          },
+          "checksum": {
+            "type": "string"
+          },
+          "transform_stack": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "duplicate_of": {
+            "type": "string"
+          },
+          "compression_ratio": {
+            "type": "number"
+          }
+        }
+      }
+    },
+    "ai": {
+      "type": "object",
+      "properties": {
+        "request_hash": {
+          "type": "string"
+        },
+        "semantic_hash": {
+          "type": "string"
+        },
+        "selected_model": {
+          "type": "string"
+        },
+        "fallback_model": {
+          "type": "string"
+        },
+        "verifier": {
+          "type": "string"
+        },
+        "tokens_before": {
+          "type": "integer"
+        },
+        "tokens_after": {
+          "type": "integer"
+        },
+        "large_model_called": {
+          "type": "boolean"
+        },
+        "kv_cache_policy": {
+          "type": "string"
+        }
+      }
+    },
+    "provenance": {
+      "type": "object",
+      "required": [
+        "created_by",
+        "source_fingerprints"
+      ],
+      "properties": {
+        "created_by": {
+          "type": "string"
+        },
+        "source_fingerprints": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "audit_event_ids": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "lineage_refs": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        }
+      }
+    }
+  }
+}

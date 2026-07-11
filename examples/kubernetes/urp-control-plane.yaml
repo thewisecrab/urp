@@ -1,0 +1,102 @@
+# Create Secret urp-runtime with api-key and postgres-dsn before applying.
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: urp-example
+automountServiceAccountToken: false
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: urp-example
+  labels:
+    app.kubernetes.io/name: urp
+    app.kubernetes.io/instance: example
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: urp
+      app.kubernetes.io/instance: example
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/name: urp
+        app.kubernetes.io/instance: example
+    spec:
+      serviceAccountName: urp-example
+      automountServiceAccountToken: false
+      securityContext:
+        runAsNonRoot: true
+        runAsUser: 10001
+        runAsGroup: 10001
+        fsGroup: 10001
+        seccompProfile:
+          type: RuntimeDefault
+      containers:
+        - name: control-plane
+          image: ghcr.io/thewisecrab/urp:0.1.0
+          imagePullPolicy: IfNotPresent
+          args: ["service", "run", "--name", "control-plane", "--listen", "0.0.0.0:8080"]
+          ports:
+            - name: http
+              containerPort: 8080
+          env:
+            - name: URP_MODE
+              value: observe
+            - name: URP_LOCAL_API_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: urp-runtime
+                  key: api-key
+            - name: URP_MANIFEST_STORE
+              valueFrom:
+                secretKeyRef:
+                  name: urp-runtime
+                  key: postgres-dsn
+            - name: URP_LEDGER_STORE
+              valueFrom:
+                secretKeyRef:
+                  name: urp-runtime
+                  key: postgres-dsn
+          startupProbe:
+            httpGet: {path: /healthz, port: http}
+            failureThreshold: 30
+            periodSeconds: 2
+          readinessProbe:
+            httpGet: {path: /readyz, port: http}
+            periodSeconds: 10
+          livenessProbe:
+            httpGet: {path: /healthz, port: http}
+            periodSeconds: 20
+          resources:
+            requests: {cpu: 250m, memory: 256Mi}
+            limits: {cpu: "1", memory: 1Gi}
+          securityContext:
+            allowPrivilegeEscalation: false
+            readOnlyRootFilesystem: true
+            capabilities:
+              drop: ["ALL"]
+          volumeMounts:
+            - name: state
+              mountPath: /var/lib/urp/.urp
+            - name: tmp
+              mountPath: /tmp
+      volumes:
+        - name: state
+          emptyDir: {}
+        - name: tmp
+          emptyDir: {sizeLimit: 64Mi}
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: urp-example
+spec:
+  selector:
+    app.kubernetes.io/name: urp
+    app.kubernetes.io/instance: example
+  ports:
+    - name: http
+      port: 8080
+      targetPort: http

@@ -1,0 +1,107 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://urp.dev/schemas/urp_manifest.schema.json",
+  "title": "URP Manifest",
+  "type": "object",
+  "required": [
+    "manifest_version",
+    "manifest_id",
+    "work_unit_id",
+    "tenant",
+    "kind",
+    "contract",
+    "state",
+    "created_at"
+  ],
+  "properties": {
+    "manifest_version": {
+      "const": "urp.manifest.v1"
+    },
+    "manifest_id": {
+      "type": "string",
+      "pattern": "^mf_[A-Za-z0-9_-]+$"
+    },
+    "work_unit_id": {
+      "type": "string"
+    },
+    "logical_ref": {
+      "type": "string"
+    },
+    "tenant": {
+      "type": "string"
+    },
+    "namespace": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "trace_id": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "kind": {
+      "type": "string"
+    },
+    "contract": {
+      "type": "string",
+      "enum": ["exact_bytes", "exact_logical", "bounded_approx", "semantic", "derived", "tombstone"]
+    },
+    "state": {
+      "type": "string",
+      "enum": [
+        "planned",
+        "executing",
+        "active",
+        "superseded",
+        "rehydrating",
+        "failed",
+        "quarantined",
+        "expired",
+        "tombstoned"
+      ]
+    },
+    "created_at": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "policy": {
+      "type": "object",
+      "additionalProperties": true
+    },
+    "classification": {
+      "type": "object",
+      "additionalProperties": true
+    },
+    "plan": {
+      "type": "object",
+      "additionalProperties": true
+    },
+    "physical": {
+      "type": "object",
+      "additionalProperties": true
+    },
+    "verification": {
+      "type": "object",
+      "additionalProperties": true
+    },
+    "lineage": {
+      "type": "object",
+      "additionalProperties": true
+    },
+    "telemetry": {
+      "type": "object",
+      "additionalProperties": true
+    },
+    "signatures": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": true
+      }
+    }
+  },
+  "additionalProperties": false
+}

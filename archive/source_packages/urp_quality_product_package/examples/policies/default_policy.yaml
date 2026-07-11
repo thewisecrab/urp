@@ -1,0 +1,32 @@
+apiVersion: urp.dev/v1
+kind: ReductionPolicy
+metadata:
+  name: default-safe
+spec:
+  defaults:
+    contract: exact_bytes
+    semanticReduction: deny
+    approximateReduction: deny
+    crossTenantDedupe: deny
+    crossTenantCache: deny
+    dedupeDomain: tenant
+    cacheDomain: tenant_namespace
+  rules:
+    - name: exact-byte-safe-default
+      match:
+        kind: byte_object
+      contract: exact_bytes
+      allow:
+        transforms: [hash, content_defined_chunk, dedupe_same_tenant, zstd]
+      require:
+        verifiers: [sha256_restore]
+    - name: prompt-observe-default
+      match:
+        kind: prompt_request
+      contract: semantic
+      allow:
+        transforms: [exact_cache, context_dedupe, model_route_shadow]
+      deny:
+        transforms: [semantic_cache_enforce, distillation_enforce]
+      require:
+        verifiers: [fallback_available]

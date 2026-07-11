@@ -1,0 +1,23 @@
+sources:
+  shannon_source_coding: https://en.wikipedia.org/wiki/Shannon%27s_source_coding_theorem
+  iea_energy_ai: https://www.iea.org/reports/energy-and-ai/energy-demand-from-ai
+  zstd_rfc: https://datatracker.ietf.org/doc/html/rfc8878
+  borg_cdc: https://borgbackup.readthedocs.io/en/stable/internals/data-structures.html
+  parquet: https://parquet.apache.org/
+  arrow: https://arrow.apache.org/docs/format/Columnar.html
+  iceberg_evolution: https://iceberg.apache.org/docs/latest/evolution/
+  delta_lake: https://docs.delta.io/latest/index.html
+  opentelemetry: https://opentelemetry.io/docs/what-is-opentelemetry/
+  frugalgpt: https://arxiv.org/abs/2305.05176
+  routellm: https://openreview.net/forum?id=8n3uWUEuue
+  vllm: https://arxiv.org/abs/2309.06180
+  flashattention: https://arxiv.org/abs/2205.14135
+  kivi: https://proceedings.mlr.press/v235/liu24bz.html
+  kvquant: https://arxiv.org/abs/2401.18079
+  lora: https://arxiv.org/abs/2106.09685
+  qlora: https://arxiv.org/abs/2305.14314
+  slora: https://arxiv.org/abs/2311.03285
+  dedupe_lm_training: https://arxiv.org/abs/2107.06499
+  semcache_2024: https://arxiv.org/abs/2406.12649
+  lmcache_2025: https://arxiv.org/abs/2503.01185
+  google_carbon_aware: https://cloud.google.com/blog/products/infrastructure/using-demand-response-to-reduce-data-center-power-consumption

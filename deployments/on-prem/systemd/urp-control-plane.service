@@ -1,0 +1,32 @@
+[Unit]
+Description=URP control plane
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+Type=simple
+EnvironmentFile=/etc/urp/urp.env
+Environment=URP_AIRGAP_MODE=true
+WorkingDirectory=/opt/urp
+ExecStart=/opt/urp/venv/bin/python -m urp.cli --state-dir /var/lib/urp/.urp service run --name control-plane --listen 127.0.0.1:8080
+Restart=always
+RestartSec=5
+User=urp
+Group=urp
+UMask=0077
+NoNewPrivileges=true
+PrivateTmp=true
+PrivateDevices=true
+ProtectSystem=strict
+ProtectHome=true
+ProtectKernelTunables=true
+ProtectKernelModules=true
+ProtectControlGroups=true
+RestrictSUIDSGID=true
+RestrictRealtime=true
+LockPersonality=true
+MemoryDenyWriteExecute=true
+ReadWritePaths=/var/lib/urp
+
+[Install]
+WantedBy=multi-user.target

@@ -1,0 +1,47 @@
+name: urp-airgap
+
+services:
+  postgres:
+    image: postgres:16.4-alpine
+    restart: unless-stopped
+    environment:
+      POSTGRES_PASSWORD: ${URP_POSTGRES_PASSWORD:?Set URP_POSTGRES_PASSWORD}
+      POSTGRES_USER: urp
+      POSTGRES_DB: urp
+    volumes:
+      - urp-postgres:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U urp -d urp"]
+      interval: 5s
+      timeout: 3s
+      retries: 10
+
+  control-plane:
+    image: urp-local:0.1.0
+    build:
+      context: ../..
+      dockerfile: deployments/docker/Dockerfile
+    restart: unless-stopped
+    read_only: true
+    command: ["service", "run", "--name", "control-plane", "--listen", "0.0.0.0:8080"]
+    environment:
+      URP_AIRGAP_MODE: "true"
+      URP_LOCAL_API_KEY: ${URP_LOCAL_API_KEY:?Set URP_LOCAL_API_KEY}
+      URP_MANIFEST_STORE: postgresql://urp:${URP_POSTGRES_PASSWORD}@postgres:5432/urp
+      URP_LEDGER_STORE: postgresql://urp:${URP_POSTGRES_PASSWORD}@postgres:5432/urp
+    ports:
+      - "127.0.0.1:8080:8080"
+    volumes:
+      - urp-state:/var/lib/urp/.urp
+    tmpfs:
+      - /tmp:size=64m,mode=1777
+    security_opt:
+      - no-new-privileges:true
+    cap_drop: ["ALL"]
+    depends_on:
+      postgres:
+        condition: service_healthy
+
+volumes:
+  urp-postgres: {}
+  urp-state: {}

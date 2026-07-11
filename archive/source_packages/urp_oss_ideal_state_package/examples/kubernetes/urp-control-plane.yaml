@@ -1,0 +1,30 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: urp-control-plane
+spec:
+  replicas: 2
+  selector:
+    matchLabels: { app: urp-control-plane }
+  template:
+    metadata:
+      labels: { app: urp-control-plane }
+    spec:
+      containers:
+        - name: urp
+          image: ghcr.io/urp-dev/urp:latest
+          ports:
+            - containerPort: 8080
+          env:
+            - name: URP_MODE
+              value: observe-only
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: urp-control-plane
+spec:
+  selector: { app: urp-control-plane }
+  ports:
+    - port: 8080
+      targetPort: 8080

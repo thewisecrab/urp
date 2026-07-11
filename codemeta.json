@@ -1,0 +1,45 @@
+{
+  "@context": "https://doi.org/10.5063/schema/codemeta-2.0",
+  "@type": "SoftwareSourceCode",
+  "name": "Universal Reduction Plane",
+  "alternateName": "URP",
+  "version": "0.1.0",
+  "datePublished": "2026-07-11",
+  "dateModified": "2026-07-11",
+  "description": "A compatibility-first control and execution layer for reducing unnecessary storage, data transfer, and AI compute through contracts, verification, manifests, and an audit ledger.",
+  "codeRepository": "https://github.com/thewisecrab/urp",
+  "issueTracker": "https://github.com/thewisecrab/urp/issues",
+  "url": "https://thewisecrab.github.io/urp/",
+  "license": "https://spdx.org/licenses/Apache-2.0",
+  "developmentStatus": "active",
+  "applicationCategory": "DeveloperApplication",
+  "programmingLanguage": ["Python", "TypeScript", "Go", "Rust"],
+  "runtimePlatform": ["Local", "Docker", "Kubernetes", "Linux", "macOS"],
+  "operatingSystem": ["Linux", "macOS"],
+  "keywords": [
+    "AI infrastructure",
+    "data reduction",
+    "deduplication",
+    "exact cache",
+    "FinOps",
+    "OpenAI-compatible",
+    "S3 gateway"
+  ],
+  "author": {
+    "@type": "Person",
+    "@id": "https://github.com/thewisecrab",
+    "name": "thewisecrab"
+  },
+  "maintainer": {
+    "@type": "Person",
+    "@id": "https://github.com/thewisecrab",
+    "name": "thewisecrab"
+  },
+  "softwareRequirements": [
+    "Python >=3.10",
+    "Optional: Node.js >=20",
+    "Optional: Go >=1.22",
+    "Optional: Rust >=1.75",
+    "Optional: Docker or Kubernetes"
+  ]
+}

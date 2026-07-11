@@ -1,0 +1,78 @@
+{% extends "base.html" %}
+
+{% block extrahead %}
+  {{ super() }}
+  {% set page_title = page.title ~ " | " ~ config.site_name if page and page.title else config.site_name %}
+  {% set page_description = config.site_description %}
+  {% set page_url = page.canonical_url if page and page.canonical_url else config.site_url %}
+  <meta name="description" content="{{ page_description }}">
+  <meta name="keywords" content="Universal Reduction Plane, URP, AI gateway, exact cache, data reduction, S3 gateway, AI infrastructure, FinOps, WorkUnit, manifest ledger">
+  <meta name="robots" content="index,follow,max-image-preview:large,max-snippet:-1,max-video-preview:-1">
+  <meta name="googlebot" content="index,follow,max-image-preview:large,max-snippet:-1,max-video-preview:-1">
+  <meta property="og:type" content="website">
+  <meta property="og:site_name" content="Universal Reduction Plane">
+  <meta property="og:title" content="{{ page_title }}">
+  <meta property="og:description" content="{{ page_description }}">
+  <meta property="og:url" content="{{ page_url }}">
+  <meta name="twitter:card" content="summary">
+  <meta name="twitter:title" content="{{ page_title }}">
+  <meta name="twitter:description" content="{{ page_description }}">
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@graph": [
+      {
+        "@type": "WebSite",
+        "@id": "https://thewisecrab.github.io/urp/#website",
+        "url": "https://thewisecrab.github.io/urp/",
+        "name": "Universal Reduction Plane Documentation",
+        "description": "{{ page_description }}",
+        "inLanguage": "en"
+      },
+      {
+        "@type": "SoftwareSourceCode",
+        "@id": "https://github.com/thewisecrab/urp#software",
+        "name": "Universal Reduction Plane",
+        "alternateName": "URP",
+        "description": "{{ page_description }}",
+        "codeRepository": "https://github.com/thewisecrab/urp",
+        "url": "https://thewisecrab.github.io/urp/",
+        "license": "https://www.apache.org/licenses/LICENSE-2.0",
+        "version": "0.1.0",
+        "programmingLanguage": ["Python", "TypeScript", "Go", "Rust"],
+        "runtimePlatform": ["Local", "Docker", "Kubernetes", "Linux", "macOS"],
+        "isAccessibleForFree": true,
+        "author": {
+          "@type": "Person",
+          "name": "thewisecrab",
+          "url": "https://github.com/thewisecrab"
+        }
+      }
+      {% if page and page.file and page.file.src_uri == "WHITE_PAPER.md" %},
+      {
+        "@type": "TechArticle",
+        "@id": "https://thewisecrab.github.io/urp/WHITE_PAPER/#article",
+        "headline": "Universal Reduction Plane: A compatibility-first control plane for reducing data and AI waste",
+        "description": "An evidence-based white paper covering the URP problem, architecture, implementation, measured local proof, modeled impact, safety, deployment, and limitations.",
+        "datePublished": "2026-07-11",
+        "dateModified": "2026-07-11",
+        "inLanguage": "en",
+        "isAccessibleForFree": true,
+        "license": "https://www.apache.org/licenses/LICENSE-2.0",
+        "encoding": {
+          "@type": "MediaObject",
+          "contentUrl": "https://thewisecrab.github.io/urp/assets/URP-White-Paper-v1.0.pdf",
+          "encodingFormat": "application/pdf"
+        },
+        "author": {
+          "@type": "Person",
+          "name": "thewisecrab",
+          "url": "https://github.com/thewisecrab"
+        },
+        "isPartOf": {"@id": "https://thewisecrab.github.io/urp/#website"}
+      }
+      {% endif %}
+    ]
+  }
+  </script>
+{% endblock %}

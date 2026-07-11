@@ -1,0 +1,105 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://urp.dev/schemas/urp_policy.schema.json",
+  "title": "URP Reduction Policy",
+  "type": "object",
+  "required": ["apiVersion", "kind", "metadata", "spec"],
+  "additionalProperties": false,
+  "properties": {
+    "apiVersion": { "const": "urp.dev/v1" },
+    "kind": { "const": "ReductionPolicy" },
+    "metadata": {
+      "type": "object",
+      "required": ["name"],
+      "additionalProperties": false,
+      "properties": {
+        "name": { "type": "string", "minLength": 1, "maxLength": 128, "pattern": "^[A-Za-z0-9][A-Za-z0-9._-]*$" },
+        "version": { "type": "string", "minLength": 1, "maxLength": 128, "pattern": "^[A-Za-z0-9][A-Za-z0-9._-]*$" },
+        "tenant": { "type": "string", "minLength": 1 },
+        "labels": { "type": "object", "additionalProperties": { "type": "string" } }
+      }
+    },
+    "spec": {
+      "type": "object",
+      "required": ["defaults", "rules"],
+      "additionalProperties": false,
+      "properties": {
+        "defaults": {
+          "type": "object",
+          "required": ["contract"],
+          "additionalProperties": false,
+          "properties": {
+            "contract": { "$ref": "#/$defs/contract" },
+            "semanticReduction": { "type": "string", "enum": ["allow", "deny"] },
+            "approximateReduction": { "type": "string", "enum": ["allow", "deny"] },
+            "crossTenantDedupe": { "type": "string", "enum": ["allow", "deny"] },
+            "crossTenantCache": { "type": "string", "enum": ["allow", "deny"] },
+            "dedupeDomain": { "type": "string", "enum": ["tenant", "tenant_namespace"] },
+            "cacheDomain": { "type": "string", "enum": ["tenant", "tenant_namespace"] },
+            "modelAllowlist": {
+              "type": "array",
+              "minItems": 1,
+              "uniqueItems": true,
+              "items": { "type": "string", "minLength": 1 }
+            }
+          }
+        },
+        "rules": {
+          "type": "array",
+          "items": { "$ref": "#/$defs/rule" }
+        }
+      }
+    }
+  },
+  "$defs": {
+    "contract": {
+      "type": "string",
+      "enum": ["exact_bytes", "exact_logical", "bounded_approx", "semantic", "derived", "tombstone"]
+    },
+    "stringList": {
+      "type": "array",
+      "uniqueItems": true,
+      "items": { "type": "string", "minLength": 1 }
+    },
+    "rule": {
+      "type": "object",
+      "required": ["name", "match", "contract"],
+      "additionalProperties": false,
+      "properties": {
+        "name": { "type": "string", "minLength": 1, "maxLength": 128 },
+        "match": {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "kind": { "type": "string" },
+            "namespace": { "type": "string" },
+            "tenant": { "type": "string" },
+            "tags": { "type": "object", "additionalProperties": true }
+          }
+        },
+        "contract": { "$ref": "#/$defs/contract" },
+        "allow": {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": { "transforms": { "$ref": "#/$defs/stringList" } }
+        },
+        "deny": {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": { "transforms": { "$ref": "#/$defs/stringList" } }
+        },
+        "require": {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "verifiers": { "$ref": "#/$defs/stringList" },
+            "maxCacheAge": { "type": ["string", "integer"] },
+            "fallbackModel": { "type": "string" }
+          }
+        },
+        "requires_approval": { "type": "boolean" },
+        "modelAllowlist": { "$ref": "#/$defs/stringList" }
+      }
+    }
+  }
+}

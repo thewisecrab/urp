@@ -1,0 +1,10 @@
+[project]
+name = "urp-prototype"
+version = "0.1.0"
+description = "Universal Reduction Plane prototype skeleton"
+requires-python = ">=3.10"
+dependencies = []
+
+[tool.pytest.ini_options]
+pythonpath = ["src/python"]
+testpaths = ["tests/python"]

@@ -1,0 +1,19 @@
+apiVersion: v2
+name: urp
+description: Universal Reduction Plane control plane and gateway runtime
+type: application
+version: 0.1.0
+appVersion: "0.1.0"
+kubeVersion: ">=1.26.0-0"
+home: https://thewisecrab.github.io/urp/
+sources:
+  - https://github.com/thewisecrab/urp
+maintainers:
+  - name: thewisecrab
+    url: https://github.com/thewisecrab
+annotations:
+  artifacthub.io/license: Apache-2.0
+  artifacthub.io/category: integration-delivery
+  artifacthub.io/changes: |
+    - kind: added
+      description: Initial URP control-plane chart with hardened defaults.

@@ -1,0 +1,19 @@
+name: local-s3-adapter
+version: 0.1.0
+trust_level: core
+category: adapters
+capabilities:
+  - adapter.s3.local
+  - object.read
+  - object.write
+  - object.list
+  - object.delete
+  - range.read
+  - metadata.headers
+  - object.tags
+  - multipart.upload
+contracts:
+  - exact_bytes
+entrypoint: src/urp_plugin.py
+network_access: false
+default_enabled: true

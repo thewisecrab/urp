@@ -1,0 +1,110 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://urp.dev/schemas/urp_work_unit.schema.json",
+  "title": "URP Work Unit",
+  "type": "object",
+  "required": [
+    "id",
+    "kind",
+    "tenant",
+    "logical_ref",
+    "created_at"
+  ],
+  "properties": {
+    "id": {
+      "type": "string",
+      "pattern": "^wu_[A-Za-z0-9_-]+$"
+    },
+    "kind": {
+      "type": "string"
+    },
+    "tenant": {
+      "type": "string",
+      "minLength": 1
+    },
+    "namespace": {
+      "type": "string"
+    },
+    "logical_ref": {
+      "type": "string",
+      "minLength": 1
+    },
+    "payload_ref": {
+      "type": [
+        "string",
+        "object",
+        "null"
+      ]
+    },
+    "requested_contract": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "enum": [
+        "exact_bytes",
+        "exact_logical",
+        "bounded_approx",
+        "semantic",
+        "derived",
+        "tombstone",
+        null
+      ]
+    },
+    "effective_contract": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "enum": [
+        "exact_bytes",
+        "exact_logical",
+        "bounded_approx",
+        "semantic",
+        "derived",
+        "tombstone",
+        null
+      ]
+    },
+    "metadata": {
+      "type": "object",
+      "additionalProperties": true
+    },
+    "policy_context": {
+      "type": "object",
+      "additionalProperties": true
+    },
+    "deadline": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "format": "date-time"
+    },
+    "latency_budget_ms": {
+      "type": [
+        "integer",
+        "null"
+      ],
+      "minimum": 0
+    },
+    "quality_target": {
+      "type": [
+        "object",
+        "null"
+      ],
+      "additionalProperties": true
+    },
+    "trace_id": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "created_at": {
+      "type": "string",
+      "format": "date-time"
+    }
+  },
+  "additionalProperties": false
+}

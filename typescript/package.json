@@ -1,0 +1,46 @@
+{
+  "name": "@thewisecrab/urp",
+  "version": "0.1.0",
+  "description": "Typed client SDK for the Universal Reduction Plane",
+  "keywords": [
+    "ai-infrastructure",
+    "data-reduction",
+    "finops",
+    "openai-compatible",
+    "s3"
+  ],
+  "homepage": "https://thewisecrab.github.io/urp/",
+  "bugs": {
+    "url": "https://github.com/thewisecrab/urp/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/thewisecrab/urp.git",
+    "directory": "typescript"
+  },
+  "type": "module",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js"
+    }
+  },
+  "files": ["dist", "README.md"],
+  "sideEffects": false,
+  "scripts": {
+    "build": "tsc -p tsconfig.json",
+    "test": "npm run build && node --test tests/*.test.mjs"
+  },
+  "engines": {
+    "node": ">=20"
+  },
+  "license": "Apache-2.0",
+  "publishConfig": {
+    "access": "public"
+  },
+  "devDependencies": {
+    "typescript": "^6.0.3"
+  }
+}

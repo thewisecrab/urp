@@ -1,0 +1,39 @@
+policy_version: v1
+defaults:
+  contract: exact-byte
+  dedupe_domain: tenant
+  allowed_transforms: [whole-object-dedupe, content-defined-chunking, zstd]
+rules:
+  - name: financial-ledgers-exact
+    match:
+      resource_type: financial_ledger
+    contract: exact-byte
+    allowed_transforms: [whole-object-dedupe, content-defined-chunking, zstd]
+    forbidden_transforms: [summarization, downsampling, lossy-codec, semantic-equivalent]
+    retention:
+      delete_after: never
+    requires_approval: false
+  - name: debug-logs-semantic-after-retention
+    match:
+      resource_type: application_log
+      environment: production
+    contract: exact-byte
+    allowed_transforms: [template-log-extraction, zstd, tenant-dedupe]
+    retention:
+      hot_for: 14d
+      summary_after: 30d
+      delete_after: 180d
+    ai:
+      allow_summary: true
+      verifier: log-summary-consistency
+    requires_approval: true
+  - name: ai-chat-routing
+    match:
+      resource_type: ai_request
+    contract: semantic-equivalent
+    allowed_transforms: [exact-cache, semantic-cache, context-pruning, tool-routing, model-routing]
+    ai:
+      small_model_first: true
+      large_model_fallback: true
+      require_verifier: true
+      max_context_tokens: 8000

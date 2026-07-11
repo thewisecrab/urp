@@ -1,0 +1,20 @@
+apiVersion: urp.dev/v1
+kind: ReductionPolicy
+metadata:
+  name: semantic-ai-shadow
+spec:
+  defaults:
+    contract: exact_bytes
+    semanticReduction: deny
+  rules:
+    - name: internal-support-semantic-shadow
+      match:
+        kind: prompt_request
+        namespace: internal-support
+      contract: semantic
+      allow:
+        transforms: [exact_cache, semantic_cache_shadow, context_compile, model_route]
+      require:
+        verifiers: [source_fingerprint_match, freshness_check, answer_citation_check]
+        maxCacheAge: 24h
+        fallbackModel: frontier-large

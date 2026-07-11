@@ -1,0 +1,91 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://urp.dev/schemas/compute-manifest.schema.json",
+  "title": "URP AI Compute Manifest",
+  "type": "object",
+  "required": [
+    "request",
+    "contract",
+    "plan",
+    "result"
+  ],
+  "properties": {
+    "request": {
+      "type": "object",
+      "properties": {
+        "request_hash": {
+          "type": "string"
+        },
+        "tenant": {
+          "type": "string"
+        },
+        "task_type": {
+          "type": "string"
+        },
+        "input_tokens": {
+          "type": "integer"
+        }
+      }
+    },
+    "contract": {
+      "type": "object",
+      "properties": {
+        "quality_required": {
+          "type": "string"
+        },
+        "latency_budget_ms": {
+          "type": "integer"
+        },
+        "freshness_required_seconds": {
+          "type": "integer"
+        },
+        "privacy_scope": {
+          "type": "string"
+        }
+      }
+    },
+    "plan": {
+      "type": "object",
+      "properties": {
+        "cache_checked": {
+          "type": "boolean"
+        },
+        "tools_checked": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "context_tokens_before": {
+          "type": "integer"
+        },
+        "context_tokens_after": {
+          "type": "integer"
+        },
+        "selected_model": {
+          "type": "string"
+        },
+        "fallback_model": {
+          "type": "string"
+        }
+      }
+    },
+    "result": {
+      "type": "object",
+      "properties": {
+        "accepted_by_verifier": {
+          "type": "boolean"
+        },
+        "large_model_called": {
+          "type": "boolean"
+        },
+        "cacheable_until": {
+          "type": "string"
+        },
+        "estimated_joules_avoided": {
+          "type": "number"
+        }
+      }
+    }
+  }
+}

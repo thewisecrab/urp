@@ -1,0 +1,14 @@
+name: local-kind-classifier
+version: 0.1.0
+trust_level: core
+category: classifiers
+capabilities:
+  - classifier.work_unit_kind
+  - classifier.local_safe_default
+contracts:
+  - exact_bytes
+  - exact_logical
+  - semantic
+entrypoint: src/urp_plugin.py
+network_access: false
+default_enabled: true

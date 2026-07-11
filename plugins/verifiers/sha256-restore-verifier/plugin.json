@@ -1,0 +1,17 @@
+{
+  "api_version": "urp.plugin.v1",
+  "name": "sha256-restore-verifier",
+  "version": "0.1.0",
+  "capabilities": [
+    "verifier.sha256_restore",
+    "verifier.exact_rehydration"
+  ],
+  "trust_level": "core",
+  "category": "verifiers",
+  "contracts": ["exact_bytes"],
+  "entrypoint": "src/urp_plugin.py",
+  "entrypoint_sha256": "b62bad56e62017dd7a60ca780f288985c8079855b73fe9395e95496996ff177b",
+  "operations": ["verify"],
+  "network_access": false,
+  "default_enabled": true
+}

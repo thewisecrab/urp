@@ -1,0 +1,92 @@
+[project]
+name = "urp"
+version = "0.1.0"
+description = "Universal Reduction Plane local-ideal reference implementation"
+readme = "README.md"
+license = "Apache-2.0"
+license-files = ["LICENSE", "NOTICE"]
+authors = [
+  {name = "URP contributors"},
+]
+keywords = [
+  "ai-infrastructure",
+  "data-reduction",
+  "deduplication",
+  "finops",
+  "openai-compatible",
+  "s3-gateway",
+]
+classifiers = [
+  "Development Status :: 3 - Alpha",
+  "Environment :: Console",
+  "Framework :: FastAPI",
+  "Intended Audience :: Developers",
+  "Intended Audience :: Information Technology",
+  "Operating System :: OS Independent",
+  "Programming Language :: Python :: 3",
+  "Programming Language :: Python :: 3.10",
+  "Programming Language :: Python :: 3.11",
+  "Programming Language :: Python :: 3.12",
+  "Programming Language :: Python :: 3.13",
+  "Topic :: System :: Distributed Computing",
+  "Typing :: Typed",
+]
+requires-python = ">=3.10"
+dependencies = [
+  "cryptography>=42.0",
+  "jsonschema>=4.23",
+  "PyYAML>=6.0",
+]
+
+[project.optional-dependencies]
+api = [
+  "fastapi>=0.139,<1",
+  "httpx2>=2.5,<3",
+]
+dev = [
+  "build>=1.2",
+  "coverage[toml]>=7.6",
+  "fastapi>=0.139,<1",
+  "httpx2>=2.5,<3",
+  "pytest>=8.3",
+  "pytest-cov>=6.0",
+  "ruff>=0.8",
+]
+production = [
+  "psycopg[binary]>=3.2",
+]
+cloud = [
+  "azure-storage-blob>=12.24",
+  "google-cloud-storage>=2.19",
+]
+
+[project.scripts]
+urp = "urp.cli:main"
+
+[project.urls]
+Homepage = "https://thewisecrab.github.io/urp/"
+Documentation = "https://thewisecrab.github.io/urp/"
+Repository = "https://github.com/thewisecrab/urp"
+Issues = "https://github.com/thewisecrab/urp/issues"
+Changelog = "https://github.com/thewisecrab/urp/blob/main/CHANGELOG.md"
+
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[tool.setuptools.packages.find]
+where = ["python"]
+
+[tool.setuptools.data-files]
+"share/urp/specs" = [
+  "specs/*.json",
+  "specs/*.proto",
+  "specs/*.yaml",
+]
+
+[tool.pytest.ini_options]
+pythonpath = ["python"]
+testpaths = ["tests"]
+
+[tool.ruff]
+line-length = 140

@@ -1,0 +1,16 @@
+URP {{ .Chart.AppVersion }} is configured in {{ .Values.mode }} mode.
+
+Check the rollout:
+  kubectl -n {{ .Release.Namespace }} rollout status deployment/{{ include "urp.fullname" . }}
+
+Port-forward the service:
+  kubectl -n {{ .Release.Namespace }} port-forward service/{{ include "urp.fullname" . }} 8080:{{ .Values.service.port }}
+
+Probe readiness:
+  curl http://127.0.0.1:8080/readyz
+
+Run the chart test:
+  helm test {{ .Release.Name }} -n {{ .Release.Namespace }}
+
+All /v1 routes and /metrics require the API key from Secret {{ include "urp.secretName" . }}.
+Promote from observe to shadow or enforce only after reviewing verifier, latency, and impact evidence.

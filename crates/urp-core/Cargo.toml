@@ -1,0 +1,14 @@
+[package]
+name = "urp-core"
+version.workspace = true
+edition.workspace = true
+rust-version.workspace = true
+license.workspace = true
+repository.workspace = true
+homepage.workspace = true
+authors.workspace = true
+description = "Core WorkUnit and contract types for the Universal Reduction Plane"
+
+[lib]
+name = "urp_core"
+path = "src/lib.rs"

@@ -1,0 +1,10 @@
+.git
+.urp
+.venv
+archive
+build
+dist
+node_modules
+target
+**/__pycache__
+**/*.pyc

@@ -1,0 +1,56 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "required": ["mode", "runtime", "image", "secrets", "service"],
+  "properties": {
+    "replicaCount": {"type": "integer", "minimum": 1, "maximum": 100},
+    "mode": {"type": "string", "enum": ["observe", "shadow", "enforce"]},
+    "runtime": {
+      "type": "object",
+      "required": ["serviceName", "listen"],
+      "properties": {
+        "serviceName": {"type": "string", "enum": ["control-plane", "gateway-ai", "gateway-s3", "worker", "scheduler"]},
+        "listen": {"type": "string", "minLength": 3}
+      }
+    },
+    "image": {
+      "type": "object",
+      "required": ["repository", "tag", "pullPolicy"],
+      "properties": {
+        "repository": {"type": "string", "minLength": 1},
+        "tag": {"type": "string", "minLength": 1, "not": {"enum": ["latest", "dev"]}},
+        "pullPolicy": {"type": "string", "enum": ["Always", "IfNotPresent", "Never"]}
+      }
+    },
+    "secrets": {
+      "type": "object",
+      "required": ["create", "existingSecret"],
+      "properties": {
+        "create": {"type": "boolean"},
+        "existingSecret": {"type": "string"},
+        "apiKey": {"type": "string"},
+        "postgresDsn": {"type": "string"},
+        "approvalSigningKey": {"type": "string"},
+        "backupSigningKey": {"type": "string"}
+      },
+      "allOf": [
+        {
+          "if": {"properties": {"create": {"const": true}}},
+          "then": {"properties": {"apiKey": {"minLength": 32}}}
+        },
+        {
+          "if": {"properties": {"create": {"const": false}}},
+          "then": {"properties": {"existingSecret": {"minLength": 1}}}
+        }
+      ]
+    },
+    "service": {
+      "type": "object",
+      "required": ["type", "port"],
+      "properties": {
+        "type": {"type": "string", "enum": ["ClusterIP", "NodePort", "LoadBalancer"]},
+        "port": {"type": "integer", "minimum": 1, "maximum": 65535}
+      }
+    }
+  }
+}

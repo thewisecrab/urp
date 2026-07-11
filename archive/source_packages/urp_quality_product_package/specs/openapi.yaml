@@ -1,0 +1,135 @@
+openapi: 3.1.0
+info:
+  title: Universal Reduction Plane API
+  version: 0.1.0
+  description: URP control API for work units, manifests, policy, ledger, cache, and AI gateway metadata.
+servers:
+  - url: http://localhost:8080
+paths:
+  /healthz:
+    get:
+      summary: Health check
+      responses:
+        "200":
+          description: Healthy
+  /metrics:
+    get:
+      summary: Prometheus metrics
+      responses:
+        "200":
+          description: Metrics
+  /v1/work-units:
+    post:
+      summary: Create a work unit
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "./urp_work_unit.schema.json"
+      responses:
+        "200":
+          description: Work unit accepted
+  /v1/work-units/{id}/plan:
+    post:
+      summary: Plan a work unit
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema: { type: string }
+      responses:
+        "200":
+          description: Plan
+  /v1/work-units/{id}/execute:
+    post:
+      summary: Execute a plan for a work unit
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema: { type: string }
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                mode:
+                  type: string
+                  enum: [observe, shadow, enforce]
+      responses:
+        "200":
+          description: Execution result
+  /v1/manifests/{id}:
+    get:
+      summary: Get a manifest
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema: { type: string }
+      responses:
+        "200":
+          description: Manifest
+  /v1/manifests/{id}/rehydrate:
+    post:
+      summary: Rehydrate a manifest
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema: { type: string }
+      responses:
+        "200":
+          description: Rehydrated payload or reference
+  /v1/policies/validate:
+    post:
+      summary: Validate policy YAML or JSON
+      responses:
+        "200":
+          description: Validation result
+  /v1/policies/evaluate:
+    post:
+      summary: Evaluate policy against a work unit
+      responses:
+        "200":
+          description: Policy decision
+  /v1/ledger/query:
+    post:
+      summary: Query ledger events
+      responses:
+        "200":
+          description: Ledger results
+  /v1/cache/exact/lookup:
+    post:
+      summary: Exact cache lookup
+      responses:
+        "200":
+          description: Cache lookup result
+  /v1/cache/semantic/lookup:
+    post:
+      summary: Policy-gated semantic cache lookup
+      responses:
+        "200":
+          description: Cache lookup result
+  /v1/chat/completions:
+    post:
+      summary: OpenAI-compatible chat completions gateway
+      responses:
+        "200":
+          description: Chat completion
+  /v1/embeddings:
+    post:
+      summary: OpenAI-compatible embeddings gateway
+      responses:
+        "200":
+          description: Embedding response
+components:
+  schemas:
+    WorkUnit:
+      $ref: "./urp_work_unit.schema.json"
+    Manifest:
+      $ref: "./urp_manifest.schema.json"
+    LedgerEvent:
+      $ref: "./urp_ledger_event.schema.json"

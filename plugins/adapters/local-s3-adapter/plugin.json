@@ -1,0 +1,24 @@
+{
+  "api_version": "urp.plugin.v1",
+  "name": "local-s3-adapter",
+  "version": "0.1.0",
+  "capabilities": [
+    "adapter.s3.local",
+    "object.read",
+    "object.write",
+    "object.list",
+    "object.delete",
+    "range.read",
+    "metadata.headers",
+    "object.tags",
+    "multipart.upload"
+  ],
+  "trust_level": "core",
+  "category": "adapters",
+  "contracts": ["exact_bytes"],
+  "entrypoint": "src/urp_plugin.py",
+  "entrypoint_sha256": "db4f13458cb4db15d5e9044a6b28a9031c799b7f179bb679cbdb6a3b3abeb81e",
+  "operations": ["capabilities", "create_adapter"],
+  "network_access": false,
+  "default_enabled": true
+}

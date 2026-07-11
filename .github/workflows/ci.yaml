@@ -1,0 +1,136 @@
+name: CI
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  python:
+    name: Python ${{ matrix.python-version }}
+    strategy:
+      fail-fast: false
+      matrix:
+        python-version: ["3.10", "3.11", "3.12", "3.13", "3.14"]
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7.0.0
+      - uses: actions/setup-python@ece7cb06caefa5fff74198d8649806c4678c61a1 # v6.3.0
+        with:
+          python-version: ${{ matrix.python-version }}
+          cache: pip
+      - run: python3 -m pip install --upgrade pip
+      - run: python3 -m pip install -e ".[dev]"
+      - run: python3 -m ruff check python tests
+      - run: python3 -m pytest -W error::ResourceWarning --cov=urp --cov-report=term-missing --cov-fail-under=70
+      - run: python3 -m urp.cli plugin conformance --all-packages
+      - run: python3 -m urp.cli admin readiness
+      - run: python3 -m urp.cli --state-dir .urp-ci benchmark run --suite object-exact-v1
+      - run: python3 -m urp.cli report impact --scenario examples/impact/illustrative-portfolio.json
+
+  wheel:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7.0.0
+      - uses: actions/setup-python@ece7cb06caefa5fff74198d8649806c4678c61a1 # v6.3.0
+        with:
+          python-version: "3.13"
+          cache: pip
+      - run: python3 -m pip install build
+      - run: python3 -m build
+      - run: python3 -m venv /tmp/urp-wheel
+      - run: /tmp/urp-wheel/bin/python -m pip install dist/*.whl
+      - run: cd /tmp && /tmp/urp-wheel/bin/python -c "from urp.schema_validation import load_schema; assert load_schema('work_unit')['title'] == 'URP Work Unit'"
+      - run: cd /tmp && /tmp/urp-wheel/bin/urp --state-dir /tmp/urp-state execute --kind byte_object --input wheel-smoke
+
+  typescript:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7.0.0
+      - uses: actions/setup-node@48b55a011bda9f5d6aeb4c2d9c7362e8dae4041e # v6.4.0
+        with:
+          node-version: "24"
+          cache: npm
+          cache-dependency-path: typescript/package-lock.json
+      - run: npm ci
+        working-directory: typescript
+      - run: npm test
+        working-directory: typescript
+      - run: npm pack --dry-run
+        working-directory: typescript
+
+  go:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7.0.0
+      - uses: actions/setup-go@924ae3a1cded613372ab5595356fb5720e22ba16 # v6.5.0
+        with:
+          go-version: "1.22"
+          cache-dependency-path: go/go.mod
+      - name: Check formatting
+        run: test -z "$(gofmt -d urp.go urp/urp.go urp_test.go)"
+        working-directory: go
+      - run: go vet ./...
+        working-directory: go
+      - run: go test -race ./...
+        working-directory: go
+
+  rust:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7.0.0
+      - uses: dtolnay/rust-toolchain@4be7066ada62dd38de10e7b70166bc74ed198c30 # stable
+        with:
+          toolchain: stable
+          components: rustfmt, clippy
+      - run: cargo fmt --all -- --check
+      - run: cargo clippy --workspace --all-targets -- -D warnings
+      - run: cargo test --workspace
+
+  specs-and-deployments:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7.0.0
+      - uses: actions/setup-python@ece7cb06caefa5fff74198d8649806c4678c61a1 # v6.3.0
+        with:
+          python-version: "3.13"
+      - uses: hashicorp/setup-terraform@dfe3c3f87815947d99a8997f908cb6525fc44e9e # v4.0.1
+        with:
+          terraform_version: "1.14.6"
+      - uses: azure/setup-helm@9bc31f4ebc9c6b171d7bfbaa5d006ae7abdb4310 # v5.0.1
+        with:
+          version: "v4.1.0"
+      - run: python3 -m pip install -e ".[dev]"
+      - run: python3 -m urp.cli platform validate --target all
+      - run: python3 -m urp.cli admin readiness
+      - run: terraform fmt -check -recursive deployments/terraform examples/terraform
+      - run: terraform -chdir=deployments/terraform/aws init -backend=false -input=false && terraform -chdir=deployments/terraform/aws validate
+      - run: terraform -chdir=deployments/terraform/azure init -backend=false -input=false && terraform -chdir=deployments/terraform/azure validate
+      - run: terraform -chdir=deployments/terraform/gcp init -backend=false -input=false && terraform -chdir=deployments/terraform/gcp validate
+      - run: helm lint deployments/helm/urp
+      - run: helm template urp deployments/helm/urp --set secrets.create=false --set secrets.existingSecret=urp-runtime > /tmp/urp-rendered.yaml
+      - run: docker compose -f deployments/docker-compose/docker-compose.yaml config --quiet
+        env:
+          URP_LOCAL_API_KEY: ci-not-a-production-secret
+          URP_POSTGRES_PASSWORD: ci-not-a-production-secret
+      - run: docker build -f deployments/docker/Dockerfile -t urp:ci .
+
+  release-integrity:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7.0.0
+      - uses: actions/setup-python@ece7cb06caefa5fff74198d8649806c4678c61a1 # v6.3.0
+        with:
+          python-version: "3.13"
+      - run: python3 -m pip install -e ".[dev]"
+      - run: python3 -m urp.cli release sign --output /tmp/urp-release.json
+        env:
+          URP_RELEASE_SIGNING_KEY: Y2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2M=
+      - run: python3 -m urp.cli release verify --manifest /tmp/urp-release.json --root . --require-signature

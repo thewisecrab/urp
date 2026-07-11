@@ -1,0 +1,33 @@
+syntax = "proto3";
+package urp.v1;
+
+message ResourceRef {
+  string logical_id = 1;
+  string resource_type = 2;
+  string tenant = 3;
+}
+
+message ResourceContract {
+  string mode = 1;
+  string reversibility = 2;
+  int64 freshness_slo_seconds = 3;
+  int64 latency_slo_ms = 4;
+  bool audit_required = 5;
+}
+
+message ReductionPlanRequest {
+  ResourceRef resource = 1;
+  ResourceContract contract = 2;
+  bytes sample = 3;
+}
+
+message ReductionPlanResponse {
+  string plan_id = 1;
+  repeated string transforms = 2;
+  string fallback = 3;
+  bool policy_allowed = 4;
+}
+
+service URPPlanner {
+  rpc Plan(ReductionPlanRequest) returns (ReductionPlanResponse);
+}

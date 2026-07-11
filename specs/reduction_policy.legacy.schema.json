@@ -1,0 +1,67 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://urp.dev/schemas/reduction-policy.schema.json",
+  "title": "URP Reduction Policy",
+  "type": "object",
+  "required": [
+    "policy_version",
+    "rules"
+  ],
+  "properties": {
+    "policy_version": {
+      "type": "string"
+    },
+    "defaults": {
+      "type": "object"
+    },
+    "rules": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": [
+          "name",
+          "match",
+          "contract"
+        ],
+        "properties": {
+          "name": {
+            "type": "string"
+          },
+          "description": {
+            "type": "string"
+          },
+          "match": {
+            "type": "object"
+          },
+          "contract": {
+            "type": "string"
+          },
+          "allowed_transforms": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "forbidden_transforms": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "dedupe_domain": {
+            "type": "string"
+          },
+          "retention": {
+            "type": "object"
+          },
+          "ai": {
+            "type": "object"
+          },
+          "requires_approval": {
+            "type": "boolean"
+          }
+        }
+      }
+    }
+  }
+}

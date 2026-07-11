@@ -1,0 +1,5 @@
+Universal Reduction Plane OSS Ideal-State Package
+
+Every Markdown document in this package is intentionally 10,000+ lines.
+See line_count_manifest.json for exact counts.
+Supporting code, schemas, OpenAPI, protobuf, examples, Kubernetes, Terraform, and SDK skeletons are included.

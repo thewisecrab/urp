@@ -1,0 +1,131 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://urp.dev/schemas/urp_work_unit.schema.json",
+  "title": "URP Work Unit",
+  "type": "object",
+  "required": [
+    "id",
+    "kind",
+    "tenant",
+    "logical_ref",
+    "created_at"
+  ],
+  "properties": {
+    "id": {
+      "type": "string",
+      "pattern": "^wu_[A-Za-z0-9_-]+$"
+    },
+    "kind": {
+      "type": "string",
+      "enum": [
+        "byte_object", "file", "directory_snapshot", "block_extent", "backup_snapshot", "container_layer",
+        "structured_file", "table_snapshot", "table_row_group", "stream_segment", "event_batch", "metric_series",
+        "trace_batch", "log_batch", "media_asset", "image_asset", "video_asset", "audio_asset", "document_asset",
+        "vector_index_segment", "embedding_request", "embedding_batch", "prompt_request", "completion_response",
+        "chat_session", "agent_step", "tool_call", "rag_context_pack", "training_dataset", "evaluation_job",
+        "model_checkpoint", "adapter_artifact", "fine_tune_job", "inference_batch", "kv_cache_segment",
+        "synthetic_data_job", "batch_compute_job", "lifecycle_transition", "deletion_candidate", "rehydration_request",
+        "policy_override", "plugin_action"
+      ]
+    },
+    "tenant": {
+      "type": "string",
+      "minLength": 1
+    },
+    "namespace": {
+      "type": "string"
+    },
+    "logical_ref": {
+      "type": "string",
+      "minLength": 1
+    },
+    "payload_ref": {
+      "type": [
+        "string",
+        "object",
+        "null"
+      ]
+    },
+    "payload": {
+      "type": [
+        "string",
+        "object",
+        "array",
+        "number",
+        "integer",
+        "boolean",
+        "null"
+      ]
+    },
+    "requested_contract": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "enum": [
+        "exact_bytes",
+        "exact_logical",
+        "bounded_approx",
+        "semantic",
+        "derived",
+        "tombstone",
+        null
+      ]
+    },
+    "effective_contract": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "enum": [
+        "exact_bytes",
+        "exact_logical",
+        "bounded_approx",
+        "semantic",
+        "derived",
+        "tombstone",
+        null
+      ]
+    },
+    "metadata": {
+      "type": "object",
+      "additionalProperties": true
+    },
+    "policy_context": {
+      "type": "object",
+      "additionalProperties": true
+    },
+    "deadline": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "format": "date-time"
+    },
+    "latency_budget_ms": {
+      "type": [
+        "integer",
+        "null"
+      ],
+      "minimum": 0
+    },
+    "quality_target": {
+      "type": [
+        "object",
+        "null"
+      ],
+      "additionalProperties": true
+    },
+    "trace_id": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "created_at": {
+      "type": "string",
+      "format": "date-time"
+    }
+  },
+  "additionalProperties": false
+}

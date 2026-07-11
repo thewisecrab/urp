@@ -1,0 +1,23 @@
+{
+  "name": "illustrative-portfolio-low-v1",
+  "currency": "USD",
+  "storage_gib": 102400,
+  "storage_reduction_rate": 0.15,
+  "storage_cost_per_gib_month": 0.023,
+  "monthly_data_transfer_gib": 204800,
+  "data_transfer_reduction_rate": 0.10,
+  "data_transfer_cost_per_gib": 0.05,
+  "monthly_ai_requests": 10000000,
+  "average_input_tokens": 1000,
+  "average_output_tokens": 250,
+  "exact_cache_hit_rate": 0.05,
+  "context_compiler_coverage": 0.20,
+  "context_input_reduction_rate": 0.15,
+  "ai_input_cost_per_million_tokens": 1.0,
+  "ai_output_cost_per_million_tokens": 4.0,
+  "monthly_urp_operating_cost": 2500,
+  "implementation_cost": 30000,
+  "analysis_horizon_months": 36,
+  "energy_kwh_per_avoided_model_call": null,
+  "grid_kg_co2e_per_kwh": null
+}

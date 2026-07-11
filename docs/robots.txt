@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://thewisecrab.github.io/urp/sitemap.xml

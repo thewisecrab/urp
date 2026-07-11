@@ -1,0 +1,851 @@
+syntax = "proto3";
+
+package urp.v1;
+
+option go_package = "github.com/urp/urp/go/urpv1;urpv1";
+
+import "google/protobuf/empty.proto";
+import "google/protobuf/struct.proto";
+
+enum Contract {
+  CONTRACT_UNSPECIFIED = 0;
+  CONTRACT_EXACT_BYTES = 1;
+  CONTRACT_EXACT_LOGICAL = 2;
+  CONTRACT_BOUNDED_APPROX = 3;
+  CONTRACT_SEMANTIC = 4;
+  CONTRACT_DERIVED = 5;
+  CONTRACT_TOMBSTONE = 6;
+}
+
+enum WorkUnitKind {
+  WORK_UNIT_KIND_UNSPECIFIED = 0;
+  WORK_UNIT_KIND_BYTE_OBJECT = 1;
+  WORK_UNIT_KIND_FILE = 2;
+  WORK_UNIT_KIND_DIRECTORY_SNAPSHOT = 3;
+  WORK_UNIT_KIND_BLOCK_EXTENT = 4;
+  WORK_UNIT_KIND_BACKUP_SNAPSHOT = 5;
+  WORK_UNIT_KIND_CONTAINER_LAYER = 6;
+  WORK_UNIT_KIND_STRUCTURED_FILE = 7;
+  WORK_UNIT_KIND_TABLE_SNAPSHOT = 8;
+  WORK_UNIT_KIND_TABLE_ROW_GROUP = 9;
+  WORK_UNIT_KIND_STREAM_SEGMENT = 10;
+  WORK_UNIT_KIND_EVENT_BATCH = 11;
+  WORK_UNIT_KIND_METRIC_SERIES = 12;
+  WORK_UNIT_KIND_TRACE_BATCH = 13;
+  WORK_UNIT_KIND_LOG_BATCH = 14;
+  WORK_UNIT_KIND_MEDIA_ASSET = 15;
+  WORK_UNIT_KIND_IMAGE_ASSET = 16;
+  WORK_UNIT_KIND_VIDEO_ASSET = 17;
+  WORK_UNIT_KIND_AUDIO_ASSET = 18;
+  WORK_UNIT_KIND_DOCUMENT_ASSET = 19;
+  WORK_UNIT_KIND_VECTOR_INDEX_SEGMENT = 20;
+  WORK_UNIT_KIND_EMBEDDING_REQUEST = 21;
+  WORK_UNIT_KIND_EMBEDDING_BATCH = 22;
+  WORK_UNIT_KIND_PROMPT_REQUEST = 23;
+  WORK_UNIT_KIND_COMPLETION_RESPONSE = 24;
+  WORK_UNIT_KIND_CHAT_SESSION = 25;
+  WORK_UNIT_KIND_AGENT_STEP = 26;
+  WORK_UNIT_KIND_TOOL_CALL = 27;
+  WORK_UNIT_KIND_RAG_CONTEXT_PACK = 28;
+  WORK_UNIT_KIND_TRAINING_DATASET = 29;
+  WORK_UNIT_KIND_EVALUATION_JOB = 30;
+  WORK_UNIT_KIND_MODEL_CHECKPOINT = 31;
+  WORK_UNIT_KIND_ADAPTER_ARTIFACT = 32;
+  WORK_UNIT_KIND_FINE_TUNE_JOB = 33;
+  WORK_UNIT_KIND_INFERENCE_BATCH = 34;
+  WORK_UNIT_KIND_KV_CACHE_SEGMENT = 35;
+  WORK_UNIT_KIND_SYNTHETIC_DATA_JOB = 36;
+  WORK_UNIT_KIND_BATCH_COMPUTE_JOB = 37;
+  WORK_UNIT_KIND_LIFECYCLE_TRANSITION = 38;
+  WORK_UNIT_KIND_DELETION_CANDIDATE = 39;
+  WORK_UNIT_KIND_REHYDRATION_REQUEST = 40;
+  WORK_UNIT_KIND_POLICY_OVERRIDE = 41;
+  WORK_UNIT_KIND_PLUGIN_ACTION = 42;
+}
+
+message WorkUnit {
+  string id = 1;
+  WorkUnitKind kind = 2;
+  string tenant = 3;
+  string namespace = 4;
+  string logical_ref = 5;
+  Contract requested_contract = 6;
+  google.protobuf.Value payload = 7;
+  google.protobuf.Struct metadata = 8;
+  google.protobuf.Struct policy_context = 9;
+  string trace_id = 10;
+  string created_at = 11;
+  google.protobuf.Value payload_ref = 12;
+  Contract effective_contract = 13;
+  string deadline = 14;
+  uint64 latency_budget_ms = 15;
+  google.protobuf.Struct quality_target = 16;
+}
+
+message WorkUnitQuery {
+  string tenant = 1;
+  string namespace = 2;
+  WorkUnitKind kind = 3;
+  int32 limit = 4;
+}
+
+message WorkUnitIdRequest {
+  string id = 1;
+}
+
+message WorkUnitList {
+  repeated WorkUnit work_units = 1;
+}
+
+message PlanAction {
+  string type = 1;
+  bool required = 2;
+  string risk = 3;
+  google.protobuf.Struct params = 4;
+  string reason = 5;
+}
+
+message Plan {
+  string plan_id = 1;
+  string work_unit_id = 2;
+  repeated PlanAction actions = 3;
+  Contract contract = 4;
+  string policy_bundle_id = 5;
+  string trace_id = 6;
+  string mode = 7;
+  string risk = 8;
+  google.protobuf.Struct expected = 9;
+  string fallback = 10;
+  string tenant = 11;
+}
+
+message PlanRequest {
+  WorkUnit work_unit = 1;
+  string work_unit_id = 2;
+  string mode = 3;
+}
+
+message PlanQuery {
+  string work_unit_id = 1;
+  int32 limit = 2;
+}
+
+message PlanIdRequest {
+  string id = 1;
+}
+
+message PlanList {
+  repeated Plan plans = 1;
+}
+
+message VerificationResult {
+  bool accepted = 1;
+  string verifier_id = 2;
+  string reason = 3;
+  google.protobuf.Struct details = 4;
+}
+
+message ExecuteWorkUnitRequest {
+  WorkUnit work_unit = 1;
+  string work_unit_id = 2;
+  string mode = 3;
+}
+
+message ExecutionResult {
+  string work_unit_id = 1;
+  string manifest_id = 2;
+  bool accepted = 3;
+  string mode = 4;
+  google.protobuf.Value output = 5;
+  google.protobuf.Struct details = 6;
+}
+
+message Manifest {
+  string manifest_version = 1;
+  string manifest_id = 2;
+  string work_unit_id = 3;
+  string tenant = 4;
+  WorkUnitKind kind = 5;
+  Contract contract = 6;
+  string logical_ref = 7;
+  string namespace = 8;
+  string trace_id = 9;
+  string state = 10;
+  string created_at = 11;
+  google.protobuf.Struct policy = 12;
+  google.protobuf.Struct classification = 13;
+  google.protobuf.Struct physical = 14;
+  google.protobuf.Struct plan = 15;
+  google.protobuf.Struct verification = 16;
+  google.protobuf.Struct lineage = 17;
+  google.protobuf.Struct telemetry = 18;
+  repeated google.protobuf.Struct signatures = 19;
+}
+
+message ManifestIdRequest {
+  string id = 1;
+  bool redacted = 2;
+}
+
+message ManifestQuery {
+  string tenant = 1;
+  string logical_ref = 2;
+  bool redacted = 3;
+  int32 limit = 4;
+}
+
+message ManifestList {
+  repeated Manifest manifests = 1;
+}
+
+message RehydrateRequest {
+  string manifest_id = 1;
+  string tenant = 2;
+  uint64 start = 3;
+  uint64 end = 4;
+  bool range_requested = 5;
+}
+
+message RehydrateResponse {
+  string manifest_id = 1;
+  bytes payload = 2;
+  string logical_ref = 3;
+  google.protobuf.Struct metadata = 4;
+}
+
+message ManifestExportRequest {
+  string tenant = 1;
+  bool redacted = 2;
+}
+
+message ManifestExport {
+  repeated Manifest manifests = 1;
+  string exported_at = 2;
+}
+
+message ManifestExplorerReport {
+  uint64 manifest_count = 1;
+  uint64 returned = 2;
+  google.protobuf.Struct filters = 3;
+  google.protobuf.Struct by_kind = 4;
+  google.protobuf.Struct by_contract = 5;
+  google.protobuf.Struct by_state = 6;
+  google.protobuf.Struct totals = 7;
+  repeated google.protobuf.Struct rows = 8;
+}
+
+message LedgerEvent {
+  string event_id = 1;
+  string event_type = 2;
+  string tenant = 3;
+  string work_unit_id = 4;
+  string manifest_id = 5;
+  string policy_bundle_id = 6;
+  string actor = 7;
+  string decision = 8;
+  google.protobuf.Struct details = 9;
+  string trace_id = 10;
+  string prev_hash = 11;
+  string event_hash = 12;
+  string created_at = 13;
+}
+
+message LedgerQuery {
+  string tenant = 1;
+  string work_unit_id = 2;
+  string manifest_id = 3;
+  repeated string event_types = 4;
+  int32 limit = 5;
+}
+
+message LedgerEventList {
+  repeated LedgerEvent events = 1;
+}
+
+message PolicyDecision {
+  Contract contract = 1;
+  repeated string allowed_actions = 2;
+  repeated string denied_actions = 3;
+  string policy_bundle_id = 4;
+  repeated string reasons = 5;
+  string cache_domain = 6;
+  string dedupe_domain = 7;
+  repeated string matched_rules = 8;
+  repeated string required_verifiers = 9;
+  repeated string model_allowlist = 10;
+  bool require_approval = 11;
+}
+
+message PolicyEvaluateRequest {
+  WorkUnit work_unit = 1;
+  google.protobuf.Struct bundle = 2;
+}
+
+message PolicyValidationRequest {
+  google.protobuf.Struct bundle = 1;
+  string yaml = 2;
+}
+
+message PolicyValidationResult {
+  bool valid = 1;
+  string policy_bundle_id = 2;
+  repeated string errors = 3;
+}
+
+message PolicyBundle {
+  string name = 1;
+  string version = 2;
+  google.protobuf.Struct bundle = 3;
+  string created_at = 4;
+}
+
+message PolicyBundleList {
+  repeated PolicyBundle bundles = 1;
+}
+
+message PolicyRollbackRequest {
+  string name = 1;
+  string actor = 2;
+  string reason = 3;
+}
+
+message PolicyRollbackResult {
+  bool rolled_back = 1;
+  string active_bundle = 2;
+  LedgerEvent audit_event = 3;
+}
+
+message PolicyReloadRequest {
+  string name = 1;
+  string actor = 2;
+}
+
+message PolicyReloadResult {
+  string name = 1;
+  string version = 2;
+  bool reloaded = 3;
+  bool record_hash_matches = 4;
+  string reloaded_at = 5;
+}
+
+message CacheLookupRequest {
+  string key = 1;
+  string tenant = 2;
+  string namespace = 3;
+  repeated string source_fingerprints = 4;
+}
+
+message SemanticCacheLookupRequest {
+  string key = 1;
+  string tenant = 2;
+  string namespace = 3;
+  string logical_ref = 4;
+  bool allow_semantic_cache = 5;
+  reserved 6;
+  repeated string source_fingerprints = 7;
+}
+
+message CacheLookupResponse {
+  bool hit = 1;
+  google.protobuf.Value value = 2;
+  string reason = 3;
+}
+
+message CacheStoreRequest {
+  string key = 1;
+  string tenant = 2;
+  string namespace = 3;
+  google.protobuf.Value value = 4;
+  repeated string source_fingerprints = 5;
+  CacheVerification verification = 6;
+  uint32 ttl_seconds = 7;
+}
+
+message CacheVerification {
+  string type = 1;
+  string expected = 2;
+  repeated string required_keys = 3;
+}
+
+message CacheStoreResponse {
+  bool stored = 1;
+  string reason = 2;
+  VerificationResult verification = 3;
+}
+
+message ApprovalRequest {
+  string tenant = 1;
+  Contract contract = 2;
+  string policy_bundle_id = 3;
+  string reason = 4;
+  string work_unit_id = 5;
+  uint32 ttl_seconds = 6;
+}
+
+message Approval {
+  string approval_id = 1;
+  string tenant = 2;
+  string actor = 3;
+  Contract contract = 4;
+  string policy_bundle_id = 5;
+  string created_at = 6;
+  string expires_at = 7;
+  string work_unit_id = 8;
+  string reason = 9;
+  string signature = 10;
+}
+
+message ApprovalQuery {
+  string tenant = 1;
+}
+
+message ApprovalList {
+  repeated Approval approvals = 1;
+}
+
+message OpenAIRequest {
+  google.protobuf.Struct request = 1;
+  string tenant = 2;
+  string namespace = 3;
+}
+
+message OpenAIResponse {
+  google.protobuf.Struct response = 1;
+}
+
+message ModelDescriptor {
+  string id = 1;
+  string object = 2;
+  string owned_by = 3;
+}
+
+message ModelList {
+  repeated ModelDescriptor data = 1;
+}
+
+message PluginDescriptor {
+  string name = 1;
+  string version = 2;
+  repeated string capabilities = 3;
+  string trust_level = 4;
+  google.protobuf.Struct metadata = 5;
+}
+
+message PluginList {
+  repeated PluginDescriptor plugins = 1;
+}
+
+message ConformanceResult {
+  string name = 1;
+  bool passed = 2;
+  repeated string errors = 3;
+  google.protobuf.Struct details = 4;
+}
+
+message ConformanceResultList {
+  repeated ConformanceResult results = 1;
+}
+
+message KMSKeyRequest {
+  string tenant = 1;
+  string key_id = 2;
+  string purpose = 3;
+}
+
+message KMSKeyDescriptor {
+  string tenant = 1;
+  string key_id = 2;
+  string purpose = 3;
+  string created_at = 4;
+}
+
+message BackupRequest {
+  string tenant = 1;
+  bool include_manifests = 2;
+  bool include_ledger = 3;
+}
+
+message BackupManifest {
+  string backup_id = 1;
+  string created_at = 2;
+  google.protobuf.Struct contents = 3;
+}
+
+message RestoreRequest {
+  BackupManifest backup = 1;
+  string actor = 2;
+}
+
+message RestoreResult {
+  bool restored = 1;
+  string restored_at = 2;
+}
+
+message ProductionReadinessRequest {
+  bool use_current_state = 1;
+}
+
+message ProductionReadinessResult {
+  string name = 1;
+  bool passed = 2;
+  google.protobuf.Struct checks = 3;
+  google.protobuf.Struct details = 4;
+}
+
+message PlatformProfile {
+  string name = 1;
+  string display_name = 2;
+  string category = 3;
+  repeated string deployment_targets = 4;
+  repeated string storage_backends = 5;
+  repeated string compute_backends = 6;
+  repeated string ai_providers = 7;
+  repeated string required_capabilities = 8;
+  repeated string required_artifacts = 9;
+  repeated string live_credential_env = 10;
+  repeated string optional_env = 11;
+  repeated string config_keys = 12;
+  repeated string notes = 13;
+}
+
+message PlatformProfileList {
+  repeated PlatformProfile profiles = 1;
+}
+
+message PlatformReadinessRequest {
+  string target = 1;
+  bool require_live = 2;
+}
+
+message PlatformReadinessResult {
+  string target = 1;
+  bool contract_ready = 2;
+  bool live_ready = 3;
+  bool passed = 4;
+  google.protobuf.Struct checks = 5;
+  google.protobuf.Struct details = 6;
+}
+
+message PlatformReadinessList {
+  repeated PlatformReadinessResult results = 1;
+}
+
+message PlatformMatrix {
+  uint64 platform_count = 1;
+  uint64 contract_ready_count = 2;
+  uint64 live_ready_count = 3;
+  repeated PlatformReadinessResult targets = 4;
+}
+
+message SchedulerSubmitRequest {
+  WorkUnit work_unit = 1;
+  string earliest_start = 2;
+  string deadline = 3;
+  google.protobuf.Struct constraints = 4;
+}
+
+message SchedulerDecision {
+  string job_id = 1;
+  string work_unit_id = 2;
+  string scheduled_at = 3;
+  string reason = 4;
+  google.protobuf.Struct details = 5;
+}
+
+message SchedulerDecisionList {
+  repeated SchedulerDecision jobs = 1;
+}
+
+message PutObjectRequest {
+  string tenant = 1;
+  string namespace = 2;
+  string bucket = 3;
+  string key = 4;
+  bytes body = 5;
+  google.protobuf.Struct metadata = 6;
+  google.protobuf.Struct tags = 7;
+}
+
+message ObjectByManifestRequest {
+  string manifest_id = 1;
+  string tenant = 2;
+}
+
+message RangeReadRequest {
+  string manifest_id = 1;
+  string tenant = 2;
+  uint64 start = 3;
+  uint64 end = 4;
+}
+
+message ListObjectsRequest {
+  string tenant = 1;
+  string bucket = 2;
+  string prefix = 3;
+}
+
+message DeleteObjectRequest {
+  string manifest_id = 1;
+  string tenant = 2;
+  string actor = 3;
+  bool allow_delete = 4;
+}
+
+message ObjectDescriptor {
+  string manifest_id = 1;
+  string bucket = 2;
+  string key = 3;
+  string etag = 4;
+  uint64 size = 5;
+  google.protobuf.Struct metadata = 6;
+  google.protobuf.Struct tags = 7;
+  string state = 8;
+}
+
+message ObjectList {
+  repeated ObjectDescriptor objects = 1;
+  uint64 count = 2;
+}
+
+message DeleteObjectResult {
+  string manifest_id = 1;
+  bool deleted = 2;
+  string reason = 3;
+  string state = 4;
+  bool raw_chunks_retained = 5;
+}
+
+message ObjectBytes {
+  string manifest_id = 1;
+  bytes body = 2;
+  uint64 start = 3;
+  uint64 end = 4;
+}
+
+message MultipartCreateRequest {
+  string tenant = 1;
+  string namespace = 2;
+  string bucket = 3;
+  string key = 4;
+  google.protobuf.Struct metadata = 5;
+  google.protobuf.Struct tags = 6;
+}
+
+message MultipartUpload {
+  string upload_id = 1;
+  string bucket = 2;
+  string key = 3;
+}
+
+message MultipartPartRequest {
+  string upload_id = 1;
+  uint32 part_number = 2;
+  bytes body = 3;
+}
+
+message MultipartPart {
+  string upload_id = 1;
+  uint32 part_number = 2;
+  string etag = 3;
+  uint64 size = 4;
+}
+
+message MultipartCompleteRequest {
+  string upload_id = 1;
+}
+
+message MultipartAbortRequest {
+  string upload_id = 1;
+}
+
+message MultipartAbortResult {
+  string upload_id = 1;
+  bool aborted = 2;
+}
+
+message TraceQuery {
+  string trace_id = 1;
+  string tenant = 2;
+  int32 limit = 3;
+}
+
+message TraceSpan {
+  string trace_id = 1;
+  string span_id = 2;
+  string name = 3;
+  string started_at = 4;
+  string ended_at = 5;
+  google.protobuf.Struct attributes = 6;
+}
+
+message TraceSpanList {
+  repeated TraceSpan spans = 1;
+}
+
+message LogQuery {
+  string tenant = 1;
+  string work_unit_id = 2;
+  string manifest_id = 3;
+  repeated string event_types = 4;
+  string trace_id = 5;
+  string severity = 6;
+  string error_code = 7;
+  int32 limit = 8;
+}
+
+message StructuredLogEntry {
+  string log_id = 1;
+  string created_at = 2;
+  string severity = 3;
+  string event_type = 4;
+  string tenant = 5;
+  string work_unit_id = 6;
+  string manifest_id = 7;
+  string policy_bundle_id = 8;
+  string trace_id = 9;
+  string error_code = 10;
+  string message = 11;
+  google.protobuf.Struct details = 12;
+}
+
+message StructuredLogEntryList {
+  repeated StructuredLogEntry logs = 1;
+}
+
+message AuthCheckRequest {
+  string subject = 1;
+  string tenant = 2;
+  repeated string roles = 3;
+  string action = 4;
+  string resource_tenant = 5;
+}
+
+message AuthCheckResponse {
+  bool allowed = 1;
+  string reason = 2;
+}
+
+message SavingsReportRequest {
+  string tenant = 1;
+}
+
+message SavingsReport {
+  string tenant = 1;
+  google.protobuf.Struct metrics = 2;
+}
+
+message DashboardReport {
+  string tenant = 1;
+  google.protobuf.Struct executive = 2;
+  google.protobuf.Struct platform = 3;
+  google.protobuf.Struct ai = 4;
+  google.protobuf.Struct data = 5;
+  google.protobuf.Struct security = 6;
+  google.protobuf.Struct summary = 7;
+}
+
+message RouteFeedbackSummary {
+  google.protobuf.Struct routes = 1;
+}
+
+service WorkUnitService {
+  rpc CreateWorkUnit(WorkUnit) returns (WorkUnit);
+  rpc ListWorkUnits(WorkUnitQuery) returns (WorkUnitList);
+  rpc GetWorkUnit(WorkUnitIdRequest) returns (WorkUnit);
+  rpc PlanWorkUnit(PlanRequest) returns (Plan);
+  rpc ExecuteWorkUnit(ExecuteWorkUnitRequest) returns (ExecutionResult);
+}
+
+service PlanService {
+  rpc CreatePlan(PlanRequest) returns (Plan);
+  rpc ListPlans(PlanQuery) returns (PlanList);
+  rpc GetPlan(PlanIdRequest) returns (Plan);
+}
+
+service ManifestService {
+  rpc ListManifests(ManifestQuery) returns (ManifestList);
+  rpc GetManifest(ManifestIdRequest) returns (Manifest);
+  rpc RehydrateManifest(RehydrateRequest) returns (RehydrateResponse);
+  rpc ExportManifests(ManifestExportRequest) returns (ManifestExport);
+  rpc ExploreManifests(ManifestQuery) returns (ManifestExplorerReport);
+}
+
+service PolicyService {
+  rpc EvaluatePolicy(PolicyEvaluateRequest) returns (PolicyDecision);
+  rpc ValidatePolicy(PolicyValidationRequest) returns (PolicyValidationResult);
+  rpc ListPolicyBundles(google.protobuf.Empty) returns (PolicyBundleList);
+  rpc PublishPolicyBundle(PolicyBundle) returns (PolicyBundle);
+  rpc RollbackPolicyBundle(PolicyRollbackRequest) returns (PolicyRollbackResult);
+  rpc ReloadPolicyBundle(PolicyReloadRequest) returns (PolicyReloadResult);
+}
+
+service ApprovalService {
+  rpc IssueApproval(ApprovalRequest) returns (Approval);
+  rpc ListApprovals(ApprovalQuery) returns (ApprovalList);
+}
+
+service LedgerService {
+  rpc QueryLedger(LedgerQuery) returns (LedgerEventList);
+  rpc StreamLedger(LedgerQuery) returns (stream LedgerEvent);
+  rpc AppendEvent(LedgerEvent) returns (LedgerEvent);
+}
+
+service CacheService {
+  rpc LookupExactCache(CacheLookupRequest) returns (CacheLookupResponse);
+  rpc LookupSemanticCache(SemanticCacheLookupRequest) returns (CacheLookupResponse);
+  rpc StoreCacheEntry(CacheStoreRequest) returns (CacheStoreResponse);
+}
+
+service AIService {
+  rpc ChatCompletions(OpenAIRequest) returns (OpenAIResponse);
+  rpc Completions(OpenAIRequest) returns (OpenAIResponse);
+  rpc Embeddings(OpenAIRequest) returns (OpenAIResponse);
+  rpc ListModels(google.protobuf.Empty) returns (ModelList);
+  rpc RunAIConformance(google.protobuf.Empty) returns (ConformanceResult);
+}
+
+service PluginService {
+  rpc ListPlugins(google.protobuf.Empty) returns (PluginList);
+  rpc RegisterPlugin(PluginDescriptor) returns (PluginDescriptor);
+  rpc RunAdapterConformance(google.protobuf.Empty) returns (ConformanceResultList);
+}
+
+service ObjectGatewayService {
+  rpc PutObject(PutObjectRequest) returns (ObjectDescriptor);
+  rpc HeadObject(ObjectByManifestRequest) returns (ObjectDescriptor);
+  rpc GetObject(ObjectByManifestRequest) returns (ObjectBytes);
+  rpc RangeRead(RangeReadRequest) returns (ObjectBytes);
+  rpc ListObjects(ListObjectsRequest) returns (ObjectList);
+  rpc DeleteObject(DeleteObjectRequest) returns (DeleteObjectResult);
+  rpc CreateMultipartUpload(MultipartCreateRequest) returns (MultipartUpload);
+  rpc UploadMultipartPart(MultipartPartRequest) returns (MultipartPart);
+  rpc CompleteMultipartUpload(MultipartCompleteRequest) returns (ObjectDescriptor);
+  rpc AbortMultipartUpload(MultipartAbortRequest) returns (MultipartAbortResult);
+}
+
+service SchedulerService {
+  rpc SubmitJob(SchedulerSubmitRequest) returns (SchedulerDecision);
+  rpc ListJobs(google.protobuf.Empty) returns (SchedulerDecisionList);
+}
+
+service AdminService {
+  rpc CreateKMSKey(KMSKeyRequest) returns (KMSKeyDescriptor);
+  rpc BackupState(BackupRequest) returns (BackupManifest);
+  rpc RestoreState(RestoreRequest) returns (RestoreResult);
+  rpc CheckAuthorization(AuthCheckRequest) returns (AuthCheckResponse);
+  rpc GetProductionReadiness(ProductionReadinessRequest) returns (ProductionReadinessResult);
+}
+
+service PlatformService {
+  rpc ListPlatformProfiles(google.protobuf.Empty) returns (PlatformProfileList);
+  rpc GetPlatformReadiness(PlatformReadinessRequest) returns (PlatformReadinessList);
+  rpc GetPlatformMatrix(google.protobuf.Empty) returns (PlatformMatrix);
+}
+
+service ObservabilityService {
+  rpc GetSavingsReport(SavingsReportRequest) returns (SavingsReport);
+  rpc GetDashboardReport(SavingsReportRequest) returns (DashboardReport);
+  rpc GetRouteFeedback(google.protobuf.Empty) returns (RouteFeedbackSummary);
+  rpc QueryTraces(TraceQuery) returns (TraceSpanList);
+  rpc QueryLogs(LogQuery) returns (StructuredLogEntryList);
+}

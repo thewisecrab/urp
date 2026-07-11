@@ -1,0 +1,33 @@
+cff-version: 1.2.0
+message: "If you use URP, cite this software and identify the exact release or commit."
+title: "Universal Reduction Plane"
+type: software
+version: 0.1.0
+date-released: 2026-07-11
+abstract: >-
+  Universal Reduction Plane is a compatibility-first control and execution layer
+  for reducing unnecessary storage, data transfer, and AI compute through WorkUnits,
+  preservation contracts, policy, verification, manifests, and an audit ledger.
+authors:
+  - family-names: "thewisecrab"
+    alias: "thewisecrab"
+    website: "https://github.com/thewisecrab"
+repository-code: "https://github.com/thewisecrab/urp"
+url: "https://thewisecrab.github.io/urp/"
+license: Apache-2.0
+keywords:
+  - AI infrastructure
+  - data reduction
+  - exact cache
+  - FinOps
+  - OpenAI-compatible gateway
+  - S3 gateway
+  - WorkUnit
+references:
+  - type: article
+    title: "Universal Reduction Plane: A compatibility-first control plane for reducing data and AI waste"
+    authors:
+      - family-names: "thewisecrab"
+        alias: "thewisecrab"
+    year: 2026
+    url: "https://thewisecrab.github.io/urp/WHITE_PAPER/"

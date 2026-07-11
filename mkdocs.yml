@@ -1,0 +1,125 @@
+site_name: Universal Reduction Plane
+site_description: A compatibility-first control plane for reducing unnecessary data, transfer, and AI compute with contracts, verification, manifests, and an audit ledger.
+site_author: URP contributors
+site_url: https://thewisecrab.github.io/urp/
+repo_name: thewisecrab/urp
+repo_url: https://github.com/thewisecrab/urp
+edit_uri: edit/main/docs/
+copyright: Copyright 2026 URP contributors. Apache-2.0 licensed.
+
+theme:
+  name: material
+  custom_dir: docs/overrides
+  language: en
+  features:
+    - content.action.edit
+    - content.code.copy
+    - content.tabs.link
+    - navigation.footer
+    - navigation.indexes
+    - navigation.instant
+    - navigation.sections
+    - navigation.tabs
+    - navigation.top
+    - search.highlight
+    - search.share
+    - search.suggest
+    - toc.follow
+  palette:
+    - media: "(prefers-color-scheme: light)"
+      scheme: urp-light
+      primary: custom
+      accent: custom
+      toggle:
+        icon: material/weather-night
+        name: Switch to dark mode
+    - media: "(prefers-color-scheme: dark)"
+      scheme: urp-dark
+      primary: custom
+      accent: custom
+      toggle:
+        icon: material/weather-sunny
+        name: Switch to light mode
+
+plugins:
+  - search:
+      lang: en
+  - minify:
+      minify_html: true
+
+markdown_extensions:
+  - abbr
+  - admonition
+  - attr_list
+  - def_list
+  - footnotes
+  - md_in_html
+  - tables
+  - toc:
+      permalink: true
+  - pymdownx.details
+  - pymdownx.highlight:
+      anchor_linenums: true
+  - pymdownx.inlinehilite
+  - pymdownx.snippets
+  - pymdownx.superfences:
+      custom_fences:
+        - name: mermaid
+          class: mermaid
+          format: !!python/name:pymdownx.superfences.fence_code_format
+  - pymdownx.tabbed:
+      alternate_style: true
+  - pymdownx.tasklist:
+      custom_checkbox: true
+
+extra_css:
+  - assets/stylesheets/extra.css
+
+extra:
+  version:
+    provider: mike
+    default: latest
+  social:
+    - icon: fontawesome/brands/github
+      link: https://github.com/thewisecrab/urp
+      name: URP on GitHub
+  analytics:
+    feedback:
+      title: Was this page useful?
+      ratings:
+        - icon: material/thumb-up-outline
+          name: This page was useful
+          data: 1
+          note: Thanks for the feedback.
+        - icon: material/thumb-down-outline
+          name: This page needs improvement
+          data: 0
+          note: Open a documentation issue with the missing detail.
+
+nav:
+  - Overview: index.md
+  - Get Started:
+      - Start Here: 00_START_HERE.md
+      - Deployment Quickstart: DEPLOYMENT_QUICKSTART.md
+      - FAQ: FAQ.md
+  - Concepts:
+      - Product Explainer: 01_PRODUCT_EXPLAINER.md
+      - Architecture: 02_IDEAL_STATE_ARCHITECTURE.md
+      - WorkUnit and Manifest: 03_UNIFIED_WORK_UNIT_AND_MANIFEST_MODEL.md
+      - Algorithms: 04_REDUCTION_AND_AI_ALGORITHMS.md
+  - Build:
+      - Adapter Catalog: 05_ADAPTER_CATALOG_AND_COMPATIBILITY.md
+      - API and Protocols: 07_APIS_SCHEMAS_PROTOCOLS.md
+      - Implementation Blueprint: 08_IMPLEMENTATION_BLUEPRINT_CODEX.md
+      - Deployment Playbooks: 12_DEPLOYMENT_PLAYBOOKS.md
+      - Platform Readiness: 13_PLATFORM_READINESS.md
+  - Operate:
+      - Policy and Security: 06_POLICY_SECURITY_COMPLIANCE.md
+      - Observability and Benchmarks: 09_OBSERVABILITY_BENCHMARKS_OPS.md
+      - Migration Notes: MIGRATION_NOTES.md
+  - Research:
+      - White Paper: WHITE_PAPER.md
+      - Research Landscape: 10_RESEARCH_LANDSCAPE.md
+      - Discoverability: DISCOVERABILITY.md
+  - Community:
+      - Governance and Adoption: 11_OPEN_SOURCE_GOVERNANCE_ADOPTION.md

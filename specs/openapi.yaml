@@ -1,0 +1,705 @@
+openapi: 3.1.0
+info:
+  title: Universal Reduction Plane API
+  version: 0.1.0
+  description: URP control API for work units, manifests, policy, ledger, cache, and AI gateway metadata.
+servers:
+  - url: http://localhost:8080
+security:
+  - bearerAuth: []
+  - apiKeyAuth: []
+paths:
+  /healthz:
+    get:
+      summary: Health check
+      security: []
+      responses:
+        "200":
+          description: Healthy
+  /readyz:
+    get:
+      summary: Dependency readiness check
+      security: []
+      responses:
+        "200":
+          description: Dependencies ready
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/Readiness" }
+        "503":
+          description: One or more dependencies unavailable
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/Readiness" }
+  /metrics:
+    get:
+      summary: Prometheus metrics
+      responses:
+        "200":
+          description: Metrics
+  /v1/work-units:
+    get:
+      summary: List stored work units
+      responses:
+        "200":
+          description: Work unit list
+    post:
+      summary: Create a work unit
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "./urp_work_unit.schema.json"
+      responses:
+        "200":
+          description: Work unit accepted
+  /v1/work-units/{id}:
+    get:
+      summary: Get a stored work unit
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema: { type: string }
+      responses:
+        "200":
+          description: Work unit
+  /v1/work-units/{id}/plan:
+    post:
+      summary: Plan a work unit
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema: { type: string }
+      responses:
+        "200":
+          description: Plan
+  /v1/work-units/plan:
+    post:
+      summary: Plan an inline work unit
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+      responses:
+        "200":
+          description: Plan
+  /v1/work-units/{id}/execute:
+    post:
+      summary: Execute a plan for a work unit
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema: { type: string }
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                mode:
+                  type: string
+                  enum: [observe, shadow, enforce]
+      responses:
+        "200":
+          description: Execution result
+  /v1/work-units/execute:
+    post:
+      summary: Execute an inline work unit
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+      responses:
+        "200":
+          description: Execution result
+  /v1/plans:
+    get:
+      summary: List stored plans
+      parameters:
+        - name: work_unit_id
+          in: query
+          required: false
+          schema: { type: string }
+      responses:
+        "200":
+          description: Plan list
+    post:
+      summary: Create and store an inline work-unit plan
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+      responses:
+        "200":
+          description: Stored plan
+  /v1/plans/{id}:
+    get:
+      summary: Get a stored plan
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema: { type: string }
+      responses:
+        "200":
+          description: Plan
+  /v1/manifests/{id}:
+    get:
+      summary: Get a manifest
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema: { type: string }
+      responses:
+        "200":
+          description: Manifest
+  /v1/manifests:
+    get:
+      summary: List manifests or query by logical ref
+      parameters:
+        - name: logical_ref
+          in: query
+          required: false
+          schema: { type: string }
+        - name: tenant
+          in: query
+          required: false
+          schema: { type: string }
+        - name: redacted
+          in: query
+          required: false
+          schema: { type: boolean }
+      responses:
+        "200":
+          description: Manifest list
+  /v1/manifests/explore:
+    get:
+      summary: Explore manifests with aggregate counts and redacted rows
+      parameters:
+        - name: tenant
+          in: query
+          required: false
+          schema: { type: string }
+        - name: kind
+          in: query
+          required: false
+          schema: { type: string }
+        - name: contract
+          in: query
+          required: false
+          schema: { type: string }
+        - name: state
+          in: query
+          required: false
+          schema: { type: string }
+        - name: limit
+          in: query
+          required: false
+          schema: { type: integer }
+        - name: redacted
+          in: query
+          required: false
+          schema: { type: boolean }
+      responses:
+        "200":
+          description: Manifest explorer report
+  /v1/manifests/{id}/rehydrate:
+    post:
+      summary: Rehydrate a manifest
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema: { type: string }
+      responses:
+        "200":
+          description: Verified rehydrated bytes
+          content:
+            application/octet-stream:
+              schema: { type: string, format: binary }
+  /v1/manifests/export:
+    post:
+      summary: Export manifests for migration or audit
+      responses:
+        "200":
+          description: Manifest export
+  /v1/policies/validate:
+    post:
+      summary: Validate policy YAML or JSON
+      responses:
+        "200":
+          description: Validation result
+  /v1/policies/bundles:
+    get:
+      summary: List policy bundles
+      responses:
+        "200":
+          description: Policy bundle list
+    post:
+      summary: Publish policy bundle with audit
+      responses:
+        "200":
+          description: Published policy bundle
+  /v1/policies/bundles/{name}/rollback:
+    post:
+      summary: Roll back an active policy bundle with audit
+      parameters:
+        - name: name
+          in: path
+          required: true
+          schema: { type: string }
+      responses:
+        "200":
+          description: Rollback result
+  /v1/policies/bundles/{name}/reload:
+    post:
+      summary: Reload and validate an active policy bundle with audit
+      parameters:
+        - name: name
+          in: path
+          required: true
+          schema: { type: string }
+      responses:
+        "200":
+          description: Reload result
+  /v1/approvals:
+    get:
+      summary: List signed approvals in the authorized tenant
+      parameters:
+        - name: tenant
+          in: query
+          required: false
+          schema: { type: string }
+      responses:
+        "200":
+          description: Approval list
+          content:
+            application/json:
+              schema:
+                type: array
+                items: { $ref: "#/components/schemas/Approval" }
+    post:
+      summary: Issue a short-lived signed policy approval
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: "#/components/schemas/ApprovalRequest" }
+      responses:
+        "200":
+          description: Signed approval
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/Approval" }
+  /v1/approvals/{id}:
+    get:
+      summary: Get and verify a signed approval
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema: { type: string, pattern: '^appr_[A-Za-z0-9._-]+$' }
+      responses:
+        "200":
+          description: Signed approval
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/Approval" }
+  /v1/plugins:
+    get:
+      summary: List registered plugins
+      responses:
+        "200":
+          description: Plugin list
+  /v1/plugins/register:
+    post:
+      summary: Register plugin descriptor
+      responses:
+        "200":
+          description: Registered plugin descriptor
+  /v1/adapters/conformance:
+    get:
+      summary: Run adapter conformance checks
+      responses:
+        "200":
+          description: Adapter conformance results
+  /v1/conformance/ai:
+    get:
+      summary: Run OpenAI-compatible AI gateway conformance checks
+      responses:
+        "200":
+          description: AI gateway conformance result
+  /v1/kms/keys:
+    post:
+      summary: Create local development key
+      responses:
+        "200":
+          description: Local key descriptor
+  /v1/admin/backup:
+    post:
+      summary: Export local URP state backup
+      responses:
+        "200":
+          description: Backup manifest
+  /v1/admin/restore:
+    post:
+      summary: Restore local URP state backup
+      responses:
+        "200":
+          description: Restore result
+  /v1/admin/readiness:
+    get:
+      summary: Run local production-readiness and chaos checks
+      responses:
+        "200":
+          description: Production-readiness result
+  /v1/platforms:
+    get:
+      summary: List built-in platform profiles
+      responses:
+        "200":
+          description: Platform profiles for local, Kubernetes, cloud, on-prem, edge, provider, and CI/CD targets
+  /v1/platforms/readiness:
+    get:
+      summary: Validate platform contract readiness and optional live credential readiness
+      parameters:
+        - name: target
+          in: query
+          required: false
+          schema: { type: string, default: all }
+        - name: require_live
+          in: query
+          required: false
+          schema: { type: boolean, default: false }
+      responses:
+        "200":
+          description: Platform readiness result
+  /v1/platforms/matrix:
+    get:
+      summary: Return the all-platform readiness matrix
+      responses:
+        "200":
+          description: Platform readiness matrix
+  /v1/policies/evaluate:
+    post:
+      summary: Evaluate policy against a work unit
+      responses:
+        "200":
+          description: Policy decision
+  /v1/ledger/query:
+    post:
+      summary: Query ledger events
+      responses:
+        "200":
+          description: Ledger results
+  /v1/ledger/stream:
+    get:
+      summary: Stream local ledger events as Server-Sent Events
+      parameters:
+        - name: tenant
+          in: query
+          required: false
+          schema: { type: string }
+        - name: work_unit_id
+          in: query
+          required: false
+          schema: { type: string }
+        - name: manifest_id
+          in: query
+          required: false
+          schema: { type: string }
+        - name: event_types
+          in: query
+          required: false
+          schema: { type: string }
+        - name: limit
+          in: query
+          required: false
+          schema: { type: integer }
+      responses:
+        "200":
+          description: text/event-stream ledger events
+  /v1/reports/savings:
+    get:
+      summary: Savings report
+      responses:
+        "200":
+          description: Savings report
+  /v1/reports/dashboard:
+    get:
+      summary: Local dashboard report
+      responses:
+        "200":
+          description: Executive, platform, AI, data, and security dashboard sections
+  /v1/routes/feedback:
+    get:
+      summary: Model route feedback summary
+      responses:
+        "200":
+          description: Route feedback summary
+  /v1/benchmarks/run:
+    post:
+      summary: Run local benchmark suite
+      responses:
+        "200":
+          description: Benchmark result
+  /v1/scheduler/submit:
+    post:
+      summary: Submit a local flexible job to the scheduler
+      responses:
+        "200":
+          description: Schedule decision
+  /v1/scheduler/jobs:
+    get:
+      summary: List local scheduler decisions
+      responses:
+        "200":
+          description: Scheduler job history
+  /v1/s3/objects:
+    post:
+      summary: Local S3 facade PutObject
+      responses:
+        "200":
+          description: Object put result
+  /v1/s3/objects/head:
+    post:
+      summary: Local S3 facade HeadObject by manifest id
+      responses:
+        "200":
+          description: Object metadata
+  /v1/s3/objects/get:
+    post:
+      summary: Local S3 facade GetObject by manifest id
+      responses:
+        "200":
+          description: Verified object bytes
+          content:
+            application/octet-stream:
+              schema: { type: string, format: binary }
+  /v1/s3/objects/range:
+    post:
+      summary: Local S3 facade range read by manifest id
+      responses:
+        "200":
+          description: Verified byte range
+          content:
+            application/octet-stream:
+              schema: { type: string, format: binary }
+  /v1/s3/objects/list:
+    post:
+      summary: Local S3 facade ListObjectsV2 by bucket and prefix
+      responses:
+        "200":
+          description: Object manifest list with metadata and tags
+  /v1/s3/objects/delete:
+    post:
+      summary: Local S3 facade DeleteObject policy gate
+      responses:
+        "200":
+          description: Denied-by-default delete decision or tombstone result
+  /v1/s3/multipart/create:
+    post:
+      summary: Create a local S3 multipart upload
+      responses:
+        "200":
+          description: Multipart upload descriptor
+  /v1/s3/multipart/part:
+    post:
+      summary: Upload a local S3 multipart part
+      responses:
+        "200":
+          description: Uploaded part descriptor
+  /v1/s3/multipart/complete:
+    post:
+      summary: Complete a local S3 multipart upload into a manifest
+      responses:
+        "200":
+          description: Completed object descriptor
+  /v1/s3/multipart/abort:
+    post:
+      summary: Abort a local S3 multipart upload
+      responses:
+        "200":
+          description: Abort result
+  /v1/traces/query:
+    post:
+      summary: Query local trace spans
+      responses:
+        "200":
+          description: Trace spans
+  /v1/logs/query:
+    post:
+      summary: Query redacted structured operational logs
+      responses:
+        "200":
+          description: Structured log entries
+  /v1/auth/check:
+    post:
+      summary: Local authorization check
+      responses:
+        "200":
+          description: Authorization decision
+  /v1/cache/exact/lookup:
+    post:
+      summary: Exact cache lookup
+      responses:
+        "200":
+          description: Cache lookup result
+  /v1/cache/semantic/lookup:
+    post:
+      summary: Policy-gated semantic cache lookup
+      responses:
+        "200":
+          description: Cache lookup result
+  /v1/cache/store:
+    post:
+      summary: Run a server-side verifier and store an exact cache entry
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: "#/components/schemas/CacheStoreRequest" }
+      responses:
+        "200":
+          description: Cache store result
+  /v1/chat/completions:
+    post:
+      summary: OpenAI-compatible chat completions gateway
+      responses:
+        "200":
+          description: Chat completion
+  /v1/completions:
+    post:
+      summary: OpenAI-compatible text completions gateway
+      responses:
+        "200":
+          description: Text completion
+  /v1/embeddings:
+    post:
+      summary: OpenAI-compatible embeddings gateway
+      responses:
+        "200":
+          description: Embedding response
+  /v1/models:
+    get:
+      summary: OpenAI-compatible model list
+      responses:
+        "200":
+          description: Model list
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: API key
+    apiKeyAuth:
+      type: apiKey
+      in: header
+      name: X-API-Key
+  schemas:
+    WorkUnit:
+      $ref: "./urp_work_unit.schema.json"
+    Manifest:
+      $ref: "./urp_manifest.schema.json"
+    LedgerEvent:
+      $ref: "./urp_ledger_event.schema.json"
+    Error:
+      type: object
+      required: [error]
+      properties:
+        error:
+          type: object
+          required: [code, message, retryable, details]
+          properties:
+            code: { type: string }
+            message: { type: string }
+            retryable: { type: boolean }
+            details:
+              type: object
+              additionalProperties: true
+    Readiness:
+      type: object
+      required: [ok, checks, errors]
+      properties:
+        ok: { type: boolean }
+        checks:
+          type: object
+          additionalProperties: { type: boolean }
+        errors:
+          type: object
+          additionalProperties: { type: string }
+    ApprovalRequest:
+      type: object
+      required: [tenant, contract, policy_bundle_id, reason]
+      additionalProperties: false
+      properties:
+        tenant: { type: string, minLength: 1 }
+        contract:
+          type: string
+          enum: [exact_bytes, exact_logical, bounded_approx, semantic, derived, tombstone]
+        policy_bundle_id: { type: string, minLength: 1 }
+        reason: { type: string, minLength: 1, maxLength: 2048 }
+        work_unit_id: { type: string }
+        ttl_seconds: { type: integer, minimum: 1, maximum: 86400, default: 900 }
+    Approval:
+      type: object
+      required: [approval_id, tenant, actor, contract, policy_bundle_id, reason, created_at, expires_at, signature]
+      additionalProperties: false
+      properties:
+        approval_id: { type: string, pattern: '^appr_[A-Za-z0-9._-]+$' }
+        tenant: { type: string, minLength: 1 }
+        actor: { type: string, minLength: 1 }
+        contract:
+          type: string
+          enum: [exact_bytes, exact_logical, bounded_approx, semantic, derived, tombstone]
+        policy_bundle_id: { type: string, minLength: 1 }
+        reason: { type: string, minLength: 1, maxLength: 2048 }
+        work_unit_id: { type: [string, "null"] }
+        created_at: { type: string, format: date-time }
+        expires_at: { type: string, format: date-time }
+        signature: { type: string, pattern: '^[0-9a-f]{64}$' }
+    CacheStoreRequest:
+      type: object
+      required: [key, tenant, value, verification]
+      additionalProperties: false
+      properties:
+        key: { type: string, minLength: 1 }
+        tenant: { type: string, minLength: 1 }
+        namespace: { type: string, default: default }
+        value: {}
+        source_fingerprints:
+          type: array
+          items: { type: string }
+          uniqueItems: true
+        ttl_seconds: { type: integer, minimum: 1, maximum: 86400, default: 3600 }
+        verification:
+          type: object
+          required: [type]
+          additionalProperties: false
+          properties:
+            type:
+              type: string
+              enum: [chat_completion, embedding_shape, json_shape, non_empty_text, sha256]
+            expected: { type: string }
+            required_keys:
+              type: array
+              items: { type: string }
+  responses:
+    Unauthorized:
+      description: Authentication required or invalid
+      content:
+        application/json:
+          schema: { $ref: "#/components/schemas/Error" }
+    Forbidden:
+      description: Principal is not authorized for this action or tenant
+      content:
+        application/json:
+          schema: { $ref: "#/components/schemas/Error" }

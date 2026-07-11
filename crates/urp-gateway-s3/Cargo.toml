@@ -1,0 +1,17 @@
+[package]
+name = "urp-gateway-s3"
+version.workspace = true
+edition.workspace = true
+rust-version.workspace = true
+license.workspace = true
+repository.workspace = true
+homepage.workspace = true
+authors.workspace = true
+description = "S3 gateway contract types for the Universal Reduction Plane"
+
+[lib]
+name = "urp_gateway_s3"
+path = "src/lib.rs"
+
+[dependencies]
+urp-core = { path = "../urp-core" }

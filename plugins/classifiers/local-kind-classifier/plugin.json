@@ -1,0 +1,17 @@
+{
+  "api_version": "urp.plugin.v1",
+  "name": "local-kind-classifier",
+  "version": "0.1.0",
+  "capabilities": [
+    "classifier.work_unit_kind",
+    "classifier.local_safe_default"
+  ],
+  "trust_level": "core",
+  "category": "classifiers",
+  "contracts": ["exact_bytes", "exact_logical", "semantic"],
+  "entrypoint": "src/urp_plugin.py",
+  "entrypoint_sha256": "2cf0f4afed7eda1894118b06bb9175079df2500f886f14f6f1653a31113184c0",
+  "operations": ["classify_work_unit"],
+  "network_access": false,
+  "default_enabled": true
+}
