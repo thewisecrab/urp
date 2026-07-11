@@ -1,5 +1,5 @@
 {
-  "content_digest": "2543de3d8d4b5a1a779dc3356a05517330c8b0f3080e252952282bddb173ff2f",
+  "content_digest": "d3a918b6c1c687d5d5d3ad6c714b6b7aa13af05b88535fa07aa7f6af4b2977bb",
   "content_digest_algorithm": "sha256(stable-json(files))",
   "excluded_roots": [
     ".DS_Store",
@@ -81,8 +81,8 @@
       "size": 1268
     },
     ".github/workflows/release.yaml": {
-      "sha256": "cf3be1bd3102a94b919b2809150bad22381a5e95fb674c6823569a609d02bc16",
-      "size": 4180
+      "sha256": "6543f1d219dcd417fe55bd39d717232c5148e2bec122fd9e69021ad402365d71",
+      "size": 4590
     },
     ".github/workflows/scorecard.yaml": {
       "sha256": "5cc7c5ac782b056712c348d4c93ef9f331b7c27a94e66ce74fab437a901a2d24",
@@ -489,7 +489,7 @@
       "size": 2066
     },
     "line_count_manifest.json": {
-      "sha256": "709ab7a10ae974f485565e88a411379d85bc348fd7f3c9c7e1009178733cba1a",
+      "sha256": "ba5257ab524e3e815cf9a9fbce70ee8da0c9551dd45bddc32fc3d1a7e169d181",
       "size": 9925
     },
     "mkdocs.yml": {
@@ -501,7 +501,7 @@
       "size": 57785
     },
     "package_manifest.json": {
-      "sha256": "12d810b76002a19ee4d40e5141f73fd2cff52bf12b3494871ba6845eedac6507",
+      "sha256": "24ccbb33a3b3194f2e797a04b9fd0def22cf7878621821bd6907ca96e04b8123",
       "size": 2004
     },
     "plugins/README.md": {
@@ -1041,7 +1041,7 @@
       "size": 436
     }
   },
-  "generated_at": "2026-07-11T08:24:34.363283+00:00",
+  "generated_at": "2026-07-11T08:32:45.343566+00:00",
   "manifest_version": "urp.release.v2",
   "provenance": {
     "archive_policy": "archive/source_packages is preserved in the repository but excluded from the active release manifest",
@@ -1049,7 +1049,7 @@
     "git": {
       "available": true,
       "branch": "main",
-      "commit": "6cc29ebe91350f4c83370786cf0be0153fbf5087",
+      "commit": "0c83501ff7f02f338029513715adcf6aa9892f27",
       "dirty": false
     },
     "platform": "macOS-26.5.1-arm64-arm-64bit-Mach-O",
