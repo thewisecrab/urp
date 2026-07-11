@@ -1,0 +1,76 @@
+{
+  "active_file_count": 252,
+  "canonical_layout": {
+    "archived_sources": "archive/source_packages",
+    "deployments": "deployments",
+    "go": "go",
+    "plugins": "plugins",
+    "python": "python/urp",
+    "rust": [
+      "crates/urp-core",
+      "crates/urp-chunker",
+      "crates/urp-gateway-s3"
+    ],
+    "services": "services",
+    "specs": "specs",
+    "tests": "tests",
+    "typescript": "typescript"
+  },
+  "core_model": [
+    "WorkUnit",
+    "Contract",
+    "Plan",
+    "PlanAction",
+    "Manifest",
+    "LedgerEvent",
+    "PolicyDecision",
+    "VerificationResult"
+  ],
+  "default_safety": {
+    "authentication": "required",
+    "cross_tenant_cache": "disabled",
+    "cross_tenant_dedupe": "disabled",
+    "deletion": "denied",
+    "semantic_and_lossy_reducers": "policy_and_verifier_gated",
+    "unknown_data": "exact_bytes"
+  },
+  "evidence": [
+    "TEST_RESULTS.md",
+    "QUALITY_REPORT.md",
+    "docs/WHITE_PAPER.md",
+    "examples/live/run_live_examples.py"
+  ],
+  "generated_at": "2026-07-11T08:08:11.751431+00:00",
+  "package": "urp",
+  "platform_targets": [
+    "local",
+    "kubernetes",
+    "aws",
+    "azure",
+    "gcp",
+    "on_prem",
+    "edge",
+    "openai_compatible",
+    "cicd"
+  ],
+  "public_surfaces": [
+    "CLI",
+    "REST/OpenAPI",
+    "protobuf",
+    "Python",
+    "TypeScript",
+    "Go",
+    "Rust"
+  ],
+  "schema_version": "urp.package.v2",
+  "status": "local-ideal implementation",
+  "verification_commands": {
+    "go": "cd go && go test -race ./...",
+    "platforms": "python3 -m urp.cli platform validate --target all",
+    "python": "python3 -m pytest -q && python3 -m ruff check python tests",
+    "readiness": "python3 -m urp.cli admin readiness",
+    "release": "python3 -m urp.cli release verify --manifest PACKAGE_SHA256.json",
+    "rust": "cargo fmt --all -- --check && cargo clippy --workspace --all-targets -- -D warnings && cargo test --workspace",
+    "typescript": "npm test --prefix typescript && npm pack --dry-run --prefix typescript"
+  }
+}
