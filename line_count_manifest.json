@@ -1,7 +1,7 @@
 {
   "arbitrary_line_count_target": false,
   "file_count": 222,
-  "generated_at": "2026-07-11T08:08:12.635032+00:00",
+  "generated_at": "2026-07-11T08:12:57.999784+00:00",
   "line_counts": {
     ".github/ISSUE_TEMPLATE/bug_report.yml": 64,
     ".github/ISSUE_TEMPLATE/config.yml": 8,
@@ -221,11 +221,11 @@
     "tests/unit/test_core.py": 332,
     "typescript/README.md": 15,
     "typescript/index.ts": 1,
-    "typescript/package-lock.json": 33,
+    "typescript/package-lock.json": 394,
     "typescript/package.json": 46,
     "typescript/src/index.ts": 967,
     "typescript/tsconfig.json": 18
   },
   "schema_version": "urp.line-count.v2",
-  "total_lines": 32598
+  "total_lines": 32959
 }

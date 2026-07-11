@@ -40,7 +40,7 @@
     "docs/WHITE_PAPER.md",
     "examples/live/run_live_examples.py"
   ],
-  "generated_at": "2026-07-11T08:08:11.751431+00:00",
+  "generated_at": "2026-07-11T08:12:57.105214+00:00",
   "package": "urp",
   "platform_targets": [
     "local",
