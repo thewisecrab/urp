@@ -33,9 +33,9 @@ classifiers = [
 ]
 requires-python = ">=3.10"
 dependencies = [
-  "cryptography>=42.0",
-  "jsonschema>=4.23",
-  "PyYAML>=6.0",
+  "cryptography>=49.0.0",
+  "jsonschema>=4.26.0",
+  "PyYAML>=6.0.3",
 ]
 
 [project.optional-dependencies]
@@ -44,20 +44,20 @@ api = [
   "httpx2>=2.5,<3",
 ]
 dev = [
-  "build>=1.2",
-  "coverage[toml]>=7.6",
+  "build>=1.5.1",
+  "coverage[toml]>=7.15.0",
   "fastapi>=0.139,<1",
   "httpx2>=2.5,<3",
-  "pytest>=8.3",
-  "pytest-cov>=6.0",
-  "ruff>=0.8",
+  "pytest>=9.1.1",
+  "pytest-cov>=7.1.0",
+  "ruff>=0.15.21",
 ]
 production = [
-  "psycopg[binary]>=3.2",
+  "psycopg[binary]>=3.3.4",
 ]
 cloud = [
-  "azure-storage-blob>=12.24",
-  "google-cloud-storage>=2.19",
+  "azure-storage-blob>=12.30.0",
+  "google-cloud-storage>=3.12.1",
 ]
 
 [project.scripts]
@@ -71,7 +71,7 @@ Issues = "https://github.com/thewisecrab/urp/issues"
 Changelog = "https://github.com/thewisecrab/urp/blob/main/CHANGELOG.md"
 
 [build-system]
-requires = ["setuptools>=68"]
+requires = ["setuptools>=83.0.0"]
 build-backend = "setuptools.build_meta"
 
 [tool.setuptools.packages.find]
