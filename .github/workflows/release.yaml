@@ -33,8 +33,18 @@ jobs:
           version: "v4.1.0"
       - run: python3 -m pip install build -e ".[dev]"
       - run: python3 -m build
-      - run: npm ci && npm pack --pack-destination ../dist
+      - run: npm ci
         working-directory: typescript
+      - run: npm run build
+        working-directory: typescript
+      - run: npm pack --pack-destination ../dist
+        working-directory: typescript
+      - name: Verify npm package contents
+        run: |
+          archive="$(find dist -maxdepth 1 -name 'thewisecrab-urp-*.tgz' -print -quit)"
+          test -n "$archive"
+          tar -tzf "$archive" | grep -qx 'package/dist/index.js'
+          tar -tzf "$archive" | grep -qx 'package/dist/index.d.ts'
       - run: helm package deployments/helm/urp --destination dist
       - run: cp output/pdf/URP-White-Paper-v1.0.pdf dist/
       - run: python3 -m urp.cli release sign --output dist/URP-SOURCE-MANIFEST.json
@@ -52,7 +62,7 @@ jobs:
         with:
           subject-path: "dist/*"
       - name: Attest Python wheel SBOM
-        uses: actions/attest-sbom@c604332985a26aa8cf1bdc465b92731239ec6b9e # v4.1.0
+        uses: actions/attest@a1948c3f048ba23858d222213b7c278aabede763 # v4
         with:
           subject-path: "dist/*.whl"
           sbom-path: "dist/urp-source.spdx.json"
