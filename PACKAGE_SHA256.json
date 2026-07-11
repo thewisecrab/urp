@@ -1,5 +1,5 @@
 {
-  "content_digest": "31b45d6053b82e5f9c22a8afbf5665e7969a98f51c11234a1b5631a5253066f5",
+  "content_digest": "3392ef6e931a0370736cfed0e3ea0233ff685d56f088e0ebb3ea552b82f44e1e",
   "content_digest_algorithm": "sha256(stable-json(files))",
   "excluded_roots": [
     ".DS_Store",
@@ -69,8 +69,8 @@
       "size": 5755
     },
     ".github/workflows/codeql.yaml": {
-      "sha256": "3b5a6124ff5c7a4f1a05479b4e9d7bacee76506a59f4a2f30bb235ca6fbe402a",
-      "size": 930
+      "sha256": "b8bd68b0568127de7c1711c4a969abdcd7545a834625ea5354e5a67585202959",
+      "size": 915
     },
     ".github/workflows/dependency-review.yaml": {
       "sha256": "f1e314ddaa07c92a1e4e4d0da246cebd0554a3089c17abac62996a70b89da52b",
@@ -85,12 +85,12 @@
       "size": 4180
     },
     ".github/workflows/scorecard.yaml": {
-      "sha256": "22d824b52cc6059f8b2a1c873e7adef8773df7af7c35f7fea68fa45118ada296",
-      "size": 828
+      "sha256": "5cc7c5ac782b056712c348d4c93ef9f331b7c27a94e66ce74fab437a901a2d24",
+      "size": 823
     },
     ".github/workflows/secret-scan.yaml": {
-      "sha256": "7052e048a7536c13d2078debcc0dac9db259665012060d992aeddfe666260ec2",
-      "size": 506
+      "sha256": "3effaa99c0f1d5c36915d065cad47f9f2a37c2a955049f3982225a8daab70a2a",
+      "size": 510
     },
     ".gitignore": {
       "sha256": "863ef1aff5fdaa8515a8c10d323dfe91475e3575c40f63197e89ecdb9b234e2f",
@@ -205,7 +205,7 @@
       "size": 2343
     },
     "deployments/docker/Dockerfile": {
-      "sha256": "0371987176f47ab475d51cd37117c8b256129de89db69a63175cbb022c4aa8a9",
+      "sha256": "301830c46371952094f2186852dd1c3470cf74a4f5e6ebfa090d7effcb5542de",
       "size": 1328
     },
     "deployments/edge/urp-edge-sidecar.yaml": {
@@ -489,8 +489,8 @@
       "size": 2066
     },
     "line_count_manifest.json": {
-      "sha256": "4c66e82bd6c0ce1d8aee6779cd540d2751416d2ae1f0cb03f0d30ce92589d63e",
-      "size": 9924
+      "sha256": "5825ef7de5e608d23622e9008435090e45038066a40a50090e20e25c1c536441",
+      "size": 9925
     },
     "mkdocs.yml": {
       "sha256": "5cae7fd48f2c2a06068daaf94279593cc110c4513ee1586b6d33cadc8878c233",
@@ -501,7 +501,7 @@
       "size": 57785
     },
     "package_manifest.json": {
-      "sha256": "e5866aab743dec2304115bdeff64a8059138f753dc65c24e723faf4eb71c25ea",
+      "sha256": "64f84484d6d62fd2116859b26d5e79379194aca95affc94b3ffe7a6c61f64043",
       "size": 2004
     },
     "plugins/README.md": {
@@ -1021,11 +1021,11 @@
       "size": 32
     },
     "typescript/package-lock.json": {
-      "sha256": "93efdadaccb4bcdc05e91e658952bbf539efa83ad04bdddddd8c4025367db35e",
-      "size": 798
+      "sha256": "d46de6e8e38370ec07a11c248638ece01015efd72680c6423fcc265f2b6d6227",
+      "size": 12589
     },
     "typescript/package.json": {
-      "sha256": "143ad111885b34a050ee46bc461d9ff9899222c32bfc77d7e9e21643f4ef6788",
+      "sha256": "5141671d77a8b0ebe4aba69426e31bc6771563f940d160a3b4f90a0835015a3b",
       "size": 1024
     },
     "typescript/src/index.ts": {
@@ -1041,7 +1041,7 @@
       "size": 436
     }
   },
-  "generated_at": "2026-07-11T08:08:26.174030+00:00",
+  "generated_at": "2026-07-11T08:13:13.098479+00:00",
   "manifest_version": "urp.release.v2",
   "provenance": {
     "archive_policy": "archive/source_packages is preserved in the repository but excluded from the active release manifest",
@@ -1049,7 +1049,7 @@
     "git": {
       "available": true,
       "branch": "main",
-      "commit": "dc2dde1e62c0c4337dca8810b391495863c88409",
+      "commit": "f29b0ba759ad85c504c21f6829cffe9265a3e008",
       "dirty": false
     },
     "platform": "macOS-26.5.1-arm64-arm-64bit-Mach-O",
