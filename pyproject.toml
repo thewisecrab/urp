@@ -44,7 +44,7 @@ api = [
   "httpx2>=2.5,<3",
 ]
 dev = [
-  "build>=1.5.1",
+  "build>=1.5.0",
   "coverage[toml]>=7.15.0",
   "fastapi>=0.139,<1",
   "httpx2>=2.5,<3",
