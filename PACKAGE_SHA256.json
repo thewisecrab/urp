@@ -1,5 +1,5 @@
 {
-  "content_digest": "c32cffc00c6aa35e57c036a657d0bd4bdf746cd3653451523e02501ead9ee679",
+  "content_digest": "3150fcfec74097cdbda62fa50fcaefcbf82897538c8a435c7cd5fc62db6ea9c5",
   "content_digest_algorithm": "sha256(stable-json(files))",
   "excluded_roots": [
     ".DS_Store",
@@ -489,7 +489,7 @@
       "size": 2066
     },
     "line_count_manifest.json": {
-      "sha256": "e6b6c699e53707dc262f520ca4349d6ef973cfccd03dd1494f8501919475c46c",
+      "sha256": "128751005c542dd8af768c99d502b9ae7ded244f48b9ac1e5cc02e96dba31716",
       "size": 9958
     },
     "mkdocs.yml": {
@@ -501,7 +501,7 @@
       "size": 60625
     },
     "package_manifest.json": {
-      "sha256": "57f8b10e4b5616fdb8624711667e03157075dbb3ba5e27b2fd9bafce8239021a",
+      "sha256": "a0ec8ea2cb54d8414accda16c4a894b4c213ab14ae7aedc0498022007e2cabee",
       "size": 1981
     },
     "paper/arxiv/README.md": {
@@ -641,7 +641,7 @@
       "size": 129
     },
     "pyproject.toml": {
-      "sha256": "044809e69c24adcfada68eea0a9b51d2722b72b24cde74d7feb976274826d875",
+      "sha256": "bd0bfb63d339faf2646408d8eaa7fc446772279d75847f7ecadd33dd0935030d",
       "size": 2072
     },
     "python/urp/__init__.py": {
@@ -1045,15 +1045,15 @@
       "size": 436
     }
   },
-  "generated_at": "2026-07-15T10:57:39.509304+00:00",
+  "generated_at": "2026-07-15T11:01:02.085297+00:00",
   "manifest_version": "urp.release.v2",
   "provenance": {
     "archive_policy": "archive/source_packages is preserved in the repository but excluded from the active release manifest",
     "builder": "urp.release.write_release_manifest",
     "git": {
       "available": true,
-      "branch": "main",
-      "commit": "514c0af8b8a5e3a7b5f4ed3dab7dd5b9f552c122",
+      "branch": "codex/arxiv-publication",
+      "commit": "6dc983015bf074d3a528d24c6af7b34d14ed965e",
       "dirty": false
     },
     "platform": "macOS-26.5.1-arm64-arm-64bit-Mach-O",
