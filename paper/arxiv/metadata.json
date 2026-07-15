@@ -1,0 +1,24 @@
+{
+  "schema_version": "1.0",
+  "submission_id": "7829636",
+  "title": "Universal Reduction Plane: A Compatibility-First Control Plane for Reducing Data and AI Waste",
+  "authors": [
+    "Siddharth Nilesh Patel (Independent Researcher)"
+  ],
+  "abstract": "Modern infrastructure repeatedly pays for the same bytes, data movement, AI request, prompt context, and derived computation. Existing optimizers usually make those decisions through different interfaces, policies, verification rules, and audit records. Universal Reduction Plane (URP) is an open-source, compatibility-first control and execution plane that gives storage reduction, exact AI caching, context reduction, routing, and future reducers one lifecycle: WorkUnit and preservation Contract, Policy, Plan, Execute, Verify, Manifest, and Ledger. Unknown data defaults to exact bytes, cross-tenant reuse is disabled, and semantic, approximate, lossy, and deletion paths remain disabled unless explicit policy and verifier requirements are satisfied. The reference implementation provides S3-compatible and POSIX object paths, an OpenAI-compatible AI gateway, typed schemas and SDKs, deployment assets, metrics, manifests, and a hash-chained ledger. A deterministic local evaluation verifies byte-exact rehydration, range reads, legal-hold enforcement, same-tenant exact AI cache reuse, redacted evidence, and ledger integrity without external credentials. We also provide a transparent impact model that separates measured implementation evidence from workload assumptions. URP does not claim that every input is reducible; it provides a common, auditable protocol for accepting avoided work only when the required outcome is preserved and verified.",
+  "comments": "16 pages, 1 figure. Open-source reference implementation and reproducible local evaluation: https://github.com/thewisecrab/urp",
+  "primary_category": "cs.DC",
+  "cross_lists": [
+    "cs.PF",
+    "cs.DB"
+  ],
+  "article_license": "CC BY 4.0",
+  "software_license": "Apache-2.0",
+  "language": "en",
+  "source_format": "author-generated PDF (ReportLab, non-TeX)",
+  "source_document": "docs/WHITE_PAPER.md",
+  "generator": "scripts/render_whitepaper.py",
+  "upload_files": [
+    "docs/assets/URP-White-Paper-v1.0.pdf"
+  ]
+}

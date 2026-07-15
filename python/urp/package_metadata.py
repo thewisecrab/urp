@@ -82,9 +82,18 @@ def build_package_manifest(root: str | Path = ".") -> Dict[str, Any]:
             "rust": "cargo fmt --all -- --check && cargo clippy --workspace --all-targets -- -D warnings && cargo test --workspace",
             "readiness": "python3 -m urp.cli admin readiness",
             "platforms": "python3 -m urp.cli platform validate --target all",
+            "publication": "python3 scripts/render_whitepaper.py && python3 scripts/verify_arxiv_submission.py",
             "release": "python3 -m urp.cli release verify --manifest PACKAGE_SHA256.json",
         },
-        "evidence": ["TEST_RESULTS.md", "QUALITY_REPORT.md", "docs/WHITE_PAPER.md", "examples/live/run_live_examples.py"],
+        "evidence": [
+            "TEST_RESULTS.md",
+            "QUALITY_REPORT.md",
+            "docs/WHITE_PAPER.md",
+            "paper/arxiv/metadata.json",
+            "paper/arxiv/COMPLIANCE.md",
+            "output/arxiv-compliance.json",
+            "examples/live/run_live_examples.py",
+        ],
     }
 
 

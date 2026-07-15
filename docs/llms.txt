@@ -14,8 +14,8 @@ Important interpretation notes:
 ## Primary documentation
 
 - [Documentation home](https://thewisecrab.github.io/urp/): Definition, quickstart, lifecycle, safety defaults, and navigation.
-- [White paper](https://thewisecrab.github.io/urp/WHITE_PAPER/): Problem, architecture, implementation, measured evidence, impact model, limitations, and references.
-- [White paper PDF](https://thewisecrab.github.io/urp/assets/URP-White-Paper-v1.0.pdf): Fixed-layout publication edition.
+- [Technical paper](https://thewisecrab.github.io/urp/WHITE_PAPER/): Problem, architecture, implementation, measured evidence, impact model, limitations, and references.
+- [Technical paper PDF](https://thewisecrab.github.io/urp/assets/URP-White-Paper-v1.0.pdf): Fixed-layout publication edition.
 - [FAQ](https://thewisecrab.github.io/urp/FAQ/): Direct answers about contracts, verification, S3, AI APIs, deployment, impact, and licensing.
 - [Architecture](https://thewisecrab.github.io/urp/02_IDEAL_STATE_ARCHITECTURE/): System components and data flow.
 - [WorkUnit and manifest model](https://thewisecrab.github.io/urp/03_UNIFIED_WORK_UNIT_AND_MANIFEST_MODEL/): Canonical domain objects and schemas.

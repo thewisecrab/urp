@@ -17,7 +17,7 @@ records a manifest, and appends auditable ledger events.
 WorkUnit + Contract + Policy -> Plan -> Execute -> Verify -> Manifest + Ledger
 ```
 
-[Read the white paper](docs/WHITE_PAPER.md) | [Download the PDF](docs/assets/URP-White-Paper-v1.0.pdf) | [Open the documentation](https://thewisecrab.github.io/urp/) | [Run the live proof](examples/live/README.md) | [Model your impact](examples/impact/README.md)
+[Read the technical paper](docs/WHITE_PAPER.md) | [Download the PDF](docs/assets/URP-White-Paper-v1.0.pdf) | [Review the arXiv bundle](paper/arxiv/README.md) | [Open the documentation](https://thewisecrab.github.io/urp/) | [Run the live proof](examples/live/README.md) | [Model your impact](examples/impact/README.md)
 
 ## Why URP exists
 
@@ -73,7 +73,7 @@ manifest exploration, and ledger-chain verification.
 | Measured mock AI path | 1 of 2 identical calls avoided | Exact cache returned the verified first response. |
 | Measured policy path | Legal-hold deletion denied | The guardrail executed. |
 | Measured audit path | Ledger chain valid | Event-chain verification passed. |
-| Automated verification | 86 Python tests plus TypeScript, Go, Rust, schema, package, and deployment gates | The local product contract is continuously checked. |
+| Automated verification | 87 Python tests plus TypeScript, Go, Rust, schema, package, publication, and deployment gates | The local product contract is continuously checked. |
 
 The checked-in base impact scenario models 100 TiB of storage, 200 TiB of monthly
 transfer, and 10 million AI requests per month. Under its explicit assumptions it
@@ -86,7 +86,7 @@ That is a scenario, not a forecast.
   --scenario examples/impact/illustrative-portfolio.json
 ```
 
-See [the white paper](docs/WHITE_PAPER.md#9-reproducible-impact-model) for formulas,
+See [the technical paper](docs/WHITE_PAPER.md#10-reproducible-impact-model) for formulas,
 low/base/high sensitivity, external context, and limitations.
 
 ## Architecture
@@ -262,7 +262,8 @@ plugins/                 Example classifiers, transforms, verifiers, adapters
 tests/                   Unit, integration, conformance, load, benchmarks
 deployments/             Docker, Compose, Kubernetes, Helm, Terraform, edge
 examples/                Live proof, policies, impact scenarios, deployment use
-docs/                    Architecture, security, API, deployment, white paper
+docs/                    Architecture, security, API, deployment, technical paper
+paper/arxiv/             Canonical arXiv metadata and submission checks
 archive/source_packages/ Original source packages preserved for provenance
 ```
 
@@ -279,7 +280,8 @@ archive/source_packages/ Original source packages preserved for provenance
 - [Operations and benchmarks](docs/09_OBSERVABILITY_BENCHMARKS_OPS.md)
 - [Deployment quickstart](docs/DEPLOYMENT_QUICKSTART.md)
 - [Platform readiness](docs/13_PLATFORM_READINESS.md)
-- [White paper](docs/WHITE_PAPER.md)
+- [Technical paper](docs/WHITE_PAPER.md)
+- [arXiv submission bundle](paper/arxiv/README.md)
 - [FAQ](docs/FAQ.md)
 
 ## Project status
@@ -288,7 +290,7 @@ URP is a pre-1.0 open-source reference implementation. The exact local paths,
 interfaces, tests, and deployment packages are usable today. Production scale,
 high availability, cloud landing zones, and workload-specific quality evaluation
 remain adopter responsibilities and active engineering areas. See the
-[roadmap](codex/ROADMAP_AND_TICKETS.md) and [white paper limitations](docs/WHITE_PAPER.md#14-limitations).
+[roadmap](codex/ROADMAP_AND_TICKETS.md) and [paper limitations](docs/WHITE_PAPER.md#16-limitations-and-future-work).
 
 ## Contributing and security
 
@@ -299,5 +301,6 @@ a public issue.
 
 ## Citation
 
-Use [CITATION.cff](CITATION.cff) or cite the white paper and the exact release tag.
-URP is licensed under [Apache-2.0](LICENSE).
+Use [CITATION.cff](CITATION.cff) or cite the technical paper and the exact release tag.
+The article is licensed under [CC BY 4.0](https://creativecommons.org/licenses/by/4.0/);
+URP software is licensed under [Apache-2.0](LICENSE).

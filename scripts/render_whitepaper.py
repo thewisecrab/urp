@@ -8,11 +8,14 @@ import shutil
 from pathlib import Path
 from typing import Iterable, Sequence
 
+import reportlab
 from reportlab.lib import colors
 from reportlab.lib.enums import TA_CENTER, TA_LEFT
 from reportlab.lib.pagesizes import A4
 from reportlab.lib.styles import ParagraphStyle, getSampleStyleSheet
 from reportlab.lib.units import mm
+from reportlab.pdfbase import pdfmetrics
+from reportlab.pdfbase.ttfonts import TTFont
 from reportlab.platypus import (
     BaseDocTemplate,
     Flowable,
@@ -42,6 +45,29 @@ PAPER = colors.white
 SOFT = colors.HexColor("#f3f7f6")
 DEEP = colors.HexColor("#0b241f")
 AUTHOR = "Siddharth Nilesh Patel"
+AFFILIATION = "Independent Researcher"
+FULL_TITLE = "Universal Reduction Plane: A Compatibility-First Control Plane for Reducing Data and AI Waste"
+ARTICLE_LICENSE = "CC BY 4.0"
+SOFTWARE_LICENSE = "Apache-2.0"
+FONT_REGULAR = "URP-Vera"
+FONT_BOLD = "URP-Vera-Bold"
+FONT_ITALIC = "URP-Vera-Italic"
+FONT_BOLD_ITALIC = "URP-Vera-BoldItalic"
+
+
+def register_fonts() -> None:
+    font_dir = Path(reportlab.__file__).resolve().parent / "fonts"
+    pdfmetrics.registerFont(TTFont(FONT_REGULAR, str(font_dir / "Vera.ttf")))
+    pdfmetrics.registerFont(TTFont(FONT_BOLD, str(font_dir / "VeraBd.ttf")))
+    pdfmetrics.registerFont(TTFont(FONT_ITALIC, str(font_dir / "VeraIt.ttf")))
+    pdfmetrics.registerFont(TTFont(FONT_BOLD_ITALIC, str(font_dir / "VeraBI.ttf")))
+    pdfmetrics.registerFontFamily(
+        "URP-Vera",
+        normal=FONT_REGULAR,
+        bold=FONT_BOLD,
+        italic=FONT_ITALIC,
+        boldItalic=FONT_BOLD_ITALIC,
+    )
 
 
 class WhitePaperDocTemplate(BaseDocTemplate):
@@ -71,7 +97,7 @@ class WhitePaperDocTemplate(BaseDocTemplate):
 
     def _decorate_page(self, canvas: object, doc: object) -> None:
         canvas.saveState()
-        canvas.setTitle("Universal Reduction Plane White Paper")
+        canvas.setTitle(FULL_TITLE)
         canvas.setAuthor(AUTHOR)
         canvas.setCreator("URP publication renderer")
         canvas.setSubject("A compatibility-first control plane for reducing data and AI waste")
@@ -81,12 +107,12 @@ class WhitePaperDocTemplate(BaseDocTemplate):
             canvas.setStrokeColor(RULE)
             canvas.setLineWidth(0.6)
             canvas.line(doc.leftMargin, page_height - 17 * mm, page_width - doc.rightMargin, page_height - 17 * mm)
-            canvas.setFont("Helvetica-Bold", 7.5)
+            canvas.setFont(FONT_BOLD, 7.5)
             canvas.setFillColor(FOREST)
             canvas.drawString(doc.leftMargin, page_height - 13 * mm, "UNIVERSAL REDUCTION PLANE")
-            canvas.setFont("Helvetica", 7.5)
+            canvas.setFont(FONT_REGULAR, 7.5)
             canvas.setFillColor(MUTED)
-            canvas.drawRightString(page_width - doc.rightMargin, page_height - 13 * mm, "WHITE PAPER 1.0")
+            canvas.drawRightString(page_width - doc.rightMargin, page_height - 13 * mm, "TECHNICAL REPORT 1.0")
             canvas.line(doc.leftMargin, 15 * mm, page_width - doc.rightMargin, 15 * mm)
             canvas.drawString(doc.leftMargin, 10 * mm, "github.com/thewisecrab/urp")
             canvas.drawRightString(page_width - doc.rightMargin, 10 * mm, str(doc.page))
@@ -112,7 +138,7 @@ class LifecycleGraphic(Flowable):
             self.canv.setStrokeColor(fill)
             self.canv.roundRect(x, y, box_width, box_height, 2.5, fill=1, stroke=1)
             self.canv.setFillColor(PAPER)
-            self.canv.setFont("Helvetica-Bold", 6.9)
+            self.canv.setFont(FONT_BOLD, 6.9)
             self.canv.drawCentredString(x + box_width / 2, y + 5.1 * mm, label)
             if index < len(labels) - 1:
                 start = x + box_width + 0.6 * mm
@@ -132,7 +158,7 @@ def build_styles() -> dict[str, ParagraphStyle]:
         "CoverEyebrow": ParagraphStyle(
             "CoverEyebrow",
             parent=base["Normal"],
-            fontName="Helvetica-Bold",
+            fontName=FONT_BOLD,
             fontSize=9,
             leading=11,
             textColor=TEAL,
@@ -141,7 +167,7 @@ def build_styles() -> dict[str, ParagraphStyle]:
         "CoverTitle": ParagraphStyle(
             "CoverTitle",
             parent=base["Title"],
-            fontName="Helvetica-Bold",
+            fontName=FONT_BOLD,
             fontSize=29,
             leading=32,
             textColor=INK,
@@ -151,7 +177,7 @@ def build_styles() -> dict[str, ParagraphStyle]:
         "CoverSubtitle": ParagraphStyle(
             "CoverSubtitle",
             parent=base["Normal"],
-            fontName="Helvetica",
+            fontName=FONT_REGULAR,
             fontSize=15,
             leading=20,
             textColor=FOREST,
@@ -160,7 +186,7 @@ def build_styles() -> dict[str, ParagraphStyle]:
         "CoverAuthor": ParagraphStyle(
             "CoverAuthor",
             parent=base["Normal"],
-            fontName="Helvetica",
+            fontName=FONT_REGULAR,
             fontSize=10.5,
             leading=13,
             textColor=MUTED,
@@ -170,7 +196,7 @@ def build_styles() -> dict[str, ParagraphStyle]:
         "CoverBody": ParagraphStyle(
             "CoverBody",
             parent=base["BodyText"],
-            fontName="Helvetica",
+            fontName=FONT_REGULAR,
             fontSize=10.5,
             leading=15,
             textColor=INK,
@@ -179,7 +205,7 @@ def build_styles() -> dict[str, ParagraphStyle]:
         "Heading2": ParagraphStyle(
             "Heading2",
             parent=base["Heading2"],
-            fontName="Helvetica-Bold",
+            fontName=FONT_BOLD,
             fontSize=17,
             leading=21,
             textColor=FOREST,
@@ -190,7 +216,7 @@ def build_styles() -> dict[str, ParagraphStyle]:
         "Heading3": ParagraphStyle(
             "Heading3",
             parent=base["Heading3"],
-            fontName="Helvetica-Bold",
+            fontName=FONT_BOLD,
             fontSize=12,
             leading=15,
             textColor=TEAL,
@@ -201,7 +227,7 @@ def build_styles() -> dict[str, ParagraphStyle]:
         "Heading4": ParagraphStyle(
             "Heading4",
             parent=base["Heading4"],
-            fontName="Helvetica-Bold",
+            fontName=FONT_BOLD,
             fontSize=10,
             leading=13,
             textColor=INK,
@@ -212,7 +238,7 @@ def build_styles() -> dict[str, ParagraphStyle]:
         "Body": ParagraphStyle(
             "Body",
             parent=base["BodyText"],
-            fontName="Helvetica",
+            fontName=FONT_REGULAR,
             fontSize=9.2,
             leading=13.5,
             textColor=INK,
@@ -223,7 +249,7 @@ def build_styles() -> dict[str, ParagraphStyle]:
         "Small": ParagraphStyle(
             "Small",
             parent=base["BodyText"],
-            fontName="Helvetica",
+            fontName=FONT_REGULAR,
             fontSize=7.6,
             leading=10.2,
             textColor=INK,
@@ -231,15 +257,23 @@ def build_styles() -> dict[str, ParagraphStyle]:
         "SmallBold": ParagraphStyle(
             "SmallBold",
             parent=base["BodyText"],
-            fontName="Helvetica-Bold",
+            fontName=FONT_BOLD,
             fontSize=7.6,
             leading=10.2,
             textColor=INK,
         ),
+        "SmallHeader": ParagraphStyle(
+            "SmallHeader",
+            parent=base["BodyText"],
+            fontName=FONT_BOLD,
+            fontSize=7.6,
+            leading=10.2,
+            textColor=PAPER,
+        ),
         "Reference": ParagraphStyle(
             "Reference",
             parent=base["BodyText"],
-            fontName="Helvetica",
+            fontName=FONT_REGULAR,
             fontSize=7.8,
             leading=10.4,
             textColor=INK,
@@ -247,10 +281,21 @@ def build_styles() -> dict[str, ParagraphStyle]:
             allowWidows=0,
             allowOrphans=0,
         ),
+        "FigureCaption": ParagraphStyle(
+            "FigureCaption",
+            parent=base["BodyText"],
+            fontName=FONT_ITALIC,
+            fontSize=7.8,
+            leading=10.4,
+            textColor=MUTED,
+            alignment=TA_CENTER,
+            spaceBefore=2,
+            spaceAfter=8,
+        ),
         "Quote": ParagraphStyle(
             "Quote",
             parent=base["BodyText"],
-            fontName="Helvetica-Bold",
+            fontName=FONT_BOLD,
             fontSize=10.2,
             leading=15,
             textColor=FOREST,
@@ -266,7 +311,7 @@ def build_styles() -> dict[str, ParagraphStyle]:
         "Code": ParagraphStyle(
             "Code",
             parent=base["Code"],
-            fontName="Courier",
+            fontName=FONT_REGULAR,
             fontSize=7.3,
             leading=9.6,
             textColor=DEEP,
@@ -282,7 +327,7 @@ def build_styles() -> dict[str, ParagraphStyle]:
         "TOCHeading": ParagraphStyle(
             "TOCHeading",
             parent=base["Heading1"],
-            fontName="Helvetica-Bold",
+            fontName=FONT_BOLD,
             fontSize=20,
             leading=24,
             textColor=FOREST,
@@ -291,7 +336,7 @@ def build_styles() -> dict[str, ParagraphStyle]:
         "TOCEntry": ParagraphStyle(
             "TOCEntry",
             parent=base["Normal"],
-            fontName="Helvetica",
+            fontName=FONT_REGULAR,
             fontSize=9.5,
             leading=14,
             textColor=INK,
@@ -315,7 +360,7 @@ def cover_story(styles: dict[str, ParagraphStyle], width: float) -> list[Flowabl
         [[
             Paragraph("<b>EXACT BY DEFAULT</b><br/>Unknown data remains byte-identical", metric_style),
             Paragraph("<b>VERIFIER BACKED</b><br/>Candidate output must prove its contract", metric_style),
-            Paragraph("<b>OPEN SOURCE</b><br/>Apache-2.0 local-first implementation", metric_style),
+            Paragraph("<b>OPEN SOFTWARE</b><br/>Apache-2.0 reference implementation", metric_style),
         ]],
         colWidths=[width / 3] * 3,
         rowHeights=[24 * mm],
@@ -323,6 +368,7 @@ def cover_story(styles: dict[str, ParagraphStyle], width: float) -> list[Flowabl
     metrics.setStyle(
         TableStyle(
             [
+                ("FONTNAME", (0, 0), (-1, -1), FONT_REGULAR),
                 ("BACKGROUND", (0, 0), (-1, -1), SOFT),
                 ("BOX", (0, 0), (-1, -1), 0.6, RULE),
                 ("INNERGRID", (0, 0), (-1, -1), 0.6, RULE),
@@ -335,15 +381,18 @@ def cover_story(styles: dict[str, ParagraphStyle], width: float) -> list[Flowabl
     metadata = Table(
         [
             [Paragraph("VERSION", styles["SmallBold"]), Paragraph("1.0", styles["Small"])],
-            [Paragraph("PUBLISHED", styles["SmallBold"]), Paragraph("2026-07-11", styles["Small"])],
+            [Paragraph("FIRST PUBLISHED", styles["SmallBold"]), Paragraph("2026-07-11", styles["Small"])],
+            [Paragraph("REVISED", styles["SmallBold"]), Paragraph("2026-07-15", styles["Small"])],
             [Paragraph("REPOSITORY", styles["SmallBold"]), Paragraph("github.com/thewisecrab/urp", styles["Small"])],
-            [Paragraph("LICENSE", styles["SmallBold"]), Paragraph("Apache License 2.0", styles["Small"])],
+            [Paragraph("ARTICLE LICENSE", styles["SmallBold"]), Paragraph(ARTICLE_LICENSE, styles["Small"])],
+            [Paragraph("SOFTWARE LICENSE", styles["SmallBold"]), Paragraph(SOFTWARE_LICENSE, styles["Small"])],
         ],
-        colWidths=[34 * mm, width - 34 * mm],
+        colWidths=[40 * mm, width - 40 * mm],
     )
     metadata.setStyle(
         TableStyle(
             [
+                ("FONTNAME", (0, 0), (-1, -1), FONT_REGULAR),
                 ("LINEBELOW", (0, 0), (-1, -2), 0.4, RULE),
                 ("VALIGN", (0, 0), (-1, -1), "MIDDLE"),
                 ("TOPPADDING", (0, 0), (-1, -1), 5),
@@ -354,22 +403,21 @@ def cover_story(styles: dict[str, ParagraphStyle], width: float) -> list[Flowabl
         )
     )
     return [
-        Spacer(1, 19 * mm),
-        Paragraph("OPEN-SOURCE INFRASTRUCTURE WHITE PAPER", styles["CoverEyebrow"]),
+        Spacer(1, 17 * mm),
+        Paragraph("OPEN-SOURCE SYSTEMS TECHNICAL REPORT", styles["CoverEyebrow"]),
         Paragraph("Universal Reduction Plane", styles["CoverTitle"]),
         Paragraph("A compatibility-first control plane for reducing data and AI waste", styles["CoverSubtitle"]),
-        Paragraph(AUTHOR, styles["CoverAuthor"]),
+        Paragraph(f"{AUTHOR}<br/>{AFFILIATION}", styles["CoverAuthor"]),
         HRFlowable(width="100%", thickness=2, color=AMBER, spaceBefore=0, spaceAfter=14),
         Paragraph(
-            "URP gives storage reduction, exact AI caching, context reduction, routing, and future reducers one contract, one policy decision, one verification standard, and one audit model.",
+            "URP studies whether storage reduction, exact AI caching, context reduction, routing, and future reducers can share one preservation contract, policy decision, verification standard, and audit model.",
             styles["CoverBody"],
         ),
-        LifecycleGraphic(width),
-        Spacer(1, 5 * mm),
+        Spacer(1, 4 * mm),
         metrics,
-        Spacer(1, 12 * mm),
-        metadata,
         Spacer(1, 10 * mm),
+        metadata,
+        Spacer(1, 8 * mm),
         Paragraph(
             "Evidence note: local measurements prove implementation paths on controlled fixtures. Portfolio impact figures are transparent modeled scenarios, not forecasts or guaranteed savings.",
             styles["Small"],
@@ -381,10 +429,11 @@ def cover_story(styles: dict[str, ParagraphStyle], width: float) -> list[Flowabl
 def toc_story(styles: dict[str, ParagraphStyle]) -> list[Flowable]:
     toc = TableOfContents()
     toc.levelStyles = [styles["TOCEntry"]]
+    toc.tableStyle.add("FONTNAME", (0, 0), (-1, -1), FONT_REGULAR)
     return [
         Paragraph("Contents", styles["TOCHeading"]),
         Paragraph(
-            "The white paper separates measured repository evidence, modeled scenarios, and external context so each claim can be evaluated on its own terms.",
+            "The report separates measured repository evidence, modeled scenarios, and external context so each claim can be evaluated on its own terms.",
             styles["Body"],
         ),
         Spacer(1, 5 * mm),
@@ -415,7 +464,16 @@ def markdown_story(source: str, styles: dict[str, ParagraphStyle], width: float)
                 index += 1
             index += 1
             if language == "mermaid":
-                story.extend([Spacer(1, 2 * mm), LifecycleGraphic(width), Spacer(1, 2 * mm)])
+                story.extend(
+                    [
+                        Spacer(1, 2 * mm),
+                        LifecycleGraphic(width),
+                        Paragraph(
+                            "Figure 1. URP's contract-preserving reduction lifecycle. Rejected candidates follow a safe baseline fallback before evidence is recorded.",
+                            styles["FigureCaption"],
+                        ),
+                    ]
+                )
             else:
                 story.append(XPreformatted(html.escape("\n".join(code)), styles["Code"]))
             continue
@@ -483,7 +541,7 @@ def build_table(lines: Sequence[str], styles: dict[str, ParagraphStyle], width: 
     normalized = [row + [""] * (column_count - len(row)) for row in rows]
     data: list[list[Paragraph]] = []
     for row_index, row in enumerate(normalized):
-        style = styles["SmallBold"] if row_index == 0 else styles["Small"]
+        style = styles["SmallHeader"] if row_index == 0 else styles["Small"]
         data.append([Paragraph(inline_markup(cell), style) for cell in row])
     if column_count == 2:
         widths = [width * 0.34, width * 0.66]
@@ -495,6 +553,7 @@ def build_table(lines: Sequence[str], styles: dict[str, ParagraphStyle], width: 
     table.setStyle(
         TableStyle(
             [
+                ("FONTNAME", (0, 0), (-1, -1), FONT_REGULAR),
                 ("BACKGROUND", (0, 0), (-1, 0), FOREST),
                 ("TEXTCOLOR", (0, 0), (-1, 0), PAPER),
                 ("GRID", (0, 0), (-1, -1), 0.4, RULE),
@@ -523,7 +582,7 @@ def build_list(
         rows,
         bulletType="1" if ordered else "bullet",
         leftIndent=18,
-        bulletFontName="Helvetica-Bold",
+        bulletFontName=FONT_BOLD,
         bulletFontSize=6.8 if compact else 7.5,
         bulletColor=TEAL,
         spaceBefore=1,
@@ -539,7 +598,11 @@ def inline_markup(value: str) -> str:
         lambda match: f'<link href="{match.group(2)}" color="#007f8b">{match.group(1)}</link>',
         escaped,
     )
-    escaped = re.sub(r"`([^`]+)`", r'<font name="Courier" color="#0b241f">\1</font>', escaped)
+    escaped = re.sub(
+        r"`([^`]+)`",
+        lambda match: f'<font name="{FONT_REGULAR}" color="#0b241f">{match.group(1)}</font>',
+        escaped,
+    )
     escaped = re.sub(r"\*\*([^*]+)\*\*", r"<b>\1</b>", escaped)
     escaped = re.sub(r"(?<!\*)\*([^*]+)\*(?!\*)", r"<i>\1</i>", escaped)
     return escaped
@@ -565,6 +628,7 @@ def _split_table_row(line: str) -> list[str]:
 
 def render(source: Path, output: Path) -> None:
     output.parent.mkdir(parents=True, exist_ok=True)
+    register_fonts()
     styles = build_styles()
     doc = WhitePaperDocTemplate(
         str(output),
@@ -573,9 +637,17 @@ def render(source: Path, output: Path) -> None:
         rightMargin=20 * mm,
         topMargin=22 * mm,
         bottomMargin=20 * mm,
-        title="Universal Reduction Plane White Paper",
+        title=FULL_TITLE,
         author=AUTHOR,
         subject="A compatibility-first control plane for reducing data and AI waste",
+        creator="URP publication renderer",
+        keywords="URP, data reduction, AI infrastructure, exact cache, FinOps, S3 gateway",
+        invariant=1,
+        pageCompression=1,
+        lang="en-US",
+        initialFontName=FONT_REGULAR,
+        initialFontSize=10,
+        initialLeading=12,
     )
     story = cover_story(styles, doc.width)
     story.extend(toc_story(styles))
@@ -584,7 +656,7 @@ def render(source: Path, output: Path) -> None:
 
 
 def main() -> None:
-    parser = argparse.ArgumentParser(description="Render the URP Markdown white paper as a publication PDF")
+    parser = argparse.ArgumentParser(description="Render the URP Markdown technical paper as a publication PDF")
     parser.add_argument("--source", default="docs/WHITE_PAPER.md")
     parser.add_argument("--output", default="output/pdf/URP-White-Paper-v1.0.pdf")
     parser.add_argument("--public-copy", default="docs/assets/URP-White-Paper-v1.0.pdf")
