@@ -41,6 +41,7 @@ RULE = colors.HexColor("#d7e2df")
 PAPER = colors.white
 SOFT = colors.HexColor("#f3f7f6")
 DEEP = colors.HexColor("#0b241f")
+AUTHOR = "Siddharth Nilesh Patel"
 
 
 class WhitePaperDocTemplate(BaseDocTemplate):
@@ -71,7 +72,7 @@ class WhitePaperDocTemplate(BaseDocTemplate):
     def _decorate_page(self, canvas: object, doc: object) -> None:
         canvas.saveState()
         canvas.setTitle("Universal Reduction Plane White Paper")
-        canvas.setAuthor("URP contributors")
+        canvas.setAuthor(AUTHOR)
         canvas.setCreator("URP publication renderer")
         canvas.setSubject("A compatibility-first control plane for reducing data and AI waste")
         canvas.setKeywords("URP, data reduction, AI infrastructure, exact cache, FinOps, S3 gateway")
@@ -156,6 +157,16 @@ def build_styles() -> dict[str, ParagraphStyle]:
             textColor=FOREST,
             spaceAfter=18,
         ),
+        "CoverAuthor": ParagraphStyle(
+            "CoverAuthor",
+            parent=base["Normal"],
+            fontName="Helvetica",
+            fontSize=10.5,
+            leading=13,
+            textColor=MUTED,
+            alignment=TA_LEFT,
+            spaceAfter=16,
+        ),
         "CoverBody": ParagraphStyle(
             "CoverBody",
             parent=base["BodyText"],
@@ -224,6 +235,17 @@ def build_styles() -> dict[str, ParagraphStyle]:
             fontSize=7.6,
             leading=10.2,
             textColor=INK,
+        ),
+        "Reference": ParagraphStyle(
+            "Reference",
+            parent=base["BodyText"],
+            fontName="Helvetica",
+            fontSize=7.8,
+            leading=10.4,
+            textColor=INK,
+            spaceAfter=2,
+            allowWidows=0,
+            allowOrphans=0,
         ),
         "Quote": ParagraphStyle(
             "Quote",
@@ -336,6 +358,7 @@ def cover_story(styles: dict[str, ParagraphStyle], width: float) -> list[Flowabl
         Paragraph("OPEN-SOURCE INFRASTRUCTURE WHITE PAPER", styles["CoverEyebrow"]),
         Paragraph("Universal Reduction Plane", styles["CoverTitle"]),
         Paragraph("A compatibility-first control plane for reducing data and AI waste", styles["CoverSubtitle"]),
+        Paragraph(AUTHOR, styles["CoverAuthor"]),
         HRFlowable(width="100%", thickness=2, color=AMBER, spaceBefore=0, spaceAfter=14),
         Paragraph(
             "URP gives storage reduction, exact AI caching, context reduction, routing, and future reducers one contract, one policy decision, one verification standard, and one audit model.",
@@ -376,6 +399,7 @@ def markdown_story(source: str, styles: dict[str, ParagraphStyle], width: float)
     lines = lines[start:]
     story: list[Flowable] = []
     index = 0
+    reference_mode = False
     while index < len(lines):
         raw = lines[index]
         stripped = raw.strip()
@@ -404,7 +428,9 @@ def markdown_story(source: str, styles: dict[str, ParagraphStyle], width: float)
             index += 1
             continue
         if stripped.startswith("## "):
-            story.append(Paragraph(inline_markup(stripped[3:]), styles["Heading2"]))
+            heading = stripped[3:]
+            reference_mode = heading.startswith("Appendix B: references")
+            story.append(Paragraph(inline_markup(heading), styles["Heading2"]))
             index += 1
             continue
         if stripped.startswith("# "):
@@ -439,7 +465,7 @@ def markdown_story(source: str, styles: dict[str, ParagraphStyle], width: float)
             while index < len(lines) and re.match(r"^\d+\.\s+", lines[index].strip()):
                 items.append(re.sub(r"^\d+\.\s+", "", lines[index].strip()))
                 index += 1
-            story.append(build_list(items, styles, ordered=True))
+            story.append(build_list(items, styles, ordered=True, compact=reference_mode))
             story.append(Spacer(1, 2 * mm))
             continue
         paragraph = [stripped]
@@ -484,15 +510,21 @@ def build_table(lines: Sequence[str], styles: dict[str, ParagraphStyle], width: 
     return table
 
 
-def build_list(items: Iterable[str], styles: dict[str, ParagraphStyle], ordered: bool) -> ListFlowable:
-    rows = [ListItem(Paragraph(inline_markup(item), styles["Body"]), leftIndent=11) for item in items]
+def build_list(
+    items: Iterable[str],
+    styles: dict[str, ParagraphStyle],
+    ordered: bool,
+    compact: bool = False,
+) -> ListFlowable:
+    item_style = styles["Reference"] if compact else styles["Body"]
+    rows = [ListItem(Paragraph(inline_markup(item), item_style), leftIndent=11) for item in items]
     options = {"start": "1" if ordered else "-"}
     return ListFlowable(
         rows,
         bulletType="1" if ordered else "bullet",
         leftIndent=18,
         bulletFontName="Helvetica-Bold",
-        bulletFontSize=7.5,
+        bulletFontSize=6.8 if compact else 7.5,
         bulletColor=TEAL,
         spaceBefore=1,
         spaceAfter=2,
@@ -542,7 +574,7 @@ def render(source: Path, output: Path) -> None:
         topMargin=22 * mm,
         bottomMargin=20 * mm,
         title="Universal Reduction Plane White Paper",
-        author="URP contributors",
+        author=AUTHOR,
         subject="A compatibility-first control plane for reducing data and AI waste",
     )
     story = cover_story(styles, doc.width)

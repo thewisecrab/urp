@@ -6,7 +6,7 @@ readme = "README.md"
 license = "Apache-2.0"
 license-files = ["LICENSE", "NOTICE"]
 authors = [
-  {name = "URP contributors"},
+  {name = "Siddharth Nilesh Patel"},
 ]
 keywords = [
   "ai-infrastructure",
@@ -44,7 +44,7 @@ api = [
   "httpx2>=2.5,<3",
 ]
 dev = [
-  "build>=1.5.1",
+  "build>=1.5.0",
   "coverage[toml]>=7.15.0",
   "fastapi>=0.139,<1",
   "httpx2>=2.5,<3",

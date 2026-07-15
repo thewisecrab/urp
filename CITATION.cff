@@ -9,7 +9,8 @@ abstract: >-
   for reducing unnecessary storage, data transfer, and AI compute through WorkUnits,
   preservation contracts, policy, verification, manifests, and an audit ledger.
 authors:
-  - family-names: "thewisecrab"
+  - family-names: "Patel"
+    given-names: "Siddharth Nilesh"
     alias: "thewisecrab"
     website: "https://github.com/thewisecrab"
 repository-code: "https://github.com/thewisecrab/urp"
@@ -27,7 +28,8 @@ references:
   - type: article
     title: "Universal Reduction Plane: A compatibility-first control plane for reducing data and AI waste"
     authors:
-      - family-names: "thewisecrab"
+      - family-names: "Patel"
+        given-names: "Siddharth Nilesh"
         alias: "thewisecrab"
     year: 2026
     url: "https://thewisecrab.github.io/urp/WHITE_PAPER/"

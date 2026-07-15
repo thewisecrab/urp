@@ -1,11 +1,11 @@
 site_name: Universal Reduction Plane
 site_description: A compatibility-first control plane for reducing unnecessary data, transfer, and AI compute with contracts, verification, manifests, and an audit ledger.
-site_author: URP contributors
+site_author: Siddharth Nilesh Patel
 site_url: https://thewisecrab.github.io/urp/
 repo_name: thewisecrab/urp
 repo_url: https://github.com/thewisecrab/urp
 edit_uri: edit/main/docs/
-copyright: Copyright 2026 URP contributors. Apache-2.0 licensed.
+copyright: Copyright 2026 Siddharth Nilesh Patel and URP contributors. Apache-2.0 licensed.
 
 theme:
   name: material

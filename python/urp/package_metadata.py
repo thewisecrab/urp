@@ -77,7 +77,7 @@ def build_package_manifest(root: str | Path = ".") -> Dict[str, Any]:
         ],
         "verification_commands": {
             "python": "python3 -m pytest -q && python3 -m ruff check python tests",
-            "typescript": "npm test --prefix typescript && npm pack --dry-run --prefix typescript",
+            "typescript": "cd typescript && npm test && npm pack --dry-run",
             "go": "cd go && go test -race ./...",
             "rust": "cargo fmt --all -- --check && cargo clippy --workspace --all-targets -- -D warnings && cargo test --workspace",
             "readiness": "python3 -m urp.cli admin readiness",

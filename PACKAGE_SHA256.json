@@ -1,5 +1,5 @@
 {
-  "content_digest": "d3a918b6c1c687d5d5d3ad6c714b6b7aa13af05b88535fa07aa7f6af4b2977bb",
+  "content_digest": "3150fcfec74097cdbda62fa50fcaefcbf82897538c8a435c7cd5fc62db6ea9c5",
   "content_digest_algorithm": "sha256(stable-json(files))",
   "excluded_roots": [
     ".DS_Store",
@@ -22,7 +22,7 @@
     "target",
     "tmp"
   ],
-  "file_count": 254,
+  "file_count": 255,
   "files": {
     ".dockerignore": {
       "sha256": "d02e0fac2307703377510a2889a745722114ca6cd7048be8e580fa52c7644a02",
@@ -105,8 +105,8 @@
       "size": 1603
     },
     "CITATION.cff": {
-      "sha256": "47d525a87139e50449a463397e48a839237a0dcb9ac8eb6b37e3047e600ea098",
-      "size": 1109
+      "sha256": "9018ae4bc61f6718d85840d4a5d06b0e3622536a360e717dff92c774512a01f9",
+      "size": 1173
     },
     "CODE_OF_CONDUCT.md": {
       "sha256": "d1632891a1c813086f1912757543915363041318504d9acd77d5f2e746441736",
@@ -121,8 +121,8 @@
       "size": 291
     },
     "Cargo.toml": {
-      "sha256": "d10b461dd4f66c398be06996ed3de7b3ec358f959197aab73b65baf028324690",
-      "size": 349
+      "sha256": "7ad985e8ac4fdf9a692729047a37fd7406387a0e18d4a915f4bb1f527b60d2b0",
+      "size": 355
     },
     "GOVERNANCE.md": {
       "sha256": "a105954af2289c4fc980cd0bf5c99c259b77f64111f84fe7967e77f178a58413",
@@ -161,8 +161,8 @@
       "size": 2794
     },
     "codemeta.json": {
-      "sha256": "3035f2f70261e7ab7fa06abee9c2ae38a4c3eb9e87655b9efcb509c3039fbf5d",
-      "size": 1502
+      "sha256": "5b52d0cab83dfac22d9f66d82f1f044405c9105a923c817e32c157137c50e343",
+      "size": 1724
     },
     "codex/ACCEPTANCE_CHECKLIST.md": {
       "sha256": "509aecd6fdf28dfd5716cf90033a914a2bc3ebaeb12876f3755c8aa89c0bc11b",
@@ -397,12 +397,12 @@
       "size": 3779
     },
     "docs/WHITE_PAPER.md": {
-      "sha256": "5f30f8a5bc5410a6aed3601281f7821a787b3aedbd0643b5be2a9d29507fbcf3",
-      "size": 30262
+      "sha256": "2f2ea9658f2ec02b1e05ad74bd788776376aeb4a4cdf525c6e1c03635d63361d",
+      "size": 32216
     },
     "docs/assets/URP-White-Paper-v1.0.pdf": {
-      "sha256": "931d2d0e2896841e262f63175e3b528d54d68284580f7ca81d0ec0cc1759bf13",
-      "size": 57785
+      "sha256": "f70fb3b5f1270c2bae0e6f486cbf9f8f80f9b53507e3e40112e4085b8a81a1f8",
+      "size": 60625
     },
     "docs/assets/stylesheets/extra.css": {
       "sha256": "3bac5c153458f3b0cdce1dbb066cfd90091b551139aaf567fde4aa0a5928c586",
@@ -417,8 +417,8 @@
       "size": 2915
     },
     "docs/overrides/main.html": {
-      "sha256": "2ddc9b67166bbcf6e5d63dd8a55a1593139f66c847345554cb8d074a85925f50",
-      "size": 3597
+      "sha256": "9e7a8d5c4cc48e31d94526002972a739189ec3848b292184bb6f7dff1a360d80",
+      "size": 3703
     },
     "docs/robots.txt": {
       "sha256": "662dcbb8762b9c056d742a8f9c5993c51fbc67dafc951907acf9705d230fc2f6",
@@ -489,20 +489,24 @@
       "size": 2066
     },
     "line_count_manifest.json": {
-      "sha256": "ba5257ab524e3e815cf9a9fbce70ee8da0c9551dd45bddc32fc3d1a7e169d181",
-      "size": 9925
+      "sha256": "128751005c542dd8af768c99d502b9ae7ded244f48b9ac1e5cc02e96dba31716",
+      "size": 9958
     },
     "mkdocs.yml": {
-      "sha256": "5cae7fd48f2c2a06068daaf94279593cc110c4513ee1586b6d33cadc8878c233",
-      "size": 3590
+      "sha256": "fa2fd0180246199ca1a03d4751171097d86dbca0af66954a30c6e3b1b710de33",
+      "size": 3623
     },
     "output/pdf/URP-White-Paper-v1.0.pdf": {
-      "sha256": "931d2d0e2896841e262f63175e3b528d54d68284580f7ca81d0ec0cc1759bf13",
-      "size": 57785
+      "sha256": "f70fb3b5f1270c2bae0e6f486cbf9f8f80f9b53507e3e40112e4085b8a81a1f8",
+      "size": 60625
     },
     "package_manifest.json": {
-      "sha256": "24ccbb33a3b3194f2e797a04b9fd0def22cf7878621821bd6907ca96e04b8123",
-      "size": 2004
+      "sha256": "a0ec8ea2cb54d8414accda16c4a894b4c213ab14ae7aedc0498022007e2cabee",
+      "size": 1981
+    },
+    "paper/arxiv/README.md": {
+      "sha256": "125ddd56cb61768a356d8edd0b4f37aada9bee501381dd94d957fd1135352eb7",
+      "size": 2907
     },
     "plugins/README.md": {
       "sha256": "662e65120e1981d546178f7d6aeb290519e6c85ce6053800b0c3b8045c0b07a5",
@@ -637,8 +641,8 @@
       "size": 129
     },
     "pyproject.toml": {
-      "sha256": "2e4fb3010c2fad13cc5cef16fede4727e7fa602d586149009b4ed3d7fab3d553",
-      "size": 2066
+      "sha256": "bd0bfb63d339faf2646408d8eaa7fc446772279d75847f7ecadd33dd0935030d",
+      "size": 2072
     },
     "python/urp/__init__.py": {
       "sha256": "af92fd71033c14f39e98c7464f3de255c91d9407623fdefa45da8dda7013cf08",
@@ -797,8 +801,8 @@
       "size": 10511
     },
     "python/urp/package_metadata.py": {
-      "sha256": "1a07cee38b01ca4279d3a8f084ec291f5fb4c549c3bbe63c492b1d62e8acca4a",
-      "size": 4372
+      "sha256": "1452771c473fd733673d5bc6d24885e7f08e6552f9967e6542ed6d5c3c638052",
+      "size": 4349
     },
     "python/urp/plan_store.py": {
       "sha256": "94b2f65502b03d646ce637b59921cdb52c27bf3e082f8e2fd03707398523d613",
@@ -905,8 +909,8 @@
       "size": 709
     },
     "scripts/render_whitepaper.py": {
-      "sha256": "8297519e350b2c8f470f409d8fe27940047d6a8a88d193bf92f4c39321ba88d1",
-      "size": 20737
+      "sha256": "c158a47b07396094be00935a3f95a790a0c2e0421ff8d870c9fb36253210e7c0",
+      "size": 21666
     },
     "services/control-plane/README.md": {
       "sha256": "d071ad7e45bd0f9751ebf64172ee6d87a0d1d1a98e275fdd0dec71dc50030fa9",
@@ -981,8 +985,8 @@
       "size": 10756
     },
     "tests/conformance/test_security_and_adapters.py": {
-      "sha256": "1f5c33fa7298127cf12a5e152999cb0bf9b4a90e936142bfe28e916fcc5223c6",
-      "size": 28662
+      "sha256": "3345989c26f87ec7d3a2531a8cf0f118e9e843e6940668cb6b1846723ab80ea3",
+      "size": 29643
     },
     "tests/integration/__init__.py": {
       "sha256": "01ba4719c80b6fe911b091a7c05124b64eeece964e09c058ef8f9805daca546b",
@@ -1041,15 +1045,15 @@
       "size": 436
     }
   },
-  "generated_at": "2026-07-11T08:32:45.343566+00:00",
+  "generated_at": "2026-07-15T11:01:02.085297+00:00",
   "manifest_version": "urp.release.v2",
   "provenance": {
     "archive_policy": "archive/source_packages is preserved in the repository but excluded from the active release manifest",
     "builder": "urp.release.write_release_manifest",
     "git": {
       "available": true,
-      "branch": "main",
-      "commit": "0c83501ff7f02f338029513715adcf6aa9892f27",
+      "branch": "codex/arxiv-publication",
+      "commit": "6dc983015bf074d3a528d24c6af7b34d14ed965e",
       "dirty": false
     },
     "platform": "macOS-26.5.1-arm64-arm-64bit-Mach-O",
