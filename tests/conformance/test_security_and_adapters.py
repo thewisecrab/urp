@@ -571,6 +571,23 @@ class SecurityAndConformanceTests(unittest.TestCase):
         self.assertIn("(except as stated in this section) patent license", license_text)
         self.assertIn("APPENDIX: How to apply the Apache License to your work.", license_text)
 
+    def test_arxiv_publication_metadata_is_complete_and_ascii(self):
+        root = Path(__file__).resolve().parents[2]
+        author = "Siddharth Nilesh Patel"
+        white_paper = (root / "docs/WHITE_PAPER.md").read_text(encoding="utf-8")
+        citation = (root / "CITATION.cff").read_text(encoding="utf-8")
+        renderer = (root / "scripts/render_whitepaper.py").read_text(encoding="utf-8")
+        bundle = (root / "paper/arxiv/README.md").read_text(encoding="utf-8")
+        for artifact in (white_paper, renderer, bundle):
+            self.assertIn(author, artifact)
+        self.assertIn('family-names: "Patel"', citation)
+        self.assertIn('given-names: "Siddharth Nilesh"', citation)
+        abstract = bundle.split("## Abstract\n\n", 1)[1].split("\n\n## Upload policy", 1)[0]
+        abstract.encode("ascii")
+        self.assertLessEqual(len(" ".join(abstract.split())), 1920)
+        self.assertIn("cs.DC", bundle)
+        self.assertIn("CC BY 4.0", bundle)
+
     def test_api_specs_parse_and_have_typed_operations(self):
         result = validate_api_specs(Path(__file__).resolve().parents[2])
         self.assertTrue(result.passed, result.to_dict())

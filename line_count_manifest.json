@@ -1,7 +1,7 @@
 {
   "arbitrary_line_count_target": false,
-  "file_count": 222,
-  "generated_at": "2026-07-11T08:32:44.241811+00:00",
+  "file_count": 223,
+  "generated_at": "2026-07-15T10:56:53.886576+00:00",
   "line_counts": {
     ".github/ISSUE_TEMPLATE/bug_report.yml": 64,
     ".github/ISSUE_TEMPLATE/config.yml": 8,
@@ -26,7 +26,7 @@
     "SECURITY.md": 63,
     "SUPPORT.md": 27,
     "TEST_RESULTS.md": 86,
-    "codemeta.json": 45,
+    "codemeta.json": 51,
     "codex/ACCEPTANCE_CHECKLIST.md": 150,
     "codex/CODEX_BUILD_PROMPT.md": 60,
     "codex/ROADMAP_AND_TICKETS.md": 68,
@@ -77,7 +77,7 @@
     "docs/DISCOVERABILITY.md": 43,
     "docs/FAQ.md": 110,
     "docs/MIGRATION_NOTES.md": 91,
-    "docs/WHITE_PAPER.md": 634,
+    "docs/WHITE_PAPER.md": 659,
     "docs/index.md": 79,
     "examples/USE_CASES.md": 58,
     "examples/docker-compose.yaml": 62,
@@ -95,6 +95,7 @@
     "go/urp/urp.go": 65,
     "go/urp_test.go": 71,
     "mkdocs.yml": 125,
+    "paper/arxiv/README.md": 57,
     "plugins/README.md": 9,
     "plugins/adapters/local-s3-adapter/README.md": 5,
     "plugins/adapters/local-s3-adapter/conformance/README.md": 5,
@@ -192,7 +193,7 @@
     "python/urp/verifiers.py": 57,
     "python/urp/work_unit_store.py": 85,
     "research/research_sources.yaml": 23,
-    "scripts/render_whitepaper.py": 570,
+    "scripts/render_whitepaper.py": 602,
     "services/control-plane/README.md": 29,
     "services/gateway-ai/README.md": 27,
     "services/gateway-s3/README.md": 25,
@@ -211,7 +212,7 @@
     "tests/benchmarks/test_benchmark_smoke.py": 48,
     "tests/conformance/__init__.py": 1,
     "tests/conformance/test_hardening.py": 218,
-    "tests/conformance/test_security_and_adapters.py": 583,
+    "tests/conformance/test_security_and_adapters.py": 600,
     "tests/integration/__init__.py": 1,
     "tests/integration/test_live_examples.py": 64,
     "tests/integration/test_runtime.py": 1350,
@@ -227,5 +228,5 @@
     "typescript/tsconfig.json": 18
   },
   "schema_version": "urp.line-count.v2",
-  "total_lines": 32972
+  "total_lines": 33109
 }

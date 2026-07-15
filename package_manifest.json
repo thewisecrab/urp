@@ -1,5 +1,5 @@
 {
-  "active_file_count": 252,
+  "active_file_count": 253,
   "canonical_layout": {
     "archived_sources": "archive/source_packages",
     "deployments": "deployments",
@@ -40,7 +40,7 @@
     "docs/WHITE_PAPER.md",
     "examples/live/run_live_examples.py"
   ],
-  "generated_at": "2026-07-11T08:32:43.349944+00:00",
+  "generated_at": "2026-07-15T10:56:52.585080+00:00",
   "package": "urp",
   "platform_targets": [
     "local",
@@ -71,6 +71,6 @@
     "readiness": "python3 -m urp.cli admin readiness",
     "release": "python3 -m urp.cli release verify --manifest PACKAGE_SHA256.json",
     "rust": "cargo fmt --all -- --check && cargo clippy --workspace --all-targets -- -D warnings && cargo test --workspace",
-    "typescript": "npm test --prefix typescript && npm pack --dry-run --prefix typescript"
+    "typescript": "cd typescript && npm test && npm pack --dry-run"
   }
 }

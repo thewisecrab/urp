@@ -4,6 +4,7 @@
 
 **White paper version:** 1.0  
 **Publication date:** 2026-07-11  
+**Author:** Siddharth Nilesh Patel<br>
 **Project:** Universal Reduction Plane (URP)  
 **Repository:** [github.com/thewisecrab/urp](https://github.com/thewisecrab/urp)  
 **License:** Apache License 2.0  
@@ -288,6 +289,26 @@ Release workflows generate artifacts, an SBOM, provenance, and GitHub artifact
 attestations. GitHub describes attestations as signed claims linking artifacts to
 their source repository, workflow, commit, and triggering event. Attestation proves
 provenance, not that software is vulnerability-free. [GitHub artifact attestations](https://docs.github.com/en/actions/concepts/security/artifact-attestations)
+
+### 5.6 Relationship to recent AI serving systems
+
+Recent systems demonstrate that repeated context and cache movement are material
+infrastructure concerns. vLLM's PagedAttention reduces key-value cache fragmentation
+and enables sharing within and across requests. CacheGen compresses and streams
+key-value caches to reduce context-loading delay. Mooncake treats the key-value cache
+as a disaggregated serving resource with scheduler-level service objectives. SISO
+explores semantic caching policies for improving hit ratio and service-level
+attainment. [Kwon et al., vLLM](https://arxiv.org/abs/2309.06180), [Liu et al.,
+CacheGen](https://arxiv.org/abs/2310.07240), [Qin et al.,
+Mooncake](https://arxiv.org/abs/2407.00079), [Kim et al.,
+SISO](https://arxiv.org/abs/2508.18736)
+
+Those systems optimize LLM-serving internals. URP operates at a different boundary:
+it standardizes eligibility, tenant scope, policy, verification, lineage, fallback,
+and avoided-work accounting across object, data, and AI interfaces. URP can therefore
+coexist with an inference engine or key-value cache system rather than replacing it.
+Semantic reuse remains disabled by default because a higher cache hit ratio is not
+itself evidence that a reused answer satisfies the caller's preservation contract.
 
 ## 6. Safety model
 
@@ -632,3 +653,7 @@ payback_months = implementation_cost / net_monthly_savings
 8. IETF, [RFC 9110: HTTP Semantics](https://www.rfc-editor.org/rfc/rfc9110.html), 2022.
 9. Amazon Web Services, [Amazon S3 pricing](https://aws.amazon.com/s3/pricing/), accessed 2026-07-11.
 10. GitHub, [Artifact attestations](https://docs.github.com/en/actions/concepts/security/artifact-attestations), accessed 2026-07-11.
+11. W. Kwon et al., [Efficient Memory Management for Large Language Model Serving with PagedAttention](https://arxiv.org/abs/2309.06180), arXiv:2309.06180, 2023.
+12. Y. Liu et al., [CacheGen: KV Cache Compression and Streaming for Fast Large Language Model Serving](https://arxiv.org/abs/2310.07240), arXiv:2310.07240, 2023.
+13. R. Qin et al., [Mooncake: A KVCache-centric Disaggregated Architecture for LLM Serving](https://arxiv.org/abs/2407.00079), arXiv:2407.00079, 2024.
+14. J. Kim et al., [Rethinking Caching for LLM Serving Systems: Beyond Traditional Heuristics](https://arxiv.org/abs/2508.18736), arXiv:2508.18736, 2025.

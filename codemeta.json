@@ -28,12 +28,18 @@
   "author": {
     "@type": "Person",
     "@id": "https://github.com/thewisecrab",
-    "name": "thewisecrab"
+    "name": "Siddharth Nilesh Patel",
+    "givenName": "Siddharth Nilesh",
+    "familyName": "Patel",
+    "alternateName": "thewisecrab"
   },
   "maintainer": {
     "@type": "Person",
     "@id": "https://github.com/thewisecrab",
-    "name": "thewisecrab"
+    "name": "Siddharth Nilesh Patel",
+    "givenName": "Siddharth Nilesh",
+    "familyName": "Patel",
+    "alternateName": "thewisecrab"
   },
   "softwareRequirements": [
     "Python >=3.10",
