@@ -118,7 +118,7 @@ nav:
       - Observability and Benchmarks: 09_OBSERVABILITY_BENCHMARKS_OPS.md
       - Migration Notes: MIGRATION_NOTES.md
   - Research:
-      - White Paper: WHITE_PAPER.md
+      - Technical Paper: WHITE_PAPER.md
       - Research Landscape: 10_RESEARCH_LANDSCAPE.md
       - Discoverability: DISCOVERABILITY.md
   - Community:

@@ -55,7 +55,7 @@ flowchart LR
 | Goal | Read or run |
 |---|---|
 | Understand the product | [Product explainer](01_PRODUCT_EXPLAINER.md) |
-| Evaluate the thesis and impact | [White paper](WHITE_PAPER.md) |
+| Evaluate the thesis and impact | [Technical paper](WHITE_PAPER.md) |
 | Deploy locally or on Kubernetes | [Deployment quickstart](DEPLOYMENT_QUICKSTART.md) |
 | Integrate an API or SDK | [API and protocols](07_APIS_SCHEMAS_PROTOCOLS.md) |
 | Review security defaults | [Policy, security, and compliance](06_POLICY_SECURITY_COMPLIANCE.md) |

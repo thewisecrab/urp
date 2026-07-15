@@ -2,15 +2,18 @@
 
 ## A compatibility-first control plane for reducing data and AI waste
 
-**White paper version:** 1.0  
-**Publication date:** 2026-07-11  
+**Technical report version:** 1.0<br>
+**First publication:** 2026-07-11<br>
+**Revision date:** 2026-07-15<br>
 **Author:** Siddharth Nilesh Patel<br>
-**Project:** Universal Reduction Plane (URP)  
-**Repository:** [github.com/thewisecrab/urp](https://github.com/thewisecrab/urp)  
-**License:** Apache License 2.0  
+**Affiliation:** Independent Researcher<br>
+**Project:** Universal Reduction Plane (URP)<br>
+**Repository:** [github.com/thewisecrab/urp](https://github.com/thewisecrab/urp)<br>
+**Article license:** [Creative Commons Attribution 4.0 International](https://creativecommons.org/licenses/by/4.0/)<br>
+**Software license:** Apache License 2.0<br>
 **Evidence status:** local implementation verified; production outcomes require workload-specific measurement
 
-**PDF edition:** [URP White Paper 1.0](assets/URP-White-Paper-v1.0.pdf)
+**PDF edition:** [URP Technical Paper 1.0](assets/URP-White-Paper-v1.0.pdf)
 
 ## Abstract
 
@@ -46,37 +49,28 @@ the economics and governance of optimization, how the current implementation wor
 what its measured local evidence proves, and how to model potential impact without
 confusing assumptions with production results.
 
-## Executive answer
+## 1. Introduction and contributions
 
-> URP solves the coordination problem behind infrastructure waste. It makes storage
-> reduction, exact AI caching, context reduction, routing, and future reducers obey
-> one contract, one policy decision, one verification standard, and one audit model.
+This paper studies whether heterogeneous storage, transfer, and AI-compute
+optimizations can share one compatibility-preserving control protocol. URP treats
+reduction as a governed systems decision: storage reduction, exact AI caching,
+context reduction, routing, and future reducers use the same contract, policy,
+verification, manifest, and audit lifecycle.
 
-URP can create large impact when three conditions are true:
+The paper makes four contributions:
 
-1. A material fraction of bytes or compute is repeated or safely reducible.
-2. Existing applications can keep their familiar S3, file, HTTP, and SDK interfaces.
-3. Operators can prove that each optimization preserved the required outcome.
+1. A typed system model built around `WorkUnit`, `Contract`, `Plan`, `VerificationResult`, `Manifest`, and `LedgerEvent`.
+2. A compatibility-first architecture that preserves familiar S3, file, HTTP, and SDK boundaries while keeping unknown data byte-exact by default.
+3. A fail-closed safety model in which higher-risk behavior requires explicit policy, verifier evidence, tenant scope, and a defined fallback.
+4. An open-source reference implementation with deterministic local evaluation and a reproducible scenario model that separates measurements from assumptions.
 
-The implementation is designed around those conditions. It can first run in
-`observe`, then `shadow`, then `enforce` mode. Exact paths are useful immediately.
-Higher-risk paths require explicit policy and verifier evidence.
+The implementation supports `observe`, `shadow`, and `enforce` modes. Exact paths
+can be evaluated immediately; semantic, approximate, lossy, deletion, and
+cross-tenant reuse paths are not enabled by default. The included portfolio model
+illustrates when the architecture could be economical, but its outputs are not a
+forecast and require replacement with workload-specific measurements.
 
-An included illustrative portfolio model uses 100 TiB of hot storage, 200 TiB of
-monthly transfer, and 10 million monthly AI requests. Under the base assumptions,
-it calculates:
-
-- 30 TiB of storage and 60 TiB of transfer avoided per month;
-- 1.5 million model calls avoided per month;
-- 2.52 billion input and 375 million output tokens avoided per month;
-- $7,798.56 gross monthly direct savings under the supplied unit rates;
-- $5,298.56 net monthly savings after a supplied $2,500 URP operating cost;
-- a 5.66-month simple payback on a supplied $30,000 implementation cost.
-
-These are model outputs, not a URP forecast. The scenario is checked into the
-repository and can be changed with one JSON file.
-
-## 1. The problem: optimization is fragmented
+## 2. Problem statement and scope
 
 Infrastructure waste is not one defect. It is a set of repeated decisions spread
 across systems:
@@ -109,7 +103,7 @@ to develop. [FinOps Foundation, State of FinOps 2026](https://data.finops.org/)
 These external numbers do not prove URP savings. They establish why a reusable,
 measurable reduction mechanism matters.
 
-## 2. Why point solutions are insufficient
+## 3. Design requirements
 
 A compressor can reduce bytes. A cache can avoid a model call. A scheduler can move
 a job. None of those tools alone answers the system-level questions:
@@ -124,10 +118,13 @@ a job. None of those tools alone answers the system-level questions:
 - How much work was actually avoided?
 
 Without common answers, an organization accumulates isolated optimizers and a new
-governance burden. URP standardizes the decision and evidence layer while allowing
-specialized reducers to remain pluggable.
+governance burden. These questions define the design requirements for URP:
+contract preservation, tenant isolation, source freshness, explainable policy,
+server-executed verification, exact reconstruction where required, safe fallback,
+and attributable avoided-work metrics. URP standardizes that decision and evidence
+layer while allowing specialized reducers to remain pluggable.
 
-## 3. The URP thesis
+## 4. Architecture and system model
 
 URP is a plane, not a new universal file format and not a model provider.
 
@@ -152,7 +149,7 @@ flowchart LR
     H --> K[Existing backend]
 ```
 
-### 3.1 Canonical objects
+### 4.1 Canonical objects
 
 | Object | Responsibility |
 |---|---|
@@ -163,7 +160,7 @@ flowchart LR
 | `Manifest` | Maps the logical work unit to chunks, transforms, checksums, cache result, route, lineage, and telemetry. |
 | `LedgerEvent` | Appends an auditable event for classification, policy, execution, verification, cache, restore, deletion, or override. |
 
-### 3.2 Compatibility first
+### 4.2 Compatibility first
 
 URP minimizes adoption cost through familiar boundaries:
 
@@ -177,46 +174,46 @@ URP minimizes adoption cost through familiar boundaries:
 Applications do not need to understand chunk stores, manifests, or reduction
 plugins to use the gateway path.
 
-## 4. Why this architecture can change the economics
+## 5. Design rationale and economic mechanisms
 
 URP combines several effects that are normally optimized separately.
 
-### 4.1 One observation layer finds compound waste
+### 5.1 One observation layer finds compound waste
 
 An object may be compressible, duplicated, repeatedly transferred, and repeatedly
 included in AI context. Reducing only the stored copy leaves the other costs. A
 shared manifest and metrics model can attribute avoided bytes and avoided compute
 to the same logical source.
 
-### 4.2 Verification turns optimization into a deployable control
+### 5.2 Verification turns optimization into a deployable control
 
 The operational barrier to aggressive optimization is often trust. Exact restore
 hashes, output shape checks, source fingerprints, policy IDs, and safe fallbacks let
 teams expand only the paths that prove acceptable on their data.
 
-### 4.3 Observe-shadow-enforce reduces adoption risk
+### 5.3 Observe-shadow-enforce reduces adoption risk
 
 URP can record what it would do before changing outputs. Shadow mode executes an
 isolated candidate path and verifies it without serving that result. Enforce mode is
 therefore a measured promotion, not a blind migration.
 
-### 4.4 A stable plugin contract makes improvement cumulative
+### 5.4 A stable plugin contract makes improvement cumulative
 
 Compression, chunking, classifiers, verifiers, and provider adapters can improve
 without replacing the WorkUnit, policy, manifest, ledger, or SDK model. New
 optimizers inherit the same safety and conformance gates.
 
-### 4.5 Unit economics become visible
+### 5.5 Unit economics become visible
 
 The manifest and ledger make avoided work queryable by tenant, namespace, kind,
 contract, route, and action. This is the bridge between engineering telemetry and
 FinOps reporting.
 
-## 5. Implementation
+## 6. Implementation
 
 The repository is a working monorepo rather than an architecture-only proposal.
 
-### 5.1 Core runtime
+### 6.1 Core runtime
 
 `python/urp` implements contracts, classification, entropy sampling, planning,
 execution, exact rehydration, policies, verifiers, approvals, stores, metrics,
@@ -227,13 +224,7 @@ Exact object execution uses tenant-scoped content-defined chunks, checksums, and
 recorded compression codec. Every chunk is verified on read. Range rehydration
 checks coverage and integrity instead of trusting manifest offsets.
 
-Content addressing and duplicate coalescing are established storage techniques.
-The Venti system demonstrated hash-addressed blocks and coalescing duplicate copies
-as a storage primitive. URP extends the idea with tenant boundaries, contracts,
-policy, restore verification, and a shared AI/data lifecycle. [Quinlan and Dorward,
-Venti, FAST 2002](https://www.usenix.org/conference/fast-02/venti-new-approach-archival-data-storage)
-
-### 5.2 Policy and security
+### 6.2 Policy and security
 
 The runtime includes:
 
@@ -256,7 +247,7 @@ certification of NIST conformance, but its policy, measurement, evidence, and
 fallback model gives operators implementation hooks for those functions. [NIST AI
 RMF 1.0](https://www.nist.gov/publications/artificial-intelligence-risk-management-framework-ai-rmf-10)
 
-### 5.3 Gateways and adapters
+### 6.3 Gateways and adapters
 
 The local implementation includes:
 
@@ -270,7 +261,7 @@ The local implementation includes:
 External credentials are not required for the default suite. Live adapters are
 activated only when their environment and credentials are present.
 
-### 5.4 SDK and protocol surface
+### 6.4 SDK and protocol surface
 
 JSON Schema Draft 2020-12, OpenAPI, and protobuf describe public contracts. The
 TypeScript and Go SDKs provide authenticated clients, typed WorkUnit builders,
@@ -278,7 +269,7 @@ binary envelopes, raw-byte reads, approvals, manifests, ledgers, multipart objec
 operations, and AI helpers. Rust crates provide core contracts, chunking, and S3
 gateway primitives.
 
-### 5.5 Deployment and software supply chain
+### 6.5 Deployment and software supply chain
 
 URP ships with a non-root, read-only container; Docker Compose; hardened Kubernetes
 resources; Helm packaging; Terraform reference modules for AWS, Azure, and GCP;
@@ -290,27 +281,7 @@ attestations. GitHub describes attestations as signed claims linking artifacts t
 their source repository, workflow, commit, and triggering event. Attestation proves
 provenance, not that software is vulnerability-free. [GitHub artifact attestations](https://docs.github.com/en/actions/concepts/security/artifact-attestations)
 
-### 5.6 Relationship to recent AI serving systems
-
-Recent systems demonstrate that repeated context and cache movement are material
-infrastructure concerns. vLLM's PagedAttention reduces key-value cache fragmentation
-and enables sharing within and across requests. CacheGen compresses and streams
-key-value caches to reduce context-loading delay. Mooncake treats the key-value cache
-as a disaggregated serving resource with scheduler-level service objectives. SISO
-explores semantic caching policies for improving hit ratio and service-level
-attainment. [Kwon et al., vLLM](https://arxiv.org/abs/2309.06180), [Liu et al.,
-CacheGen](https://arxiv.org/abs/2310.07240), [Qin et al.,
-Mooncake](https://arxiv.org/abs/2407.00079), [Kim et al.,
-SISO](https://arxiv.org/abs/2508.18736)
-
-Those systems optimize LLM-serving internals. URP operates at a different boundary:
-it standardizes eligibility, tenant scope, policy, verification, lineage, fallback,
-and avoided-work accounting across object, data, and AI interfaces. URP can therefore
-coexist with an inference engine or key-value cache system rather than replacing it.
-Semantic reuse remains disabled by default because a higher cache hit ratio is not
-itself evidence that a reused answer satisfies the caller's preservation contract.
-
-## 6. Safety model
+## 7. Safety and threat model
 
 | Behavior | Default | Promotion requirement |
 |---|---|---|
@@ -327,28 +298,28 @@ itself evidence that a reused answer satisfies the caller's preservation contrac
 The verifier is a result, not a client-supplied Boolean. Cached and reduced outputs
 are accepted only after the server executes the required check.
 
-## 7. Evidence method
+## 8. Evaluation methodology
 
 URP uses three evidence classes.
 
-### 7.1 Measured repository evidence
+### 8.1 Measured repository evidence
 
 These results come from deterministic local examples and tests. They prove code
 paths and invariants on small fixtures. They do not establish production throughput
 or portfolio-wide savings.
 
-### 7.2 Modeled scenario evidence
+### 8.2 Modeled scenario evidence
 
 The impact calculator applies explicit workload, rate, reduction, operating-cost,
 and implementation-cost assumptions. It is useful for sensitivity analysis and
 deployment decisions. It is not a forecast.
 
-### 7.3 External context
+### 8.3 External context
 
 Primary reports and standards establish market scale, energy context, governance
 needs, and prior technical foundations. They do not validate URP performance.
 
-## 8. Measured local evidence
+## 9. Local evaluation results
 
 Run:
 
@@ -363,14 +334,14 @@ The current local evidence bundle demonstrates:
 | Test | Observed result | What it proves |
 |---|---:|---|
 | Exact object restore | 11,556 of 11,556 bytes matched | Exact rehydration works for the fixture. |
-| Stored representation | 249 bytes for a 11,556-byte repetitive CSV fixture | 97.85% reduction on this synthetic, highly compressible input only. |
+| Stored representation | 249 bytes for an 11,556-byte repetitive CSV fixture | 97.85% reduction on this synthetic, highly compressible input only. |
 | Byte-range read | Returned expected CSV prefix | Range reconstruction follows the verified manifest. |
 | Legal hold | Delete denied with reason `legal_hold` | Policy guardrail is enforced. |
 | Exact AI cache | First request `miss`, second request `exact_hit` | One of two identical mock-provider calls was avoided. |
 | Prompt privacy | Raw prompt absent from default logs | Default logging uses redacted evidence. |
 | Ledger | Chain validation returned true | Event-chain integrity checks pass for the run. |
 | Lakehouse adapter | Local exact-logical execution accepted | Adapter contract runs without external services. |
-| Full Python suite | 86 tests pass after this publication change | Unit, integration, conformance, security, gateway, load, and benchmark behavior remains green. |
+| Full Python suite | 87 tests pass after this publication change | Unit, integration, conformance, security, gateway, load, and benchmark behavior remains green. |
 
 The live runner emits machine-readable evidence for the same claims. In particular,
 `object_gateway_exact.rehydrated_exact` records exact object reconstruction,
@@ -384,7 +355,7 @@ cache index operations, and manifest write rate. These values vary by machine an
 fixture size. They are diagnostic smoke metrics, not production service-level
 objectives.
 
-## 9. Reproducible impact model
+## 10. Reproducible impact model
 
 The model is implemented in `python/urp/impact.py`. The base scenario is
 `examples/impact/illustrative-portfolio.json`.
@@ -393,7 +364,7 @@ The model is implemented in `python/urp/impact.py`. The base scenario is
 urp report impact --scenario examples/impact/illustrative-portfolio.json
 ```
 
-### 9.1 Base inputs
+### 10.1 Base inputs
 
 | Input | Assumption | Classification |
 |---|---:|---|
@@ -416,7 +387,7 @@ AWS publishes S3 Standard as starting at $0.023 per GB-month for the first prici
 tier, while actual rates vary by region, tier, contract, requests, and transfer.
 [Amazon S3](https://aws.amazon.com/s3/)
 
-### 9.2 Base outputs
+### 10.2 Base outputs
 
 | Output | Modeled result |
 |---|---:|
@@ -441,7 +412,7 @@ makes it narrower than the full URP opportunity but does not make it conservativ
 for every organization. Replace every assumption with observed telemetry before an
 investment decision.
 
-### 9.3 Sensitivity
+### 10.3 Sensitivity
 
 The checked-in low, base, and high cases hold workload volume, unit prices, URP
 operating cost, implementation cost, and horizon constant. They vary the assumed
@@ -457,7 +428,7 @@ The low case is important: URP is not automatically economical. Observe-mode dat
 should determine whether a deployment has enough reducible work to justify its
 operating and implementation cost.
 
-## 10. Energy and capacity impact
+## 11. Energy and capacity accounting
 
 Avoided storage, transfer, and model calls can reduce infrastructure work, but a
 universal conversion from an avoided request to energy does not exist. Model,
@@ -480,39 +451,39 @@ small percentage improvements across large workloads can matter. URP's defensibl
 environmental claim is narrower: it measures avoided bytes, tokens, and model calls,
 then lets operators apply workload-specific energy evidence.
 
-## 11. How URP can create massive change
+## 12. Discussion and potential implications
 
-### 11.1 From hidden optimization to governed optimization
+### 12.1 Governance implications
 
 Optimization becomes an auditable platform capability instead of a collection of
 opaque shortcuts. Security, platform, data, AI, and finance teams can inspect the
 same plan, verifier, manifest, and ledger.
 
-### 11.2 From isolated savings to compounding savings
+### 12.2 Compositional savings
 
 One source object can drive storage, transfer, retrieval, prompt context, and
 training costs. A shared lineage model can prevent repeated work at several stages,
 not only one.
 
-### 11.3 From provider lock-in to portable contracts
+### 12.3 Portability
 
 The value is defined by WorkUnits, contracts, policies, and evidence rather than a
 specific cloud or model provider. Adapters can change while the governance model
 remains stable.
 
-### 11.4 From unsafe experimentation to staged rollout
+### 12.4 Staged deployment
 
 Observe and shadow modes produce organization-specific evidence before enforcement.
 This can shorten the path from optimization idea to production control while
 keeping rollback and baseline fallback visible.
 
-### 11.5 From cost reports to active unit economics
+### 12.5 FinOps integration
 
 FinOps teams need usage and attribution before confident optimization. URP records
 avoided work at the decision point, giving reports a direct link to technical
 evidence.
 
-## 12. Deployment path
+## 13. Deployment methodology
 
 ### Phase 0: local proof
 
@@ -546,7 +517,7 @@ Add production stores, cloud adapters, lakehouse workflows, training reduction, 
 flexible scheduling. Introduce semantic or bounded approximation only through a
 separate policy, approval, evaluation, and rollback process.
 
-## 13. Deployment readiness and boundaries
+## 14. Operational readiness and boundaries
 
 The repository is ready for local evaluation, container build, Docker Compose,
 Kubernetes/Helm installation, SDK integration, and adaptation behind conformance
@@ -566,9 +537,41 @@ Production operators still own:
 - cost and energy telemetry from the actual environment.
 
 The command `urp platform validate --require-live` reports missing credential gates
-instead of pretending that an uncredentialed environment is live-ready.
+instead of treating an uncredentialed environment as live-ready.
 
-## 14. Limitations
+## 15. Related work
+
+Content addressing and duplicate coalescing are established storage techniques.
+Venti demonstrated hash-addressed blocks and coalescing duplicate copies as a
+storage primitive, while large-scale primary-storage studies characterized the
+practical benefits and costs of deduplication. URP builds on those foundations but
+adds tenant boundaries, preservation contracts, policy decisions, restore
+verification, and a common data-and-AI audit lifecycle. [Quinlan and Dorward,
+Venti](https://www.usenix.org/conference/fast-02/venti-new-approach-archival-data-storage),
+[El-Shimi et al., primary data deduplication](https://www.usenix.org/conference/atc12/technical-sessions/presentation/el-shimi)
+
+Recent AI-serving systems show that repeated context and cache movement are
+material systems concerns. vLLM's PagedAttention reduces key-value cache
+fragmentation and enables sharing within and across requests. CacheGen compresses
+and streams key-value caches to reduce context-loading delay. Mooncake treats the
+key-value cache as a disaggregated serving resource with scheduler-level service
+objectives. SISO explores semantic caching policies for improving hit ratio and
+service-level attainment. [Kwon et al., vLLM](https://arxiv.org/abs/2309.06180),
+[Liu et al., CacheGen](https://arxiv.org/abs/2310.07240), [Qin et al.,
+Mooncake](https://arxiv.org/abs/2407.00079), [Kim et al.,
+SISO](https://arxiv.org/abs/2508.18736)
+
+These systems optimize storage or LLM-serving internals. URP operates at a
+different boundary: it standardizes eligibility, tenant scope, policy,
+verification, lineage, fallback, and avoided-work accounting across object, data,
+and AI interfaces. It can coexist with an inference engine, object store, or
+key-value cache rather than replacing those systems. Semantic reuse remains
+disabled by default because cache-hit rate alone does not demonstrate preservation
+of a caller's contract.
+
+## 16. Limitations and future work
+
+### 16.1 Limitations
 
 1. Current throughput results are local smoke measurements, not distributed scale tests.
 2. Exact storage ratios depend entirely on data entropy and duplicate structure.
@@ -580,7 +583,7 @@ instead of pretending that an uncredentialed environment is live-ready.
 8. Energy and carbon impact require measured workload and grid telemetry.
 9. The project is pre-1.0; public interfaces can evolve under documented migration rules.
 
-## 15. Research and engineering agenda
+### 16.2 Research and engineering agenda
 
 - production traces for exact cache, context, and object opportunity distributions;
 - large-object and concurrent gateway benchmarks;
@@ -593,13 +596,13 @@ instead of pretending that an uncredentialed environment is live-ready.
 - controlled trials comparing observe, shadow, and enforce outcomes;
 - long-horizon restore drills across codec and plugin upgrades.
 
-## 16. Conclusion
+## 17. Conclusion
 
 The opportunity behind URP is not a mythical universal compressor. It is a universal
 way to decide whether work can be avoided, prove that the required result was
 preserved, and record the outcome across data and AI systems.
 
-That shared lifecycle can change how organizations optimize infrastructure. It
+That shared lifecycle may change how organizations optimize infrastructure. It
 creates a path from scattered tools to one governed reduction plane; from estimated
 savings to attributed avoided work; from risky shortcuts to verifier-backed
 promotion; and from provider-specific controls to portable contracts.
@@ -607,9 +610,18 @@ promotion; and from provider-specific controls to portable contracts.
 The current repository proves the local product contract and supplies deployment,
 SDK, policy, conformance, and release foundations. Its impact model shows that the
 economics can be material under plausible assumptions and uneconomic under weak
-ones. The correct next step for every adopter is therefore the same: deploy in
-observe mode, measure the real opportunity, and enforce only what verification can
-defend.
+ones. The resulting recommendation is deliberately conditional: deploy in observe
+mode, measure the workload-specific opportunity, and enforce only what
+verification can defend.
+
+## Author declaration and tool disclosure
+
+The author is the creator and maintainer of URP, and the local evaluation reported
+here is author-conducted rather than independently reproduced. OpenAI Codex was
+used as a software-engineering and language-editing assistant during implementation,
+testing, and manuscript preparation. The author reviewed the code, experiments,
+calculations, citations, claims, and final text and accepts responsibility for the
+entire work. The tool is not an author.
 
 ## Appendix A: impact formulas
 
@@ -641,7 +653,7 @@ net_monthly_savings = gross_monthly_savings - monthly_urp_operating_cost
 payback_months = implementation_cost / net_monthly_savings
 ```
 
-## Appendix B: references
+## Appendix B: References
 
 1. C. E. Shannon, "A Mathematical Theory of Communication," Bell System Technical Journal, 1948, [DOI 10.1002/j.1538-7305.1948.tb01338.x](https://doi.org/10.1002/j.1538-7305.1948.tb01338.x).
 2. International Energy Agency, [Energy and AI](https://www.iea.org/reports/energy-and-ai), 2025.

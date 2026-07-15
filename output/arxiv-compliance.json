@@ -1,0 +1,97 @@
+{
+  "errors": [],
+  "metadata": {
+    "abstract_characters": 1455,
+    "authors": [
+      "Siddharth Nilesh Patel (Independent Researcher)"
+    ],
+    "comments": "16 pages, 1 figure. Open-source reference implementation and reproducible local evaluation: https://github.com/thewisecrab/urp",
+    "cross_lists": [
+      "cs.PF",
+      "cs.DB"
+    ],
+    "primary_category": "cs.DC"
+  },
+  "pdf": {
+    "bytes": 124442,
+    "figures": 1,
+    "fonts": {
+      "/AAAAAA+BitstreamVeraSans-Bold": {
+        "embedded": true,
+        "pages": [
+          1,
+          2,
+          3,
+          4,
+          5,
+          6,
+          7,
+          8,
+          9,
+          10,
+          11,
+          12,
+          13,
+          14,
+          15,
+          16
+        ],
+        "subtype": "/TrueType"
+      },
+      "/AAAAAA+BitstreamVeraSans-Oblique": {
+        "embedded": true,
+        "pages": [
+          1,
+          2,
+          3,
+          4,
+          5,
+          6,
+          7,
+          8,
+          9,
+          10,
+          11,
+          12,
+          13,
+          14,
+          15,
+          16
+        ],
+        "subtype": "/TrueType"
+      },
+      "/AAAAAA+BitstreamVeraSans-Roman": {
+        "embedded": true,
+        "pages": [
+          1,
+          2,
+          3,
+          4,
+          5,
+          6,
+          7,
+          8,
+          9,
+          10,
+          11,
+          12,
+          13,
+          14,
+          15,
+          16
+        ],
+        "subtype": "/TrueType"
+      }
+    },
+    "page_sizes": [
+      [
+        595.3,
+        841.9
+      ]
+    ],
+    "pages": 16,
+    "sha256": "3d543f9d8911119a4953f779c7fe1ac70b2440f2f5a01dd71336aa5027c18c8c",
+    "text_characters": 32643
+  },
+  "status": "ok"
+}

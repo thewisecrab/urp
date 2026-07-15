@@ -11,7 +11,7 @@ indexing, citation, or generated-answer inclusion.
 - descriptive page titles and summaries;
 - crawlable static HTML on GitHub Pages;
 - canonical URL, Open Graph, and social metadata;
-- JSON-LD for `SoftwareSourceCode`, `WebSite`, and the white paper;
+- JSON-LD for `SoftwareSourceCode`, `WebSite`, and the technical paper;
 - generated `sitemap.xml` and an explicit `robots.txt`;
 - a curated `/llms.txt` map for answer-engine retrieval;
 - a direct FAQ with self-contained answers;
@@ -34,8 +34,8 @@ sitemap. See the [llms.txt proposal](https://github.com/AnswerDotAI/llms-txt).
 For every public release:
 
 1. Keep README claims aligned with measured evidence.
-2. Update white paper publication metadata and references when conclusions change.
-3. Regenerate the white paper PDF, package metadata, and release digest.
+2. Update technical paper publication metadata and references when conclusions change.
+3. Regenerate the technical paper PDF, package metadata, and release digest.
 4. Run the docs build with strict warnings.
 5. Validate generated links, canonical URLs, JSON-LD, robots, and sitemap output.
 6. Create a tagged GitHub release so citations can identify immutable source.

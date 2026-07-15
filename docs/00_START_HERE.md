@@ -25,7 +25,7 @@ Universal Reduction Plane is a single open-source product that sits between exis
 11. Open-source governance and adoption.
 12. Deployment playbooks.
 13. Platform readiness for local, Kubernetes, cloud, on-prem, edge, provider, and CI/CD targets.
-14. White paper and live examples for proof-oriented review.
+14. Technical paper and live examples for proof-oriented review.
 
 ## The central design decision
 
@@ -75,7 +75,7 @@ A contributor should be able to:
 - perform a clean rollback.
 - run the live examples and connect product claims to manifests, ledgers, cache outcomes, and dashboard evidence.
 
-## Live examples and white paper
+## Live examples and technical paper
 
 For an end-to-end product review, start with:
 

@@ -574,19 +574,31 @@ class SecurityAndConformanceTests(unittest.TestCase):
     def test_arxiv_publication_metadata_is_complete_and_ascii(self):
         root = Path(__file__).resolve().parents[2]
         author = "Siddharth Nilesh Patel"
+        affiliation = "Independent Researcher"
         white_paper = (root / "docs/WHITE_PAPER.md").read_text(encoding="utf-8")
         citation = (root / "CITATION.cff").read_text(encoding="utf-8")
         renderer = (root / "scripts/render_whitepaper.py").read_text(encoding="utf-8")
         bundle = (root / "paper/arxiv/README.md").read_text(encoding="utf-8")
+        metadata = json.loads((root / "paper/arxiv/metadata.json").read_text(encoding="utf-8"))
+        structured_data = (root / "docs/overrides/main.html").read_text(encoding="utf-8")
         for artifact in (white_paper, renderer, bundle):
             self.assertIn(author, artifact)
+            self.assertIn(affiliation, artifact)
         self.assertIn('family-names: "Patel"', citation)
         self.assertIn('given-names: "Siddharth Nilesh"', citation)
         abstract = bundle.split("## Abstract\n\n", 1)[1].split("\n\n## Upload policy", 1)[0]
         abstract.encode("ascii")
         self.assertLessEqual(len(" ".join(abstract.split())), 1920)
-        self.assertIn("cs.DC", bundle)
-        self.assertIn("CC BY 4.0", bundle)
+        self.assertEqual(" ".join(abstract.split()), " ".join(metadata["abstract"].split()))
+        self.assertEqual(metadata["primary_category"], "cs.DC")
+        self.assertLessEqual(len(metadata["cross_lists"]), 2)
+        self.assertEqual(metadata["article_license"], "CC BY 4.0")
+        self.assertEqual(metadata["software_license"], "Apache-2.0")
+        self.assertEqual(metadata["upload_files"], ["docs/assets/URP-White-Paper-v1.0.pdf"])
+        self.assertIn("OpenAI Codex", white_paper)
+        self.assertIn("Author declaration and tool disclosure", white_paper)
+        self.assertIn('"license": "https://creativecommons.org/licenses/by/4.0/"', structured_data)
+        self.assertIn('"dateModified": "2026-07-15"', structured_data)
 
     def test_api_specs_parse_and_have_typed_operations(self):
         result = validate_api_specs(Path(__file__).resolve().parents[2])

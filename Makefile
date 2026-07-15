@@ -46,6 +46,7 @@ docs-serve:
 whitepaper:
 	$(PIP) install -r requirements-publication.txt
 	$(PY) scripts/render_whitepaper.py
+	$(PY) scripts/verify_arxiv_submission.py
 
 demo:
 	$(PY) examples/live/run_live_examples.py --reset

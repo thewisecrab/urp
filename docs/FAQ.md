@@ -106,5 +106,5 @@ non-commercial use, modification, and distribution under the license terms.
 ## How should URP be cited?
 
 Use the repository's `CITATION.cff`, identify the exact release tag or commit, and
-cite the [URP white paper](WHITE_PAPER.md) when discussing the architecture or
+cite the [URP technical paper](WHITE_PAPER.md) when discussing the architecture or
 impact model.

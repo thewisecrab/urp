@@ -1,5 +1,5 @@
 {
-  "content_digest": "3150fcfec74097cdbda62fa50fcaefcbf82897538c8a435c7cd5fc62db6ea9c5",
+  "content_digest": "45f889d62f2c23c0c99d1a86d8b4b5944033f5fe01685b1f5ae946de8e8acca5",
   "content_digest_algorithm": "sha256(stable-json(files))",
   "excluded_roots": [
     ".DS_Store",
@@ -22,7 +22,7 @@
     "target",
     "tmp"
   ],
-  "file_count": 255,
+  "file_count": 259,
   "files": {
     ".dockerignore": {
       "sha256": "d02e0fac2307703377510a2889a745722114ca6cd7048be8e580fa52c7644a02",
@@ -65,8 +65,8 @@
       "size": 674
     },
     ".github/workflows/ci.yaml": {
-      "sha256": "db64025d30c5c07c55d96b8badfb816c81f10eace7200249886fdbdd5262f840",
-      "size": 5755
+      "sha256": "896409c85bf240002cbd44f063094025a0bf6a1cc4dd628df11e985ebef13f1e",
+      "size": 6926
     },
     ".github/workflows/codeql.yaml": {
       "sha256": "b8bd68b0568127de7c1711c4a969abdcd7545a834625ea5354e5a67585202959",
@@ -93,8 +93,8 @@
       "size": 510
     },
     ".gitignore": {
-      "sha256": "863ef1aff5fdaa8515a8c10d323dfe91475e3575c40f63197e89ecdb9b234e2f",
-      "size": 214
+      "sha256": "82d843b2a84e74dd9764b767c24d0c4d204c01da3241f6e0c699673b9452c9a7",
+      "size": 221
     },
     ".gitleaks.toml": {
       "sha256": "7a46d691224b67778e55c22f8ac1c49f458057da43ef1f3c6aa8d1ddd0ca96ad",
@@ -133,8 +133,8 @@
       "size": 11358
     },
     "Makefile": {
-      "sha256": "c0840d2be740a8a218be8d33c8f754580874df238658f502d125be0eff1523a5",
-      "size": 1760
+      "sha256": "ccf086a3e6b4d9444c9822adbb8e07149508f7bf166e4c2bb0753876f2d3f8d8",
+      "size": 1802
     },
     "NOTICE": {
       "sha256": "100b7c2cc65e94186d443d84a726498d11909d17c806adbc23ccd7e3a51aad74",
@@ -145,8 +145,8 @@
       "size": 3588
     },
     "README.md": {
-      "sha256": "36150fc0c2e98d124935084fe46a38a2ca214264fc682c30e544aa259cd1dfe2",
-      "size": 11601
+      "sha256": "d1a486fcfecb856e1118ccd912c87ef55db85fd4f992541c286efe7f2672b6ec",
+      "size": 11917
     },
     "SECURITY.md": {
       "sha256": "1bda4b371dde591a3942c873898608d0eff827b09860ab42df8f33d85bb62c27",
@@ -321,8 +321,8 @@
       "size": 1281
     },
     "docs/00_START_HERE.md": {
-      "sha256": "a4e1bbf6b83af954dd78b4e109e16dce86b77fda24942c8903ed8c50e0ba7a91",
-      "size": 5696
+      "sha256": "0d5d5c0765513934539704d28459b0e34a21a122567a9195a36526fa2fd0cae4",
+      "size": 5704
     },
     "docs/01_PRODUCT_EXPLAINER.md": {
       "sha256": "800663f4d312240c64b956346793fce3d6fb88debb381a4d2fd2fcb0ffa752ab",
@@ -385,40 +385,40 @@
       "size": 3930
     },
     "docs/DISCOVERABILITY.md": {
-      "sha256": "c215ae90d5cc349f1a7ad9b771920e709220a4be136b5ee3c9902de7817cb62e",
-      "size": 2275
+      "sha256": "b6dacf80d03966f3e3212988af1c237744bb61903573dddbbaeaa7eb903e7e12",
+      "size": 2287
     },
     "docs/FAQ.md": {
-      "sha256": "e8f11cbe27d3c7dc93941ae25886402528abdbe124b7ef7010bc0f59e792c21c",
-      "size": 4367
+      "sha256": "c8d65664cd8a53af3fc49dcff8b4b3cbe62e7ee82b9bb6e3d5d8e969e2076f6e",
+      "size": 4371
     },
     "docs/MIGRATION_NOTES.md": {
       "sha256": "e70792b7e698bf7281740e7358766a91ca6988281ad4b6b16f6f349f2e9f2178",
       "size": 3779
     },
     "docs/WHITE_PAPER.md": {
-      "sha256": "2f2ea9658f2ec02b1e05ad74bd788776376aeb4a4cdf525c6e1c03635d63361d",
-      "size": 32216
+      "sha256": "9daf68db26821125fa0df7e576239ee9cb9d0feed3b357c6d9adeb2da758a486",
+      "size": 33225
     },
     "docs/assets/URP-White-Paper-v1.0.pdf": {
-      "sha256": "f70fb3b5f1270c2bae0e6f486cbf9f8f80f9b53507e3e40112e4085b8a81a1f8",
-      "size": 60625
+      "sha256": "3d543f9d8911119a4953f779c7fe1ac70b2440f2f5a01dd71336aa5027c18c8c",
+      "size": 124442
     },
     "docs/assets/stylesheets/extra.css": {
       "sha256": "3bac5c153458f3b0cdce1dbb066cfd90091b551139aaf567fde4aa0a5928c586",
       "size": 1723
     },
     "docs/index.md": {
-      "sha256": "95301ab3210909454da395a0484a181af3584e5fd7ba6689d884c943243eea5e",
-      "size": 2747
+      "sha256": "c97ae3fec01fba9e9fdb56d3467b28eba7a6a576461b7be458c0e32f2d000334",
+      "size": 2751
     },
     "docs/llms.txt": {
-      "sha256": "64aa59014ee35ff108933ab423a39191e3b435b187de71d4df7580e3ec1ee841",
-      "size": 2915
+      "sha256": "56ff5a11823ebf7f8ed43f647f2ab39ccbdd82f73c9149937c771964fc8cbc86",
+      "size": 2923
     },
     "docs/overrides/main.html": {
-      "sha256": "9e7a8d5c4cc48e31d94526002972a739189ec3848b292184bb6f7dff1a360d80",
-      "size": 3703
+      "sha256": "0ec380a38d2e4d4d56174154c5dc847d0605fbdbeb2f41b2dda09099c18a5094",
+      "size": 3756
     },
     "docs/robots.txt": {
       "sha256": "662dcbb8762b9c056d742a8f9c5993c51fbc67dafc951907acf9705d230fc2f6",
@@ -489,24 +489,36 @@
       "size": 2066
     },
     "line_count_manifest.json": {
-      "sha256": "128751005c542dd8af768c99d502b9ae7ded244f48b9ac1e5cc02e96dba31716",
-      "size": 9958
+      "sha256": "2496a9fc9ef414b5672d03b9dc6f736552ea608004d2c60ce5695a9200475d61",
+      "size": 10120
     },
     "mkdocs.yml": {
-      "sha256": "fa2fd0180246199ca1a03d4751171097d86dbca0af66954a30c6e3b1b710de33",
-      "size": 3623
+      "sha256": "e414644ccaa1bede5d519a6a8f581391adfee3c70e49551bbbea404e679c8e8d",
+      "size": 3627
+    },
+    "output/arxiv-compliance.json": {
+      "sha256": "7fa31be591b16b595f48ee78ef4f1dab6f2328a0c83908467d19bb5187acf04d",
+      "size": 1742
     },
     "output/pdf/URP-White-Paper-v1.0.pdf": {
-      "sha256": "f70fb3b5f1270c2bae0e6f486cbf9f8f80f9b53507e3e40112e4085b8a81a1f8",
-      "size": 60625
+      "sha256": "3d543f9d8911119a4953f779c7fe1ac70b2440f2f5a01dd71336aa5027c18c8c",
+      "size": 124442
     },
     "package_manifest.json": {
-      "sha256": "a0ec8ea2cb54d8414accda16c4a894b4c213ab14ae7aedc0498022007e2cabee",
-      "size": 1981
+      "sha256": "af192cb54e0885b3e71f76573f531b5d67e0a9e4186580a27f4b44b0f5dfa308",
+      "size": 2188
+    },
+    "paper/arxiv/COMPLIANCE.md": {
+      "sha256": "4937aac3bc51095642275060775b480f4cf3cabc9139a81de18f023e7022829d",
+      "size": 4101
     },
     "paper/arxiv/README.md": {
-      "sha256": "125ddd56cb61768a356d8edd0b4f37aada9bee501381dd94d957fd1135352eb7",
-      "size": 2907
+      "sha256": "3e4fa0316cab5c9ea3b042e990140fd69fbb7b182e98406e1a928da7e3845dab",
+      "size": 4341
+    },
+    "paper/arxiv/metadata.json": {
+      "sha256": "16a063c8788604ad6f8833a1d3d3e7c41e1c96b90591e415c7b0e4f1b6963b22",
+      "size": 2252
     },
     "plugins/README.md": {
       "sha256": "662e65120e1981d546178f7d6aeb290519e6c85ce6053800b0c3b8045c0b07a5",
@@ -801,8 +813,8 @@
       "size": 10511
     },
     "python/urp/package_metadata.py": {
-      "sha256": "1452771c473fd733673d5bc6d24885e7f08e6552f9967e6542ed6d5c3c638052",
-      "size": 4349
+      "sha256": "28e2dc73c7eec48ea1ae34cf343765b03c85f5b7e0267d7ee3a26e31a5cd619e",
+      "size": 4647
     },
     "python/urp/plan_store.py": {
       "sha256": "94b2f65502b03d646ce637b59921cdb52c27bf3e082f8e2fd03707398523d613",
@@ -909,8 +921,12 @@
       "size": 709
     },
     "scripts/render_whitepaper.py": {
-      "sha256": "c158a47b07396094be00935a3f95a790a0c2e0421ff8d870c9fb36253210e7c0",
-      "size": 21666
+      "sha256": "8eda05d510f054ffeef09aaf6a89cb8931ed85def576cdb6e003ce11eadd4d87",
+      "size": 24371
+    },
+    "scripts/verify_arxiv_submission.py": {
+      "sha256": "813da272203b967931b53f75c89ddbc94a58c5c5cc2c9eada01f47e4c7caf643",
+      "size": 11447
     },
     "services/control-plane/README.md": {
       "sha256": "d071ad7e45bd0f9751ebf64172ee6d87a0d1d1a98e275fdd0dec71dc50030fa9",
@@ -985,8 +1001,8 @@
       "size": 10756
     },
     "tests/conformance/test_security_and_adapters.py": {
-      "sha256": "3345989c26f87ec7d3a2531a8cf0f118e9e843e6940668cb6b1846723ab80ea3",
-      "size": 29643
+      "sha256": "447a488e383aaa4f056fb94840e80fe28a0d7164ef40305d8ae4985c29ca8c84",
+      "size": 30590
     },
     "tests/integration/__init__.py": {
       "sha256": "01ba4719c80b6fe911b091a7c05124b64eeece964e09c058ef8f9805daca546b",
@@ -1045,16 +1061,16 @@
       "size": 436
     }
   },
-  "generated_at": "2026-07-15T11:01:02.085297+00:00",
+  "generated_at": "2026-07-15T11:55:22.926260+00:00",
   "manifest_version": "urp.release.v2",
   "provenance": {
     "archive_policy": "archive/source_packages is preserved in the repository but excluded from the active release manifest",
     "builder": "urp.release.write_release_manifest",
     "git": {
       "available": true,
-      "branch": "codex/arxiv-publication",
-      "commit": "6dc983015bf074d3a528d24c6af7b34d14ed965e",
-      "dirty": false
+      "branch": "codex/arxiv-compliance",
+      "commit": "d1498d40a534792101b73d1a6e3182cf8d081437",
+      "dirty": true
     },
     "platform": "macOS-26.5.1-arm64-arm-64bit-Mach-O",
     "python": "3.13.7",

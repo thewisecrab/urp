@@ -50,6 +50,31 @@ jobs:
       - run: cd /tmp && /tmp/urp-wheel/bin/python -c "from urp.schema_validation import load_schema; assert load_schema('work_unit')['title'] == 'URP Work Unit'"
       - run: cd /tmp && /tmp/urp-wheel/bin/urp --state-dir /tmp/urp-state execute --kind byte_object --input wheel-smoke
 
+  publication:
+    name: arXiv publication bundle
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7.0.0
+      - uses: actions/setup-python@ece7cb06caefa5fff74198d8649806c4678c61a1 # v6.3.0
+        with:
+          python-version: "3.13"
+          cache: pip
+      - run: python3 -m pip install -r requirements-publication.txt ruff==0.15.21
+      - run: python3 -m ruff check scripts/render_whitepaper.py scripts/verify_arxiv_submission.py
+      - run: python3 scripts/render_whitepaper.py
+      - run: python3 scripts/verify_arxiv_submission.py --report output/arxiv-compliance.json
+      - name: Verify committed PDF is reproducible
+        run: git diff --exit-code -- docs/assets/URP-White-Paper-v1.0.pdf output/pdf/URP-White-Paper-v1.0.pdf
+      - uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
+        with:
+          name: arxiv-publication-bundle
+          path: |
+            docs/assets/URP-White-Paper-v1.0.pdf
+            paper/arxiv/metadata.json
+            paper/arxiv/COMPLIANCE.md
+            output/arxiv-compliance.json
+          if-no-files-found: error
+
   typescript:
     runs-on: ubuntu-latest
     steps:
