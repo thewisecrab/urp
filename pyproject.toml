@@ -40,24 +40,24 @@ dependencies = [
 
 [project.optional-dependencies]
 api = [
-  "fastapi>=0.139,<1",
-  "httpx2>=2.5,<3",
+  "fastapi>=0.139.2,<1",
+  "httpx2>=2.7.0,<3",
 ]
 dev = [
   "build>=1.5.0",
-  "coverage[toml]>=7.15.0",
-  "fastapi>=0.139,<1",
-  "httpx2>=2.5,<3",
+  "coverage[toml]>=7.15.2",
+  "fastapi>=0.139.2,<1",
+  "httpx2>=2.7.0,<3",
   "pytest>=9.1.1",
   "pytest-cov>=7.1.0",
-  "ruff>=0.15.21",
+  "ruff>=0.15.22",
 ]
 production = [
   "psycopg[binary]>=3.3.4",
 ]
 cloud = [
   "azure-storage-blob>=12.30.0",
-  "google-cloud-storage>=3.12.1",
+  "google-cloud-storage>=3.13.0",
 ]
 
 [project.scripts]
