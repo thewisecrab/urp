@@ -11,7 +11,8 @@ from typing import Any, Dict, List, Mapping, Protocol, Set
 from urllib import error as urlerror
 from urllib import request as urlrequest
 
-from .ai_router import RouteFeedbackStore, route_model
+from .ai_router import KeywordModelRouter, ModelRouter, RouteFeedbackStore
+from .decision_backend import BackendSimilarityScorer, DecisionBackend
 from .approval_store import ApprovalStore
 from .cache import CacheEntry, URPCache
 from .context import approximate_tokens, compile_openai_messages
@@ -26,6 +27,7 @@ from .plan_store import store_plan_with_audit
 from .planner import plan_work_unit
 from .policy import evaluate_policy
 from .policy_store import resolve_active_policy_bundle
+from .provider_usage import extract_provider_cache_usage
 from .schema_validation import validate_named_schema
 from .semantic_cache import SemanticCache
 from .structured_logs import emit_log
@@ -166,13 +168,21 @@ def handle_chat_completion(
     semantic_cache: SemanticCache | None = None,
     policy_bundle: Dict[str, Any] | None = None,
     mode: str | None = None,
+    router: ModelRouter | None = None,
+    decision_backend: DecisionBackend | None = None,
 ) -> Dict[str, Any]:
     mode = execution_mode(mode)
     require_execution_enabled()
     state = init_state(state_dir)
     provider = provider or MockProvider()
     cache = cache or URPCache(state / "cache" / "cache.sqlite3")
-    semantic_cache = semantic_cache or SemanticCache(path=state / "cache" / "cache.sqlite3")
+    if semantic_cache is None:
+        semantic_cache = SemanticCache(
+            path=state / "cache" / "cache.sqlite3",
+            scorer=BackendSimilarityScorer(decision_backend) if decision_backend is not None else None,
+            verifier=decision_backend.verify if decision_backend is not None else None,
+        )
+    active_router: ModelRouter = router or decision_backend or KeywordModelRouter()
     normalized = normalize_openai_request(request)
     urp_options = dict(normalized.get("urp") or {})
     source_fingerprints = _source_fingerprints(normalized)
@@ -218,7 +228,17 @@ def handle_chat_completion(
     )
     emit_span(state, "urp.intake", work_unit.trace_id, work_unit_id=work_unit.id, tenant=tenant, kind="prompt_request")
     max_context_tokens = int(urp_options.get("max_context_tokens", 4000))
-    compiled, compiled_messages = compile_openai_messages(normalized["messages"], max_tokens=max_context_tokens)
+    allow_lossy_context_truncation = (
+        mode == "enforce"
+        and urp_options.get("allow_lossy_context_truncation") is True
+        and "context_budget_truncate" in action_names
+    )
+    compiled, compiled_messages = compile_openai_messages(
+        normalized["messages"],
+        max_tokens=max_context_tokens,
+        preserve_cache_prefix=True,
+        allow_lossy_truncation=allow_lossy_context_truncation,
+    )
     provider_request = dict(normalized)
     context_applied = mode == "enforce" and "context_compile" in action_names
     if context_applied:
@@ -234,7 +254,7 @@ def handle_chat_completion(
     provider_called = False
     fallback_used = False
     fallback_reason = ""
-    route = route_model(work_unit, policy.model_allowlist, prompt_text=routing_text)
+    route = active_router.route(work_unit, policy.model_allowlist, prompt_text=routing_text)
     semantic_hit_score: float | None = None
     verification: VerificationResult
     if cached is not None:
@@ -271,7 +291,7 @@ def handle_chat_completion(
                 routing_text,
                 source_fingerprints,
                 threshold=float(urp_options.get("semantic_cache_threshold", semantic_cache.threshold)),
-                verifier=_verify_chat_response,
+                verifier=decision_backend.verify if decision_backend is not None else _verify_chat_response,
             )
         if semantic_hit is not None:
             response = semantic_hit.value
@@ -385,6 +405,7 @@ def handle_chat_completion(
                 GLOBAL_METRICS.inc("urp_ai_large_model_calls_total")
     verification = _verify_chat_response(response)
     _verify_required_ai_verifiers(policy.required_verifiers, verification, response, source_fingerprints, cache_result, work_unit.id)
+    provider_cache_usage = _record_provider_cache_usage(state, ledger, tenant, work_unit, policy, response)
     compute_manifest = {
         "request": {
             "request_hash": stable_json_hash(normalized),
@@ -443,6 +464,14 @@ def handle_chat_completion(
             "tokens_removed": compiled.tokens_before - compiled.tokens_after if context_applied else 0,
             "tokens_removable": compiled.tokens_before - compiled.tokens_after,
             "provider_called": provider_called,
+            "context_cache_prefix_preserved": compiled.cache_prefix_preserved,
+            "context_lossy_truncation_applied": compiled.lossy_truncation_applied,
+            "context_lossy_truncation_permitted": compiled.lossy_truncation_permitted,
+            **(
+                {"provider_cache_usage": provider_cache_usage["gen_ai_usage"], "provider_usage": provider_cache_usage["provider_usage"]}
+                if provider_cache_usage["cache_fields_present"]
+                else {}
+            ),
         },
     )
     default_manifest_store(state).put(manifest)
@@ -469,6 +498,8 @@ def handle_chat_completion(
         "verifier": verification.verifier_id,
         "mode": mode,
         "context_applied": context_applied,
+        "context_cache_prefix_preserved": compiled.cache_prefix_preserved,
+        "context_lossy_truncation": compiled.lossy_truncation_applied,
         "trace_id": work_unit.trace_id,
     }
     GLOBAL_METRICS.inc("urp_work_units_total")
@@ -487,6 +518,8 @@ def handle_completion(
     semantic_cache: SemanticCache | None = None,
     policy_bundle: Dict[str, Any] | None = None,
     mode: str | None = None,
+    router: ModelRouter | None = None,
+    decision_backend: DecisionBackend | None = None,
 ) -> Dict[str, Any]:
     prompt = request.get("prompt", "")
     if isinstance(prompt, list):
@@ -510,6 +543,8 @@ def handle_completion(
         semantic_cache,
         policy_bundle,
         mode,
+        router,
+        decision_backend,
     )
     choice = chat_response["choices"][0]
     text = choice["message"]["content"]
@@ -535,11 +570,14 @@ def handle_embeddings(
     cache: URPCache | None = None,
     policy_bundle: Dict[str, Any] | None = None,
     mode: str | None = None,
+    router: ModelRouter | None = None,
+    decision_backend: DecisionBackend | None = None,
 ) -> Dict[str, Any]:
     mode = execution_mode(mode)
     require_execution_enabled()
     state = init_state(state_dir)
     cache = cache or URPCache(state / "cache" / "cache.sqlite3")
+    active_router: ModelRouter = router or decision_backend or KeywordModelRouter()
     normalized = normalize_embedding_request(request)
     source_fingerprints = _embedding_source_fingerprints(normalized)
     input_items = _embedding_inputs(normalized.get("input", ""))
@@ -599,7 +637,7 @@ def handle_embeddings(
         )
         GLOBAL_METRICS.inc("urp_cache_hits_total")
     else:
-        route = route_model(work_unit, policy.model_allowlist, prompt_text="\n".join(input_items))
+        route = active_router.route(work_unit, policy.model_allowlist, prompt_text="\n".join(input_items))
         emit_span(state, "urp.ai.route", work_unit.trace_id, work_unit_id=work_unit.id, route=route.model, reason=route.reason)
         emit_log(
             state,
@@ -691,6 +729,7 @@ def handle_embeddings(
     vectors_for_verification = [_decode_embedding(row["embedding"], normalized["encoding_format"]) for row in response.get("data", [])]
     verification = verify_embedding_vector(vectors_for_verification)
     _verify_required_embedding_verifiers(policy.required_verifiers, verification, work_unit.id)
+    _record_provider_cache_usage(state, ledger, tenant, work_unit, policy, response)
     compute_manifest = {
         "request": {
             "request_hash": stable_json_hash(normalized),
@@ -793,6 +832,38 @@ def lookup_semantic_cache(
 ) -> Any | None:
     state = init_state(state_dir)
     return SemanticCache(path=state / "cache" / "cache.sqlite3").lookup(tenant, namespace, text, source_fingerprints, task_type)
+
+
+def _record_provider_cache_usage(state: Path, ledger: Any, tenant: str, work_unit: WorkUnit, policy: Any, response: Mapping[str, Any]) -> Dict[str, Any]:
+    extracted = extract_provider_cache_usage(response)
+    if not extracted["cache_fields_present"]:
+        return extracted
+    details = {
+        "provider_usage": extracted["provider_usage"],
+        "gen_ai_usage": extracted["gen_ai_usage"],
+        "conflicts": extracted["conflicts"],
+        "inferred": False,
+        "anthropic_cache_added_to_input_tokens": extracted["anthropic_cache_added_to_input_tokens"],
+    }
+    ledger.append(
+        LedgerEvent(
+            "ai.provider_usage.recorded",
+            tenant,
+            work_unit.id,
+            policy_bundle_id=policy.policy_bundle_id,
+            details=details,
+            trace_id=work_unit.trace_id,
+        )
+    )
+    emit_span(
+        state,
+        "urp.ai.usage",
+        work_unit.trace_id,
+        work_unit_id=work_unit.id,
+        inferred=False,
+        **extracted["gen_ai_usage"],
+    )
+    return extracted
 
 
 def _source_fingerprints(normalized: Dict[str, Any]) -> Set[str]:

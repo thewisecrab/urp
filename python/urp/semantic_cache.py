@@ -8,7 +8,7 @@ import time
 from contextlib import closing
 from dataclasses import dataclass, field
 from pathlib import Path
-from typing import Any, Callable, Dict, Iterable, Optional, Set
+from typing import Any, Callable, Dict, Iterable, Optional, Protocol, Set
 
 from .contracts import stable_json_hash
 from .encoding import decode_json_value, encode_json_value
@@ -39,17 +39,50 @@ class SemanticCacheHit:
     created_at: float
 
 
+class SimilarityScorer(Protocol):
+    """Score normalized texts in ``[0, 1]``.
+
+    The default lexical scorer is not a calibrated verifier. A later decision
+    model can implement this protocol without adding a network client here.
+    """
+
+    def score(self, left: str, right: str) -> float:
+        ...
+
+
+class LexicalJaccardScorer:
+    """Fixed 0.7 word-Jaccard plus 0.3 character-trigram blend.
+
+    ``SemanticCache``'s default threshold of 0.82 is a static cutoff on this
+    score. It has no error guarantee.
+    """
+
+    def score(self, left: str, right: str) -> float:
+        return semantic_similarity(left, right)
+
+
 class SemanticCache:
     """Policy-facing semantic cache.
 
     Every stored entry carries an accepted verifier result, and every lookup
     re-checks tenant, namespace, sources, freshness, and output shape.
+
+    The default scorer is lexical. Pass ``scorer`` and ``verifier`` to plug in
+    a different local decision model. This class does not call a provider.
     """
 
-    def __init__(self, threshold: float = 0.82, path: str | Path | None = None) -> None:
+    def __init__(
+        self,
+        threshold: float = 0.82,
+        path: str | Path | None = None,
+        scorer: SimilarityScorer | None = None,
+        verifier: Callable[[Any], VerificationResult] | None = None,
+    ) -> None:
         if not 0 <= threshold <= 1:
             raise ValueError("semantic cache threshold must be between 0 and 1")
         self.threshold = threshold
+        self.scorer = scorer or LexicalJaccardScorer()
+        self.verifier = verifier or _default_value_verifier
         self.path = Path(path) if path is not None else None
         self._entries: Dict[str, SemanticCacheEntry] = {}
         self._lock = threading.RLock()
@@ -188,12 +221,12 @@ class SemanticCache:
                 source_check = verify_source_fingerprints(source_fingerprints, entry.source_fingerprints)
                 if not source_check.accepted or not entry.verification.accepted:
                     continue
-                score = semantic_similarity(query, entry.normalized_text)
+                score = self.scorer.score(query, entry.normalized_text)
                 if score >= resolved_threshold and (best is None or score > best[0]):
                     best = (score, entry)
             if best is None:
                 return None
-            output_check = (verifier or _default_value_verifier)(best[1].value)
+            output_check = (verifier or self.verifier)(best[1].value)
             if not output_check.accepted:
                 self.delete(best[1].key)
                 return None

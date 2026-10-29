@@ -48,9 +48,13 @@ dev = [
   "coverage[toml]>=7.15.0",
   "fastapi>=0.139,<1",
   "httpx2>=2.5,<3",
+  "hypothesis>=6.131.0",
   "pytest>=9.1.1",
   "pytest-cov>=7.1.0",
-  "ruff>=0.15.21",
+  # Ruff 0.17 expands the default rule set (pyupgrade, isort, E501) and fails
+  # on pre-existing modules. 0.15.21 is the version the publication workflow
+  # and the 2026-07-11 receipt used.
+  "ruff==0.15.21",
 ]
 production = [
   "psycopg[binary]>=3.3.4",

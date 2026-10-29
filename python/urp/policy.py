@@ -88,7 +88,7 @@ def evaluate_policy(work_unit: WorkUnit, bundle: Dict[str, Any] | None = None) -
     if requested == Contract.SEMANTIC and work_unit.kind in {WorkUnitKind.PROMPT_REQUEST, WorkUnitKind.COMPLETION_RESPONSE, WorkUnitKind.EMBEDDING_REQUEST}:
         allow_semantic_cache = work_unit.policy_context.get("allow_semantic_cache") is True
         allowed = ["normalize_prompt", "exact_cache_lookup", "model_route", "verify", "cache_store", "compute_manifest"]
-        denied = ["cross_tenant_cache", "semantic_summary", "lossy_transcode", "delete"]
+        denied = ["cross_tenant_cache", "semantic_summary", "lossy_transcode", "context_budget_truncate", "delete"]
         if work_unit.kind in {WorkUnitKind.PROMPT_REQUEST, WorkUnitKind.COMPLETION_RESPONSE}:
             allowed.append("context_compile")
         if allow_semantic_cache and work_unit.kind in {WorkUnitKind.PROMPT_REQUEST, WorkUnitKind.COMPLETION_RESPONSE}:
@@ -158,6 +158,8 @@ def _evaluate_bundle(work_unit: WorkUnit, requested: Contract, bundle: Dict[str,
         denied.append("cross_tenant_dedupe")
     if defaults.get("crossTenantCache") == "deny":
         denied.append("cross_tenant_cache")
+    if "context_budget_truncate" not in explicitly_allowed:
+        denied.append("context_budget_truncate")
     model_allowlist = list(defaults.get("modelAllowlist") or ["tiny", "small", "medium", "frontier"])
     for rule in matched:
         if rule.get("modelAllowlist"):
