@@ -79,9 +79,14 @@ urp report impact --scenario examples/impact/illustrative-portfolio.json
 The calculator separates assumptions from outputs and includes URP operating cost,
 implementation cost, payback, and model boundaries. The checked-in portfolio
 figures are a scenario. They are gross avoided cost at constant demand, not a
-reduction in total spend if usage grows (rebound). The default input price is the
-full list rate and is flagged as such. An `effective_blended` mode applies
-operator-supplied prompt-cache read and write ratios. It does not query a provider.
+reduction in total spend if usage grows (rebound). The portfolio JSON sets
+`input_pricing` to `list_price`. That choice is required and is no longer the
+silent default. It prices avoided input tokens at the full list rate and can
+overstate savings when provider prompt-cache reads are cheaper.
+`effective_blended` applies operator-supplied prompt-cache read and write ratios.
+It does not query a provider. `net_monthly_savings` is the same number as
+`gross_net_of_operating_cost_monthly`: gross avoided cost minus the supplied
+operating cost. It is not a change in total spend.
 
 ## Does URP claim energy or carbon savings?
 

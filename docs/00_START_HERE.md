@@ -8,7 +8,9 @@ A prior draft used artificial length targets. This package removes arbitrary lin
 
 ## URP in one paragraph
 
-Universal Reduction Plane is a single open-source product that sits between existing applications and existing infrastructure. It observes or intercepts data and AI work units, determines what must be preserved, applies safe reduction methods, verifies the outcome, records a manifest, and emits audit events. It reduces storage pressure, data movement, AI inference waste, redundant training, cache misses, and peak compute demand while preserving compatibility with S3, POSIX, SQL, lakehouse formats, streams, OpenAI-compatible APIs, model servers, Kubernetes, and developer SDKs.
+Universal Reduction Plane is a single open-source product that sits between existing applications and existing infrastructure. It observes or intercepts data and AI work units, determines what must be preserved, applies safe reduction methods, verifies the outcome, records a manifest, and emits audit events. It reduces storage pressure, data movement, AI inference waste, redundant training, cache misses, and peak compute demand while preserving compatibility with S3, POSIX, SQL, lakehouse formats, streams, OpenAI-compatible APIs, model servers, Kubernetes manifests, and developer SDKs.
+
+Helm charts, Terraform modules, and Docker Compose files are validated by lint, template, or validate only. They have never been installed on a cluster or cloud account. Container images are built in CI only and have not been run as a deployment.
 
 ## The order to read
 
@@ -24,7 +26,7 @@ Universal Reduction Plane is a single open-source product that sits between exis
 10. Research landscape for grounding decisions.
 11. Open-source governance and adoption.
 12. Deployment playbooks.
-13. Platform readiness for local, Kubernetes, cloud, on-prem, edge, provider, and CI/CD targets.
+13. Platform readiness for local, Kubernetes, cloud, on-prem, edge, provider, and CI/CD targets. Contract-ready means artifacts and validation hooks exist. It does not mean a cluster or cloud install was performed.
 14. Technical paper and live examples for proof-oriented review.
 
 ## The central design decision

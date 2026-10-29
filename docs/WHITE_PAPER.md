@@ -272,10 +272,13 @@ gateway primitives.
 
 ### 6.5 Deployment and software supply chain
 
-URP ships with a non-root, read-only container; Docker Compose; hardened Kubernetes
-resources; Helm packaging; Terraform reference modules for AWS, Azure, and GCP;
+URP ships with a non-root, read-only container definition; Docker Compose files;
+Kubernetes and Helm manifests; Terraform reference modules for AWS, Azure, and GCP;
 on-premises and edge examples; health and readiness probes; CI; release digests;
-and optional Ed25519 release signatures.
+and optional Ed25519 release signatures. Helm, Terraform, and Compose in this
+repository are validated by lint, template, or validate only. They have not been
+installed on a cluster or cloud account. Container images are built in CI only
+and have not been run as a deployment in the evidence for this report.
 
 Release workflows generate artifacts, an SBOM, provenance, and GitHub artifact
 attestations. GitHub describes attestations as signed claims linking artifacts to
@@ -290,14 +293,18 @@ provenance, not that software is vulnerability-free. [GitHub artifact attestatio
 | Exact compression | Allowed when planned | Exact restore verifier |
 | Same-tenant exact cache | Allowed | Source fingerprints and output verifier |
 | Cross-tenant reuse | Denied | No default promotion path |
-| Semantic cache | Disabled | Explicit policy, scope, threshold, and semantic verifier |
+| Semantic cache | Disabled | Explicit policy, scope, threshold, and semantic verifier. The default 0.82 cutoff is a lexical heuristic with no error guarantee. Shadow mode records a would-be hit and does not serve it. |
 | Bounded approximation | Disabled | Explicit error bound, policy, and measured verifier |
 | Deletion | Denied | Explicit policy and approval; legal hold still blocks |
 | Plugin action | Disabled until registered | Digest, capabilities, and conformance |
 | Provider failure | Never accepted as optimized output | Safe baseline fallback |
 
 The verifier is a result, not a client-supplied Boolean. Cached and reduced outputs
-are accepted only after the server executes the required check.
+are accepted only after the server executes the required check. Prompt-cache timing
+side channels (Gu et al., arXiv:2502.07776) and semantic-cache poisoning
+(Zhang et al., arXiv:2609.35908) are known risks. Tenant scoping and the default-off
+semantic cache are the current mitigations. Provider-cache timing isolation and
+poisoning detection are not implemented. See the security notes.
 
 ## 8. Evaluation methodology
 
@@ -359,7 +366,12 @@ objectives.
 ## 10. Reproducible impact model
 
 The model is implemented in `python/urp/impact.py`. The base scenario is
-`examples/impact/illustrative-portfolio.json`.
+`examples/impact/illustrative-portfolio.json`. That file sets
+`input_pricing` to `list_price` so the published full-rate totals below still
+reproduce. Omitting `input_pricing` is an error. `list_price` is an explicit
+choice, not a silent default. `net_monthly_savings` is the same number as
+`gross_net_of_operating_cost_monthly`: gross avoided cost minus the supplied
+operating cost. It is not a change in total spend.
 
 ```bash
 urp report impact --scenario examples/impact/illustrative-portfolio.json

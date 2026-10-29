@@ -174,6 +174,11 @@ docker compose -f deployments/docker-compose/docker-compose.yaml up --build
 
 ### Kubernetes with Helm
 
+Helm, Terraform, and Compose files are validated by lint, template, or validate
+only. They have never been installed on a cluster or cloud account. Container
+images are built in CI only and have not been run as a deployment. The commands
+below are examples, not a record of an install.
+
 ```bash
 helm upgrade --install urp deployments/helm/urp \
   --namespace urp-system \

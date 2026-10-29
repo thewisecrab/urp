@@ -388,7 +388,13 @@ Safe when:
 
 ### Semantic cache
 
-Semantic cache is powerful and risky.
+Semantic cache is powerful and risky. The shipped default threshold is 0.82 on a
+lexical Jaccard/trigram score (`DEFAULT_LEXICAL_THRESHOLD` in
+`python/urp/semantic_cache.py`). That cutoff is a heuristic with no error
+guarantee (Schroeder et al., vCache, arXiv:2502.03771). It stays off unless a
+policy and the request both allow it. Shadow mode can record a would-be hit and
+does not serve it. A policy bundle may set `semanticCacheThreshold` for that
+tenant; a request may still override it. Neither value is a calibrated error bound.
 
 Required guardrails:
 

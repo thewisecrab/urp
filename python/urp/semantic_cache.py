@@ -50,11 +50,17 @@ class SimilarityScorer(Protocol):
         ...
 
 
+# Schroeder et al., vCache, arXiv:2502.03771 (ICLR 2026): a static semantic-cache
+# threshold has no error guarantee. 0.82 is a lexical heuristic, not a calibrated bound.
+DEFAULT_LEXICAL_THRESHOLD = 0.82
+
+
 class LexicalJaccardScorer:
     """Fixed 0.7 word-Jaccard plus 0.3 character-trigram blend.
 
-    ``SemanticCache``'s default threshold of 0.82 is a static cutoff on this
-    score. It has no error guarantee.
+    ``DEFAULT_LEXICAL_THRESHOLD`` (0.82) is a static cutoff on this score.
+    Schroeder et al., vCache (arXiv:2502.03771), show that a static semantic-cache
+    threshold has no error guarantee. This scorer does not provide one.
     """
 
     def score(self, left: str, right: str) -> float:
@@ -67,13 +73,18 @@ class SemanticCache:
     Every stored entry carries an accepted verifier result, and every lookup
     re-checks tenant, namespace, sources, freshness, and output shape.
 
-    The default scorer is lexical. Pass ``scorer`` and ``verifier`` to plug in
-    a different local decision model. This class does not call a provider.
+    The default scorer is lexical and the default threshold is
+    ``DEFAULT_LEXICAL_THRESHOLD`` (0.82). That cutoff is a heuristic with no
+    error guarantee (Schroeder et al., vCache, arXiv:2502.03771). The gateway
+    leaves this cache off unless policy and the request both opt in. Shadow
+    mode may record a would-be hit and must not serve it. Pass ``scorer`` and
+    ``verifier`` to plug in a different local decision model. This class does
+    not call a provider.
     """
 
     def __init__(
         self,
-        threshold: float = 0.82,
+        threshold: float = DEFAULT_LEXICAL_THRESHOLD,
         path: str | Path | None = None,
         scorer: SimilarityScorer | None = None,
         verifier: Callable[[Any], VerificationResult] | None = None,

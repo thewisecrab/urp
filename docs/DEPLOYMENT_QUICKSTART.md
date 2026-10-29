@@ -1,10 +1,11 @@
 # Deployment Quickstart
 
 URP supports local processes and includes Docker Compose files, Kubernetes and
-Helm manifests, and reference cloud modules. The Kubernetes and Helm manifests
-were validated by lint and template only; they were never installed on a cluster.
-Start in `observe` mode and promote only after reviewing manifests, verifier
-outcomes, latency, and cost telemetry.
+Helm manifests, and reference cloud modules. Helm, Terraform, and Compose are
+validated by lint, template, or validate only. They have never been installed on
+a cluster or cloud account. Container images are built in CI only and have not
+been run as a deployment. Start in `observe` mode and promote only after
+reviewing manifests, verifier outcomes, latency, and cost telemetry.
 
 ## Local process
 
@@ -66,6 +67,8 @@ helm template urp deployments/helm/urp --set secrets.create=false \
 ```
 
 ## Direct Kubernetes manifests
+
+This manifest has been lint-checked as a file. It has not been applied to a cluster.
 
 ```bash
 kubectl apply -f deployments/kubernetes/urp-control-plane.yaml

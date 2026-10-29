@@ -466,6 +466,14 @@ Runbook steps:
 - exploit prompt logging;
 - abuse model router.
 
+### Known cache risks
+
+These are documented risks. They are not claims that URP has measured an exploit.
+
+- Prompt-cache timing side channels (Gu et al., arXiv:2502.07776, ICML 2025). A shared provider prefix cache can leak information through timing. URP can avoid editing a declared cache breakpoint so the gateway does not itself invalidate a prefix. That does not stop a provider-side timing channel, and URP does not pad, isolate, or disable provider prompt caches.
+- Semantic-cache poisoning (Zhang et al., arXiv:2609.35908). A poisoned near-match can be replayed as a later answer. Current mitigations: the semantic cache is off unless policy and the request both allow it; entries are tenant- and namespace-scoped; a lookup rechecks source fingerprints and a server-side verifier; shadow mode records a would-be hit and does not serve it. The default 0.82 lexical threshold has no error guarantee (Schroeder et al., vCache, arXiv:2502.03771). Not yet mitigated: a calibrated verifier, poisoning detection, and adversarial evaluation of the lexical scorer.
+- Secrets in cached responses and ledger details. Structured logs already redact sensitive key names. Exact-cache bodies and ledger details are not passed through that redactor. Applying it unchanged would erase chat `content` and usage fields whose names contain `token`, so those stores can still hold secrets that were present in a provider response or event detail. That redaction gap is open.
+
 ## Required security tests
 
 - cross-tenant cache rejection;

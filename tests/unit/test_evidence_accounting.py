@@ -10,8 +10,9 @@ from urp.errors import verifier_failed
 from urp.decision_backend import KeywordDecisionBackend
 from urp.impact import ImpactModelError, model_impact, rebound_indicator
 from urp.ledger import default_ledger
+from urp.policy import evaluate_policy
 from urp.provider_usage import extract_provider_cache_usage
-from urp.semantic_cache import LexicalJaccardScorer, SemanticCache, SemanticCacheEntry
+from urp.semantic_cache import DEFAULT_LEXICAL_THRESHOLD, LexicalJaccardScorer, SemanticCache, SemanticCacheEntry
 from urp.tracing import default_trace_store
 from urp.verifiers import VerificationResult
 
@@ -37,6 +38,7 @@ def _base_scenario(**overrides):
         "monthly_urp_operating_cost": 2500,
         "implementation_cost": 30000,
         "analysis_horizon_months": 36,
+        "input_pricing": "list_price",
     }
     payload.update(overrides)
     return payload
@@ -56,6 +58,8 @@ class ImpactAccountingTest(unittest.TestCase):
         result = model_impact(_base_scenario())
         self.assertEqual(result["financial_impact"]["gross_monthly_savings"], 7798.56)
         self.assertEqual(result["financial_impact"]["net_monthly_savings"], 5298.56)
+        self.assertEqual(result["financial_impact"]["gross_net_of_operating_cost_monthly"], 5298.56)
+        self.assertIn("not a change in total spend", result["financial_impact"]["gross_net_of_operating_cost_monthly_meaning"])
         self.assertEqual(result["financial_impact"]["gross_ai_cost_avoided"], result["financial_impact"]["monthly_ai_cost_avoided"])
         self.assertEqual(result["financial_impact"]["gross_storage_cost_avoided"], 706.56)
         self.assertFalse(result["rebound_adjusted"])
@@ -131,6 +135,13 @@ class ImpactAccountingTest(unittest.TestCase):
         self.assertEqual(result["input_pricing"]["effective_input_price_ratio"], 0.8)
         self.assertEqual(result["financial_impact"]["gross_ai_cost_avoided"], 0.8)
         self.assertTrue(result["input_pricing"]["cache_write_premium_applied"])
+
+    def test_omitted_input_pricing_is_rejected(self):
+        scenario = _base_scenario()
+        del scenario["input_pricing"]
+        with self.assertRaises(ImpactModelError) as raised:
+            model_impact(scenario)
+        self.assertIn("input_pricing is required", str(raised.exception))
 
     def test_cache_fields_are_rejected_on_the_list_price_path(self):
         with self.assertRaises(ImpactModelError):
@@ -445,6 +456,56 @@ class ContextPolicyOptInTest(unittest.TestCase):
             roles = [message["role"] for message in provider.messages[0]]
             self.assertEqual(roles, ["system", "user"])
             self.assertTrue(provider.messages[0][0]["content"].startswith("P"))
+
+
+class SemanticCacheRiskTest(unittest.TestCase):
+    def test_default_threshold_is_the_documented_lexical_heuristic(self):
+        self.assertEqual(SemanticCache().threshold, 0.82)
+        self.assertEqual(DEFAULT_LEXICAL_THRESHOLD, 0.82)
+
+    def test_policy_threshold_is_per_tenant_bundle_and_overrides_the_default(self):
+        work = WorkUnit(WorkUnitKind.PROMPT_REQUEST, "tenant-threshold", "openai://chat/completions", namespace="support")
+        bundle = {
+            "apiVersion": "urp.dev/v1",
+            "kind": "ReductionPolicy",
+            "metadata": {"name": "tenant-threshold", "version": "v1"},
+            "spec": {
+                "defaults": {"contract": "semantic", "semanticCacheThreshold": 0.99},
+                "rules": [],
+            },
+        }
+        decision = evaluate_policy(work, bundle)
+        self.assertEqual(decision.semantic_cache_threshold, 0.99)
+        with self.assertRaises(ValueError):
+            evaluate_policy(work, {**bundle, "spec": {"defaults": {"contract": "semantic", "semanticCacheThreshold": 1.5}, "rules": []}})
+
+    def test_shadow_mode_records_a_semantic_hit_without_serving_it(self):
+        request = {
+            "model": "auto",
+            "messages": [
+                {"role": "system", "content": "source:vpn-v1"},
+                {"role": "user", "content": "Summarize VPN reset policy"},
+            ],
+            "urp": {"allow_semantic_cache": True},
+        }
+        with tempfile.TemporaryDirectory() as td:
+            first = handle_chat_completion(request, tenant="tenant-shadow", namespace="support", state_dir=td)
+            shadow = handle_chat_completion(
+                {**request, "model": "other-model"},
+                tenant="tenant-shadow",
+                namespace="support",
+                state_dir=td,
+                mode="shadow",
+            )
+            self.assertEqual(first["urp"]["cache"], "miss")
+            self.assertEqual(shadow["urp"]["mode"], "shadow")
+            self.assertNotEqual(shadow["urp"]["cache"], "semantic_hit")
+            events = default_ledger(td).query(work_unit_id=shadow["urp"]["work_unit_id"])
+            recorded = [event for event in events if event.event_type == "ai.semantic_cache.shadow"]
+            self.assertEqual(len(recorded), 1)
+            self.assertFalse(recorded[0].details["served"])
+            self.assertTrue(recorded[0].details["would_hit"])
+            self.assertEqual(recorded[0].details["threshold_kind"], "lexical_heuristic_no_error_guarantee")
 
 
 if __name__ == "__main__":

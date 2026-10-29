@@ -8,6 +8,8 @@ This document explains how different users adopt URP without disrupting current 
 
 Start in observe mode. Measure. Then enable exact-safe reductions. Only later enable semantic or approximate reductions with policy and verifiers.
 
+Helm charts, Terraform modules, and Docker Compose files in this repository are validated by lint, template, or validate only. They have never been installed on a cluster or cloud account. Container images are built in CI only and have not been run as a deployment. The commands below are playbooks, not a record of an install.
+
 ## Local developer playbook
 
 ### Goal
@@ -234,6 +236,8 @@ Reduce network and local AI calls.
 - delayed ledger sync.
 
 ## Kubernetes deployment
+
+These manifests were validated by lint and template only. They have never been installed on a cluster. The `kubectl apply` commands are a playbook, not evidence of a running install.
 
 Components:
 

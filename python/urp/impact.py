@@ -38,7 +38,7 @@ class ImpactScenario:
     analysis_horizon_months: int
     energy_kwh_per_avoided_model_call: float | None = None
     grid_kg_co2e_per_kwh: float | None = None
-    input_pricing: str = "list_price"
+    input_pricing: str | None = None
     provider_cache_read_share: float | None = None
     provider_cache_write_share: float | None = None
     cache_read_price_ratio: float | None = None
@@ -139,6 +139,14 @@ class ImpactScenario:
             raise ImpactModelError("monthly_ai_requests must be non-negative")
         if self.analysis_horizon_months <= 0:
             raise ImpactModelError("analysis_horizon_months must be positive")
+        if self.input_pricing is None:
+            raise ImpactModelError(
+                "input_pricing is required. "
+                "Use 'list_price' only when you intend to price avoided input tokens at the full input list rate "
+                "(this can overstate savings if the provider would have billed prompt-cache reads below list price). "
+                "Use 'effective_blended' with provider_cache_read_share and cache_read_price_ratio when those shares are known. "
+                "URP does not choose a rate for you."
+            )
         if self.input_pricing not in _INPUT_PRICING_MODES:
             raise ImpactModelError("input_pricing must be list_price or effective_blended")
         for field_name in ("provider_cache_read_share", "provider_cache_write_share"):
@@ -299,6 +307,7 @@ def model_impact(scenario: ImpactScenario | Mapping[str, Any]) -> Dict[str, Any]
             "gross_monthly_savings": _money(gross_monthly_savings),
             "monthly_urp_operating_cost": _money(row.monthly_urp_operating_cost),
             "net_monthly_savings": _money(net_monthly_savings),
+            "gross_net_of_operating_cost_monthly": _money(net_monthly_savings),
             "annualized_net_savings": _money(net_monthly_savings * 12),
             "gross_direct_cost_reduction_rate": _ratio(gross_monthly_savings, baseline_direct_cost),
             "implementation_cost": _money(row.implementation_cost),
@@ -308,8 +317,13 @@ def model_impact(scenario: ImpactScenario | Mapping[str, Any]) -> Dict[str, Any]
             "horizon_roi": round(roi, 4) if roi is not None else None,
             "rebound_adjusted": False,
             "net_monthly_savings_meaning": (
-                "gross avoided direct cost minus the supplied URP operating cost at constant demand; "
-                "not a measured change in total spend if usage grows"
+                "Same value as gross_net_of_operating_cost_monthly: gross avoided direct cost minus the "
+                "supplied URP operating cost, at constant demand. It is not a change in total spend, "
+                "not net of rebound, and not an accounting opinion."
+            ),
+            "gross_net_of_operating_cost_monthly_meaning": (
+                "Gross avoided direct cost minus the supplied URP operating cost, at constant demand. "
+                "It is not a change in total spend if usage grows, and it is not rebound-adjusted."
             ),
         },
         "environmental_impact": energy,
@@ -317,10 +331,10 @@ def model_impact(scenario: ImpactScenario | Mapping[str, Any]) -> Dict[str, Any]
             "Rates are operator assumptions, not measured production outcomes.",
             "Avoided cost, energy, and CO2e are gross and attributional at constant demand. They are not net of rebound.",
             "Exact cache and context reduction are modeled; semantic cache, model routing, and training savings are excluded.",
-            "list_price input pricing preserves the historical full input rate and can overstate savings when a provider would have billed prompt-cache reads below list price.",
+            "input_pricing is required. list_price is an explicit full-rate choice and can overstate savings when a provider would have billed prompt-cache reads below list price.",
             "effective_blended input pricing applies the operator-supplied cache-read share, cache-read price ratio, and optional cache-write premium to avoided calls and context reductions. It does not model extra writes caused by editing a cached prefix.",
             "Request fees, taxes, discounts other than the explicit cache ratios, cache storage, and workload growth are excluded unless represented in operating cost.",
-            "net_monthly_savings subtracts the supplied URP operating cost and implementation cost but is not an accounting opinion and is not rebound-adjusted.",
+            "gross_net_of_operating_cost_monthly (also exposed as net_monthly_savings) subtracts the supplied URP operating cost. It is not a change in total spend and is not rebound-adjusted.",
         ],
     }
 
@@ -365,10 +379,9 @@ def _input_price(row: ImpactScenario) -> Dict[str, Any]:
             "effective_input_price_ratio": 1.0,
             "effective_input_cost_per_million_tokens": row.ai_input_cost_per_million_tokens,
             "note": (
-                "Avoided input tokens are priced at the full input list rate. "
-                "This preserves pre-cache-aware totals and can overstate savings when the provider "
-                "would have billed prompt-cache reads below list price. Set input_pricing to "
-                "effective_blended to apply an operator-supplied cache-read share and price ratio."
+                "Avoided input tokens are priced at the full input list rate because input_pricing is list_price. "
+                "This can overstate savings when the provider would have billed prompt-cache reads below list price. "
+                "Use effective_blended with an operator-supplied cache-read share and price ratio when those are known."
             ),
         }
     read_share = float(row.provider_cache_read_share)
@@ -462,7 +475,11 @@ def _has_energy_model(row: ImpactScenario) -> bool:
 
 def _input_pricing(payload: Mapping[str, Any]) -> str:
     if "input_pricing" not in payload or payload["input_pricing"] is None:
-        return "list_price"
+        raise ImpactModelError(
+            "input_pricing is required. "
+            "Use 'list_price' only as an explicit full-rate choice, or 'effective_blended' with cache shares. "
+            "Omitting it no longer selects the full list rate."
+        )
     value = payload["input_pricing"]
     if not isinstance(value, str):
         raise ImpactModelError("input_pricing must be list_price or effective_blended")

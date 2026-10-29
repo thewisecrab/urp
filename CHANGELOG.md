@@ -6,6 +6,16 @@ changes with migration notes.
 
 ## [Unreleased]
 
+### Changed
+
+- `input_pricing` is required. Omitting it no longer prices avoided input tokens
+  at the full list rate. The checked-in portfolio scenarios set `list_price`
+  explicitly so the published $7,798.56 / $5,298.56 / 5.66-month figures still
+  reproduce. `effective_blended` still requires operator-supplied cache shares.
+- `financial_impact.gross_net_of_operating_cost_monthly` is the same value as
+  `net_monthly_savings`. It is gross avoided cost minus operating cost, not a
+  change in total spend. The old key remains.
+
 ### Added
 
 - Draft v1.1 impact accounting: flagged list-price input rates, optional

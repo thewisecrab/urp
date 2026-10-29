@@ -277,21 +277,56 @@ def handle_chat_completion(
         GLOBAL_METRICS.inc("urp_ai_large_model_calls_avoided_total")
     else:
         semantic_hit = None
-        semantic_cache_enabled = (
-            mode == "enforce"
-            and allow_semantic_cache
+        semantic_lookup_permitted = (
+            allow_semantic_cache
             and requested_cache_ttl > 0
             and policy.contract == Contract.SEMANTIC
             and "semantic_cache_lookup" in action_names
         )
-        if semantic_cache_enabled:
+        semantic_threshold = _semantic_threshold(urp_options, policy, semantic_cache)
+        semantic_verifier = decision_backend.verify if decision_backend is not None else _verify_chat_response
+        if mode == "shadow" and semantic_lookup_permitted:
+            shadow_hit = semantic_cache.lookup_hit(
+                tenant,
+                namespace,
+                routing_text,
+                source_fingerprints,
+                threshold=semantic_threshold,
+                verifier=semantic_verifier,
+            )
+            ledger.append(
+                LedgerEvent(
+                    "ai.semantic_cache.shadow",
+                    tenant,
+                    work_unit.id,
+                    policy_bundle_id=policy.policy_bundle_id,
+                    details={
+                        "served": False,
+                        "would_hit": shadow_hit is not None,
+                        "score": None if shadow_hit is None else shadow_hit.score,
+                        "threshold": semantic_threshold,
+                        "threshold_kind": "lexical_heuristic_no_error_guarantee",
+                    },
+                    trace_id=work_unit.trace_id,
+                )
+            )
+            emit_span(
+                state,
+                "urp.cache.lookup",
+                work_unit.trace_id,
+                work_unit_id=work_unit.id,
+                cache_result="semantic_shadow",
+                cache_type="semantic",
+                served=False,
+            )
+        elif mode == "enforce" and semantic_lookup_permitted:
             semantic_hit = semantic_cache.lookup_hit(
                 tenant,
                 namespace,
                 routing_text,
                 source_fingerprints,
-                threshold=float(urp_options.get("semantic_cache_threshold", semantic_cache.threshold)),
-                verifier=decision_backend.verify if decision_backend is not None else _verify_chat_response,
+                threshold=semantic_threshold,
+                verifier=semantic_verifier,
             )
         if semantic_hit is not None:
             response = semantic_hit.value
@@ -361,7 +396,7 @@ def handle_chat_completion(
                 ttl_seconds = requested_cache_ttl
                 if mode == "enforce" and ttl_seconds > 0 and "cache_store" in action_names:
                     cache.put(CacheEntry(cache_key, tenant, namespace, response, source_fingerprints, True, _expiry(ttl_seconds)))
-                if semantic_cache_enabled:
+                if mode == "enforce" and semantic_lookup_permitted:
                     semantic_cache.store(
                         tenant,
                         namespace,
@@ -1021,6 +1056,19 @@ def _fallback_model(requested: str, allowed_models: List[str]) -> str:
     if requested in allowed_models:
         return requested
     return "frontier" if "frontier" in allowed_models else allowed_models[-1]
+
+
+def _semantic_threshold(options: Dict[str, Any], policy: Any, cache: SemanticCache) -> float:
+    """Request override, then the policy/tenant threshold, then the lexical default.
+
+    The fallback is ``SemanticCache.threshold`` (0.82 unless constructed otherwise).
+    That number is a lexical heuristic with no error guarantee.
+    """
+    if options.get("semantic_cache_threshold") is not None:
+        return float(options["semantic_cache_threshold"])
+    if getattr(policy, "semantic_cache_threshold", None) is not None:
+        return float(policy.semantic_cache_threshold)
+    return float(cache.threshold)
 
 
 def _cache_ttl_seconds(options: Dict[str, Any]) -> float:
