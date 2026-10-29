@@ -69,17 +69,21 @@ manifest exploration, and ledger-chain verification.
 | Evidence class | Result | Interpretation |
 |---|---:|---|
 | Measured local fixture | 11,556 bytes restored exactly | Exact rehydration passed. |
-| Measured local fixture | 249 bytes stored | 97.85% reduction on a deliberately repetitive CSV, not a universal ratio. |
+| Measured local fixture | 249 bytes stored | 97.85% reduction on this deliberately repetitive CSV fixture only, not a universal ratio. |
 | Measured mock AI path | 1 of 2 identical calls avoided | Exact cache returned the verified first response. |
 | Measured policy path | Legal-hold deletion denied | The guardrail executed. |
 | Measured audit path | Ledger chain valid | Event-chain verification passed. |
-| Automated verification | 87 Python tests plus TypeScript, Go, Rust, schema, package, publication, and deployment gates | The local product contract is continuously checked. |
+| Automated verification | 86 Python tests in the 2026-07-11 receipt; 115 passed on 2026-10-29 (`TEST_RESULTS.md`) | v1.0 prose that said 87 was inconsistent with the receipt. The later count is that run, not a universal SLO. |
 
 The checked-in base impact scenario models 100 TiB of storage, 200 TiB of monthly
 transfer, and 10 million AI requests per month. Under its explicit assumptions it
 calculates 1.5 million avoided model calls, 2.895 billion avoided tokens, $7,798.56
 gross monthly direct savings, and $5,298.56 after a supplied URP operating cost.
-That is a scenario, not a forecast.
+That is a scenario fixture, not a forecast. Those dollar figures are gross avoided
+cost at constant demand, not a reduction in total spend if usage grows (rebound).
+The default calculator still uses the full input list rate and flags that path,
+because it can overstate savings when a provider would have billed prompt-cache
+reads below list price.
 
 ```bash
 .venv/bin/urp report impact \
@@ -118,7 +122,7 @@ segments, prompts, embeddings, agent steps, training datasets, and checkpoints.
 | AI | Chat, completion, embeddings, exact cache, context compiler, router, fallback | OpenAI-compatible provider endpoint |
 | Data | POSIX, SQL, lakehouse, stream, OTLP, vector, training contracts | Credentialed system adapters |
 | Operations | Metrics, traces, reports, logs, approvals, backup/restore, readiness | Managed observability and secret stores |
-| Deployment | Local, Docker Compose, Kubernetes, Helm, on-prem, edge | Cloud landing-zone integration |
+| Deployment | Local process and Docker Compose files. Kubernetes and Helm manifests are provided; validated by lint/template only; never installed on a cluster | Cloud landing-zone integration |
 | SDKs | Python CLI/runtime, TypeScript, Go, Rust crates | Published registries after release promotion |
 
 ## Safety defaults

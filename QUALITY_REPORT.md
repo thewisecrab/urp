@@ -72,3 +72,10 @@ are validated locally by readiness checks; GitHub Actions performs Compose
 configuration and image-build gates. Live cloud, PostgreSQL, Kubernetes, and
 model-provider operations require their documented credentials and are not
 represented as locally executed.
+
+## Addendum (2026-10-29)
+
+The 2026-07-11 text above is unchanged. A later Python run is in `TEST_RESULTS.md`
+(115 passed, 75.47% coverage, ruff 0.15.21). The committed white-paper PDF has
+16 page objects; the 14-page sentence above is the original receipt. Kubernetes
+manifests were still not installed on a cluster.

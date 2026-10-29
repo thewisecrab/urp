@@ -119,6 +119,7 @@ nav:
       - Migration Notes: MIGRATION_NOTES.md
   - Research:
       - Technical Paper: WHITE_PAPER.md
+      - Revision notes (v1.1-draft): REVISION_NOTES_v1.1-draft.md
       - Research Landscape: 10_RESEARCH_LANDSCAPE.md
       - Discoverability: DISCOVERABILITY.md
   - Community:

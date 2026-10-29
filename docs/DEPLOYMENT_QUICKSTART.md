@@ -1,8 +1,10 @@
 # Deployment Quickstart
 
-URP supports local processes, Docker Compose, Kubernetes/Helm, and reference cloud
-infrastructure. Start in `observe` mode and promote only after reviewing manifests,
-verifier outcomes, latency, and cost telemetry.
+URP supports local processes and includes Docker Compose files, Kubernetes and
+Helm manifests, and reference cloud modules. The Kubernetes and Helm manifests
+were validated by lint and template only; they were never installed on a cluster.
+Start in `observe` mode and promote only after reviewing manifests, verifier
+outcomes, latency, and cost telemetry.
 
 ## Local process
 
