@@ -1,0 +1,39 @@
+{
+  "5857310b9e6fdc654c9f88f0cc7499027a5a054cda6c8991c6d18b6196feef19": {
+    "codec": null,
+    "dedupe_hit": false,
+    "digest": "fd6e659d344ce58dc806967d8f8c85607fb7c3b9920674fd6103471038faf9c4",
+    "logical_size": 24,
+    "namespace": "s3",
+    "ref": "domain-0bb8bb46d7c6df18e493f3e170f0d2fb/fd6e659d344ce58dc806967d8f8c85607fb7c3b9920674fd6103471038faf9c4",
+    "stored_size": 24,
+    "tenant": "corpus",
+    "transform_stack": []
+  },
+  "e9ad54198c3304c5e3f5c794136f2a5bdcbe9b9c39774762cf3a7be5632d5e63": {
+    "codec": "zlib",
+    "dedupe_hit": false,
+    "digest": "eb5e1a8a85905f44c27c7762d87e567c2e5a36be12b565381a53669300610790",
+    "logical_size": 868,
+    "namespace": "s3",
+    "ref": "domain-0bb8bb46d7c6df18e493f3e170f0d2fb/eb5e1a8a85905f44c27c7762d87e567c2e5a36be12b565381a53669300610790",
+    "stored_size": 288,
+    "tenant": "corpus",
+    "transform_stack": [
+      "zstd"
+    ]
+  },
+  "fbcb27f44ed61276ccd2c4b00e1bb014e645c0da484cc2b896d9c091bbf7a9d7": {
+    "codec": "zlib",
+    "dedupe_hit": false,
+    "digest": "1414688db65717ba770395c7c8415119f16e7fa2e828b9d9a82092ce5b2edd9b",
+    "logical_size": 2800,
+    "namespace": "s3",
+    "ref": "domain-0bb8bb46d7c6df18e493f3e170f0d2fb/1414688db65717ba770395c7c8415119f16e7fa2e828b9d9a82092ce5b2edd9b",
+    "stored_size": 45,
+    "tenant": "corpus",
+    "transform_stack": [
+      "zstd"
+    ]
+  }
+}

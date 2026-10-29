@@ -6,6 +6,29 @@ URP is implemented as a local-ideal, multi-language monorepo. The default suite
 uses no cloud or model-provider credentials; live adapters remain explicit
 credential gates.
 
+## Current gates (2026-10-29)
+
+This section is the latest local run. The 2026-07-11 "Current Gates" text below
+is unchanged.
+
+Environment: Linux 6.12.94+ x86_64, CPython 3.12.3, pytest 9.2.0, hypothesis
+6.170.13, ruff 0.15.21. Python command window 2026-10-29T13:55:42Z to
+2026-10-29T13:56:16Z.
+
+- Python: `119 passed` in 33.13s. Statement coverage 75.53% (`--cov-fail-under=70`).
+  Command: `.venv/bin/python -m pytest -W error::ResourceWarning --cov=urp --cov-report=term-missing --cov-fail-under=70 -q --tb=line`
+- Python lint: `.venv/bin/ruff check python tests` passed (ruff 0.15.21).
+- The published portfolio scenario with explicit `input_pricing: "list_price"`
+  still returns gross monthly savings 7798.56, net of operating cost 5298.56,
+  and payback 5.66 months.
+- Helm, Terraform, and Compose were not installed. No cluster or cloud apply
+  was run. No container image was run as a deployment in this session.
+- 2026-10-29T13:56:26Z: `npm test --prefix typescript` passed (2 tests, `tsc` build).
+  `cd go && go test -race ./...` passed (`ok`, cached from the race run earlier
+  the same day; `go/urp` has no test files). `cargo fmt --all -- --check`,
+  `cargo clippy --workspace --all-targets --offline -- -D warnings`, and
+  `cargo test --workspace --offline` passed (2 + 2 + 4 tests).
+
 ## Current Gates
 
 - Python: 86 tests pass under Python 3.13 with `ResourceWarning` promoted to an
@@ -72,3 +95,10 @@ are validated locally by readiness checks; GitHub Actions performs Compose
 configuration and image-build gates. Live cloud, PostgreSQL, Kubernetes, and
 model-provider operations require their documented credentials and are not
 represented as locally executed.
+
+## Addendum (2026-10-29)
+
+The 2026-07-11 text above is unchanged. A later Python run is in `TEST_RESULTS.md`
+(115 passed, 75.47% coverage, ruff 0.15.21). The committed white-paper PDF has
+16 page objects; the 14-page sentence above is the original receipt. Kubernetes
+manifests were still not installed on a cluster.

@@ -1,0 +1,70 @@
+{
+  "description": "Frozen local object manifests produced by urp 0.1.0 LocalS3Adapter.put_object on 2026-10-29. Compatibility fixture, not a measurement. python-zstandard was not installed, so compressible chunks record codec zlib (the stdlib fallback). The short object is stored uncompressed (codec null).",
+  "software_version": "0.1.0",
+  "tenant": "corpus",
+  "cases": [
+    {
+      "name": "repetitive",
+      "file": "repetitive.bin",
+      "manifest_id": "mf_171dc3f5c1e5412ea8b65975c2d5d8fe",
+      "sha256": "1414688db65717ba770395c7c8415119f16e7fa2e828b9d9a82092ce5b2edd9b",
+      "logical_size": 2800,
+      "ranges": [
+        [
+          0,
+          8
+        ],
+        [
+          1,
+          5
+        ],
+        [
+          0,
+          2800
+        ]
+      ]
+    },
+    {
+      "name": "mixed",
+      "file": "mixed.bin",
+      "manifest_id": "mf_5ad96d87408a4714b3985df1a965a8dd",
+      "sha256": "eb5e1a8a85905f44c27c7762d87e567c2e5a36be12b565381a53669300610790",
+      "logical_size": 868,
+      "ranges": [
+        [
+          0,
+          8
+        ],
+        [
+          1,
+          5
+        ],
+        [
+          0,
+          868
+        ]
+      ]
+    },
+    {
+      "name": "short",
+      "file": "short.bin",
+      "manifest_id": "mf_35bdc8f6ec74496ca0ef7b32d17d7398",
+      "sha256": "fd6e659d344ce58dc806967d8f8c85607fb7c3b9920674fd6103471038faf9c4",
+      "logical_size": 24,
+      "ranges": [
+        [
+          0,
+          8
+        ],
+        [
+          1,
+          5
+        ],
+        [
+          0,
+          24
+        ]
+      ]
+    }
+  ]
+}

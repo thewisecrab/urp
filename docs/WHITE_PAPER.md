@@ -13,7 +13,8 @@
 **Software license:** Apache License 2.0<br>
 **Evidence status:** local implementation verified; production outcomes require workload-specific measurement
 
-**PDF edition:** [URP Technical Paper 1.0](assets/URP-White-Paper-v1.0.pdf)
+**PDF edition:** [URP Technical Paper 1.0](assets/URP-White-Paper-v1.0.pdf)<br>
+**Draft revision:** v1.1-draft (2026-10-29). The v1.0 PDF above is not regenerated. See [Revision notes](#revision-notes-v11-draft) and [docs/REVISION_NOTES_v1.1-draft.md](REVISION_NOTES_v1.1-draft.md).
 
 ## Abstract
 
@@ -271,10 +272,13 @@ gateway primitives.
 
 ### 6.5 Deployment and software supply chain
 
-URP ships with a non-root, read-only container; Docker Compose; hardened Kubernetes
-resources; Helm packaging; Terraform reference modules for AWS, Azure, and GCP;
+URP ships with a non-root, read-only container definition; Docker Compose files;
+Kubernetes and Helm manifests; Terraform reference modules for AWS, Azure, and GCP;
 on-premises and edge examples; health and readiness probes; CI; release digests;
-and optional Ed25519 release signatures.
+and optional Ed25519 release signatures. Helm, Terraform, and Compose in this
+repository are validated by lint, template, or validate only. They have not been
+installed on a cluster or cloud account. Container images are built in CI only
+and have not been run as a deployment in the evidence for this report.
 
 Release workflows generate artifacts, an SBOM, provenance, and GitHub artifact
 attestations. GitHub describes attestations as signed claims linking artifacts to
@@ -289,14 +293,18 @@ provenance, not that software is vulnerability-free. [GitHub artifact attestatio
 | Exact compression | Allowed when planned | Exact restore verifier |
 | Same-tenant exact cache | Allowed | Source fingerprints and output verifier |
 | Cross-tenant reuse | Denied | No default promotion path |
-| Semantic cache | Disabled | Explicit policy, scope, threshold, and semantic verifier |
+| Semantic cache | Disabled | Explicit policy, scope, threshold, and semantic verifier. The default 0.82 cutoff is a lexical heuristic with no error guarantee. Shadow mode records a would-be hit and does not serve it. |
 | Bounded approximation | Disabled | Explicit error bound, policy, and measured verifier |
 | Deletion | Denied | Explicit policy and approval; legal hold still blocks |
 | Plugin action | Disabled until registered | Digest, capabilities, and conformance |
 | Provider failure | Never accepted as optimized output | Safe baseline fallback |
 
 The verifier is a result, not a client-supplied Boolean. Cached and reduced outputs
-are accepted only after the server executes the required check.
+are accepted only after the server executes the required check. Prompt-cache timing
+side channels (Gu et al., arXiv:2502.07776) and semantic-cache poisoning
+(Zhang et al., arXiv:2609.35908) are known risks. Tenant scoping and the default-off
+semantic cache are the current mitigations. Provider-cache timing isolation and
+poisoning detection are not implemented. See the security notes.
 
 ## 8. Evaluation methodology
 
@@ -341,7 +349,7 @@ The current local evidence bundle demonstrates:
 | Prompt privacy | Raw prompt absent from default logs | Default logging uses redacted evidence. |
 | Ledger | Chain validation returned true | Event-chain integrity checks pass for the run. |
 | Lakehouse adapter | Local exact-logical execution accepted | Adapter contract runs without external services. |
-| Full Python suite | 87 tests pass after this publication change | Unit, integration, conformance, security, gateway, load, and benchmark behavior remains green. |
+| Full Python suite | 86 tests in the 2026-07-11 receipt | v1.0 prose previously said 87. The receipt in `TEST_RESULTS.md` is the count for that date. Later runs are separate dated sections, not a rewrite of this row. |
 
 The live runner emits machine-readable evidence for the same claims. In particular,
 `object_gateway_exact.rehydrated_exact` records exact object reconstruction,
@@ -358,7 +366,12 @@ objectives.
 ## 10. Reproducible impact model
 
 The model is implemented in `python/urp/impact.py`. The base scenario is
-`examples/impact/illustrative-portfolio.json`.
+`examples/impact/illustrative-portfolio.json`. That file sets
+`input_pricing` to `list_price` so the published full-rate totals below still
+reproduce. Omitting `input_pricing` is an error. `list_price` is an explicit
+choice, not a silent default. `net_monthly_savings` is the same number as
+`gross_net_of_operating_cost_monthly`: gross avoided cost minus the supplied
+operating cost. It is not a change in total spend.
 
 ```bash
 urp report impact --scenario examples/impact/illustrative-portfolio.json
@@ -407,9 +420,15 @@ tier, while actual rates vary by region, tier, contract, requests, and transfer.
 | 36-month net value after implementation | $160,748.16 |
 
 The model excludes semantic cache, model routing, training dedupe, request fees,
-taxes, negotiated discounts, workload growth, and unmodeled operational costs. That
-makes it narrower than the full URP opportunity but does not make it conservative
-for every organization. Replace every assumption with observed telemetry before an
+taxes, negotiated discounts other than an explicit cache-price ratio, workload
+growth, and unmodeled operational costs. The dollar figures in this section are a
+scenario. They are gross avoided cost at constant demand, not a reduction in total
+spend if usage grows (rebound). v1.0 prices avoided input tokens at the full list
+rate. That historical path remains the default and is now flagged in the calculator
+because it can overstate savings when a provider would have billed prompt-cache
+reads below list price. The v1.1-draft code can price the same avoided calls and
+context tokens at an operator-supplied blended rate. It does not fill that rate
+from a live invoice. Replace every assumption with observed telemetry before an
 investment decision.
 
 ### 10.3 Sensitivity
@@ -446,10 +465,14 @@ center electricity in 2030:
 - 0.1% equals 945 GWh;
 - 1% equals 9.45 TWh.
 
-This arithmetic is not an estimate of URP impact or addressable share. It shows why
-small percentage improvements across large workloads can matter. URP's defensible
-environmental claim is narrower: it measures avoided bytes, tokens, and model calls,
-then lets operators apply workload-specific energy evidence.
+This arithmetic is gross avoided-work equivalents, not a net claim and not an
+estimate of URP impact or addressable share. It shows why small percentage
+improvements across large workloads can matter. URP's defensible environmental
+claim is narrower: it measures avoided bytes, tokens, and model calls, then lets
+operators apply workload-specific energy evidence. The v1.1-draft calculator can
+apply an operator-supplied fixed-plus-per-token energy model. It still has no
+default energy intensity. The 945 TWh figure is left as published in v1.0; a later
+IEA update is recorded in the revision notes rather than substituted here.
 
 ## 12. Discussion and potential implications
 
@@ -519,11 +542,12 @@ separate policy, approval, evaluation, and rollback process.
 
 ## 14. Operational readiness and boundaries
 
-The repository is ready for local evaluation, container build, Docker Compose,
-Kubernetes/Helm installation, SDK integration, and adaptation behind conformance
-tests. Cloud Terraform modules create or describe foundational storage and KMS
-contracts, but they are reference modules rather than a complete production landing
-zone.
+The repository is ready for local evaluation. Container and Docker Compose files
+are included. Kubernetes and Helm manifests are provided and were validated by
+lint and template only; they were never installed on a cluster. SDKs can be
+exercised locally behind conformance tests. Cloud Terraform modules create or
+describe foundational storage and KMS contracts, but they are reference modules
+rather than a complete production landing zone.
 
 Production operators still own:
 
@@ -582,6 +606,7 @@ of a caller's contract.
 7. Provider-side cached-token billing can overlap with gateway savings and must be modeled carefully.
 8. Energy and carbon impact require measured workload and grid telemetry.
 9. The project is pre-1.0; public interfaces can evolve under documented migration rules.
+10. Savings are attributional and exclude rebound (v1.1-draft). Gross avoided cost, kWh, and CO2e hold demand constant. `net_monthly_savings` subtracts the supplied operating cost only. It is not a measured change in total spend or energy if usage grows.
 
 ### 16.2 Research and engineering agenda
 
@@ -595,6 +620,7 @@ of a caller's contract.
 - task-specific semantic verifier suites;
 - controlled trials comparing observe, shadow, and enforce outcomes;
 - long-horizon restore drills across codec and plugin upgrades.
+- v1.1-draft, not yet done: rebound measurement via an observe-mode baseline plus staggered enforcement; cache-aware cost filled from provider invoices rather than operator ratios; witnessed ledger checkpoints; a pluggable calibrated router and verifier backend (the local interface exists; no network client does).
 
 ## 17. Conclusion
 
@@ -613,6 +639,20 @@ economics can be material under plausible assumptions and uneconomic under weak
 ones. The resulting recommendation is deliberately conditional: deploy in observe
 mode, measure the workload-specific opportunity, and enforce only what
 verification can defend.
+
+## Revision notes (v1.1-draft)
+
+Dated 2026-10-29. This is a draft revision of report v1.0. The published PDF is
+not regenerated. Full notes, the related-work list, and the IEA check are in
+[REVISION_NOTES_v1.1-draft.md](REVISION_NOTES_v1.1-draft.md).
+
+- The scenario dollars in section 10 are unchanged. They are gross avoided cost at constant demand, not a forecast and not a net-of-rebound claim.
+- v1.0 text that said 87 Python tests disagreed with the 2026-07-11 receipt, which records 86. The receipt is unchanged.
+- The committed PDF has 16 page objects. The 2026-07-11 receipt says 14-page and was not edited.
+- Kubernetes and Helm manifests were linted and templated only. They were not installed on a cluster.
+- The 0.01–1% energy lens is gross avoided-work equivalents, not a net claim. The 945 TWh base case is unchanged. A later IEA summary says about 950 TWh in 2030; that is a TODO for any future scenario, not a silent substitution.
+- New limitation: savings are attributional and exclude rebound.
+- Agenda, not implemented here: observe-baseline plus staggered enforcement for rebound; invoice-backed cache-aware cost; witnessed ledger checkpoints; a calibrated router/verifier behind the new local interface.
 
 ## Author declaration and tool disclosure
 
@@ -652,6 +692,11 @@ gross_monthly_savings =
 net_monthly_savings = gross_monthly_savings - monthly_urp_operating_cost
 payback_months = implementation_cost / net_monthly_savings
 ```
+
+The formulas above are the v1.0 list-price path. v1.1-draft also accepts an
+operator-supplied cache-read share, cache-read price ratio, and optional
+cache-write premium, and an operator-supplied `E_fixed + N_tokens * E_token`
+energy model. Neither path invents a measured rate. See the revision notes.
 
 ## Appendix B: References
 

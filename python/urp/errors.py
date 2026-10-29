@@ -1,17 +1,36 @@
 from __future__ import annotations
 
-from dataclasses import dataclass
+from dataclasses import FrozenInstanceError, dataclass, field
 from typing import Any, Dict
 
+_EXCEPTION_STATE = {"__traceback__", "__context__", "__cause__", "__suppress_context__", "__notes__"}
 
-@dataclass(frozen=True)
+
+@dataclass
 class URPError(Exception):
+    """Field values are frozen after init.
+
+    Starlette 1.x clears ``__traceback__`` on a handled exception. A
+    ``frozen=True`` dataclass rejects that assignment, so exception
+    bookkeeping stays writable and the public fields do not.
+    """
+
     code: str
     message: str
     work_unit_id: str | None = None
     policy_bundle_id: str | None = None
     retryable: bool = False
     details: Dict[str, Any] | None = None
+    _frozen: bool = field(default=False, init=False, repr=False, compare=False)
+
+    def __post_init__(self) -> None:
+        object.__setattr__(self, "_frozen", True)
+
+    def __setattr__(self, name: str, value: Any) -> None:
+        if name in _EXCEPTION_STATE or not getattr(self, "_frozen", False):
+            object.__setattr__(self, name, value)
+            return
+        raise FrozenInstanceError(f"cannot assign to field {name!r}")
 
     def to_dict(self) -> Dict[str, Any]:
         return {

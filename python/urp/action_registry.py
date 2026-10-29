@@ -73,6 +73,7 @@ def default_action_registry() -> ActionRegistry:
         "compute_manifest",
     ]:
         registry.register(ActionSpec(name, {Contract.SEMANTIC, Contract.EXACT_BYTES, Contract.EXACT_LOGICAL}, "medium"))
+    registry.register(ActionSpec("context_budget_truncate", semantic_only, "high"))
     registry.register(ActionSpec("semantic_cache_lookup", semantic_only, "high", ["source_consistency", "freshness_check"]))
     registry.register(ActionSpec("semantic_summary", semantic_only, "high", ["source_consistency"]))
     registry.register(ActionSpec("approximate_quantization", bounded, "high", ["error_bound"]))

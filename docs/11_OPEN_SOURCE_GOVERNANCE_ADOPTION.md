@@ -187,7 +187,7 @@ Avoid proprietary-only manifest formats or plugins required for basic functional
 - migration playbooks;
 - conformance reports;
 - policy-as-code integration;
-- Helm chart.
+- Helm chart. The chart is linted and templated only; it has not been installed on a cluster.
 
 ### Researchers
 

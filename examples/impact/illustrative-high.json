@@ -1,5 +1,6 @@
 {
   "name": "illustrative-portfolio-high-v1",
+  "input_pricing": "list_price",
   "currency": "USD",
   "storage_gib": 102400,
   "storage_reduction_rate": 0.45,

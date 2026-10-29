@@ -77,20 +77,33 @@ urp report impact --scenario examples/impact/illustrative-portfolio.json
 ```
 
 The calculator separates assumptions from outputs and includes URP operating cost,
-implementation cost, payback, and model boundaries.
+implementation cost, payback, and model boundaries. The checked-in portfolio
+figures are a scenario. They are gross avoided cost at constant demand, not a
+reduction in total spend if usage grows (rebound). The portfolio JSON sets
+`input_pricing` to `list_price`. That choice is required and is no longer the
+silent default. It prices avoided input tokens at the full list rate and can
+overstate savings when provider prompt-cache reads are cheaper.
+`effective_blended` applies operator-supplied prompt-cache read and write ratios.
+It does not query a provider. `net_monthly_savings` is the same number as
+`gross_net_of_operating_cost_monthly`: gross avoided cost minus the supplied
+operating cost. It is not a change in total spend.
 
 ## Does URP claim energy or carbon savings?
 
 Not without measured telemetry. The impact model leaves energy unestimated until
-the operator supplies energy per avoided model call. Carbon additionally requires
-a location- and time-appropriate grid intensity.
+the operator supplies either kWh per avoided model call, or both a fixed kWh per
+avoided call and a kWh per token. Neither term is defaulted. Carbon additionally
+requires a location- and time-appropriate grid intensity. Any resulting kWh or
+CO2e figure is gross and attributional at constant demand.
 
 ## Is URP production ready?
 
-URP is ready for local evaluation, integration testing, container build, Docker
-Compose, and Kubernetes/Helm deployment in observe mode. Production scale, managed
-stores, high availability, ingress/TLS, workload identity, capacity testing, and
-compliance remain environment-specific responsibilities.
+URP is ready for local evaluation, integration testing, and a container build.
+Docker Compose files are included. Kubernetes and Helm manifests are provided;
+they were validated by lint and template only and were never installed on a
+cluster. Production scale, managed stores, high availability, ingress/TLS,
+workload identity, capacity testing, and compliance remain environment-specific
+responsibilities.
 
 ## Which deployment modes are available?
 

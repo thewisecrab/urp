@@ -1,0 +1,188 @@
+{
+  "classification": {
+    "entropy_bits_per_byte": 7.670651470079018,
+    "likely_compressed": false,
+    "likely_encrypted": false,
+    "notes": [],
+    "schema_hint": "delimited_text"
+  },
+  "contract": "exact_bytes",
+  "created_at": "2026-10-29T13:37:22.668006+00:00",
+  "kind": "byte_object",
+  "lineage": {
+    "policy_context": {
+      "tags": {}
+    },
+    "work_unit_metadata": {
+      "bucket": "bucket",
+      "key": "mixed.bin",
+      "object_metadata": {},
+      "tags": {}
+    }
+  },
+  "logical_ref": "s3://bucket/mixed.bin",
+  "manifest_id": "mf_5ad96d87408a4714b3985df1a965a8dd",
+  "manifest_version": "urp.manifest.v1",
+  "namespace": "s3",
+  "physical": {
+    "logical_size": 868,
+    "segments": [
+      {
+        "codec": "zlib",
+        "dedupe_hit": false,
+        "digest": "eb5e1a8a85905f44c27c7762d87e567c2e5a36be12b565381a53669300610790",
+        "logical_end": 868,
+        "logical_size": 868,
+        "logical_start": 0,
+        "namespace": "s3",
+        "ref": "domain-0bb8bb46d7c6df18e493f3e170f0d2fb/eb5e1a8a85905f44c27c7762d87e567c2e5a36be12b565381a53669300610790",
+        "sha256": "eb5e1a8a85905f44c27c7762d87e567c2e5a36be12b565381a53669300610790",
+        "stored_size": 288,
+        "tenant": "corpus",
+        "transform_stack": [
+          "zstd"
+        ]
+      }
+    ],
+    "stored_size": 288,
+    "whole_sha256": "eb5e1a8a85905f44c27c7762d87e567c2e5a36be12b565381a53669300610790"
+  },
+  "plan": {
+    "actions": [
+      {
+        "params": {},
+        "reason": "identity and exact duplicate detection",
+        "required": true,
+        "risk": "low",
+        "type": "hash"
+      },
+      {
+        "params": {},
+        "reason": "partial duplicate detection",
+        "required": true,
+        "risk": "low",
+        "type": "content_defined_chunk"
+      },
+      {
+        "params": {},
+        "reason": "sample entropy suggests compressibility",
+        "required": false,
+        "risk": "low",
+        "type": "zstd"
+      },
+      {
+        "params": {},
+        "reason": "record restoration and audit path",
+        "required": true,
+        "risk": "low",
+        "type": "manifest"
+      },
+      {
+        "params": {},
+        "reason": "exact contract requires restore proof",
+        "required": true,
+        "risk": "low",
+        "type": "verify_restore"
+      }
+    ],
+    "contract": "exact_bytes",
+    "expected": {
+      "denied_actions": [
+        "semantic_cache",
+        "semantic_cache_lookup",
+        "semantic_summary",
+        "lossy_transcode",
+        "cross_tenant_dedupe",
+        "delete"
+      ],
+      "matched_rules": [
+        "global_default"
+      ],
+      "required_verifiers": [
+        "sha256_restore"
+      ],
+      "score": 0.64,
+      "score_components": {
+        "cpu_overhead": 0.07,
+        "latency_penalty": 0.01,
+        "metadata_overhead": 0.04,
+        "policy_bonus": 0.1,
+        "rehydration_penalty": 0.05,
+        "risk_penalty": 0.05,
+        "savings_value": 0.78,
+        "verifier_cost": 0.02
+      },
+      "score_formula": "savings_value - latency_penalty - risk_penalty - cpu_overhead - rehydration_penalty - metadata_overhead - verifier_cost + policy_bonus",
+      "stored_bytes_reduction_possible": true
+    },
+    "fallback": "store_exact_bytes",
+    "mode": "enforce",
+    "plan_id": "pl_eef6afe1b83d2a8f2864dfd2",
+    "policy_bundle_id": "default",
+    "risk": "low",
+    "tenant": "corpus",
+    "trace_id": "tr_57d8cc8c5bdc44b28cbb7a84fb357913",
+    "work_unit_id": "wu_189de4a36495450bafa596df90d22ea1"
+  },
+  "policy": {
+    "allowed_actions": [
+      "hash",
+      "content_defined_chunk",
+      "fixed_chunk",
+      "dedupe_same_tenant",
+      "zstd",
+      "manifest",
+      "verify_restore"
+    ],
+    "cache_domain": "tenant_namespace",
+    "contract": "exact_bytes",
+    "dedupe_domain": "tenant",
+    "denied_actions": [
+      "semantic_cache",
+      "semantic_cache_lookup",
+      "semantic_summary",
+      "lossy_transcode",
+      "cross_tenant_dedupe",
+      "delete"
+    ],
+    "matched_rules": [
+      "global_default"
+    ],
+    "model_allowlist": [
+      "tiny",
+      "small",
+      "medium",
+      "frontier"
+    ],
+    "policy_bundle_id": "default",
+    "reasons": [
+      "safe_default_exact_or_requested_contract"
+    ],
+    "require_approval": false,
+    "required_verifiers": [
+      "sha256_restore"
+    ]
+  },
+  "signatures": [],
+  "state": "active",
+  "telemetry": {
+    "bytes_avoided": 580,
+    "bytes_in": 868,
+    "bytes_stored": 288,
+    "chunk_count": 1,
+    "dedupe_hits": 0,
+    "mode": "enforce"
+  },
+  "tenant": "corpus",
+  "trace_id": "tr_57d8cc8c5bdc44b28cbb7a84fb357913",
+  "verification": {
+    "accepted": true,
+    "details": {
+      "actual": "eb5e1a8a85905f44c27c7762d87e567c2e5a36be12b565381a53669300610790",
+      "expected": "eb5e1a8a85905f44c27c7762d87e567c2e5a36be12b565381a53669300610790"
+    },
+    "reason": "match",
+    "verifier_id": "sha256_restore@0"
+  },
+  "work_unit_id": "wu_189de4a36495450bafa596df90d22ea1"
+}

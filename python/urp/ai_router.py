@@ -3,7 +3,7 @@ from __future__ import annotations
 from dataclasses import dataclass
 import json
 from pathlib import Path
-from typing import Dict, List
+from typing import Dict, List, Protocol
 from .contracts import WorkUnit, utc_now
 from .auth import current_tenant
 from .storage import append_json_line, ensure_private_file, file_lock
@@ -15,6 +15,35 @@ class ModelRoute:
     reason: str
     fallback_model: str
     score: float = 0.5
+
+
+class ModelRouter(Protocol):
+    """Route a prompt to an allowlisted model.
+
+    A future calibrated decision-model backend can implement this protocol.
+    The default implementation is keyword matching with fixed scores and does
+    not call a provider.
+    """
+
+    def route(
+        self,
+        work_unit: WorkUnit,
+        allowed_models: List[str] | None = None,
+        prompt_text: str | None = None,
+    ) -> ModelRoute:
+        ...
+
+
+class KeywordModelRouter:
+    """Fixed-score keyword router. Not a calibrated decision model."""
+
+    def route(
+        self,
+        work_unit: WorkUnit,
+        allowed_models: List[str] | None = None,
+        prompt_text: str | None = None,
+    ) -> ModelRoute:
+        return route_model(work_unit, allowed_models, prompt_text)
 
 
 def route_model(work_unit: WorkUnit, allowed_models: List[str] | None = None, prompt_text: str | None = None) -> ModelRoute:

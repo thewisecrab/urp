@@ -273,6 +273,7 @@ class CoreTests(unittest.TestCase):
                 "monthly_urp_operating_cost": 2500,
                 "implementation_cost": 30000,
                 "analysis_horizon_months": 36,
+                "input_pricing": "list_price",
             }
         )
         self.assertEqual(result["classification"], "modeled_scenario_not_forecast")
@@ -307,6 +308,7 @@ class CoreTests(unittest.TestCase):
                     "monthly_urp_operating_cost": 0,
                     "implementation_cost": 0,
                     "analysis_horizon_months": 1,
+                    "input_pricing": "list_price",
                 }
             )
 

@@ -31,6 +31,21 @@ payloads, prompts, or unredacted manifests in a public issue.
 - Restrict unredacted manifest access to operator/admin roles and retain ledger
   audit data separately from mutable runtime state.
 
+## Known cache risks
+
+- Prompt-cache timing side channels (Gu et al., arXiv:2502.07776). Preserving a
+  gateway cache breakpoint does not isolate or disable a provider prompt cache.
+- Semantic-cache poisoning (Zhang et al., arXiv:2609.35908). The semantic cache
+  is off by default, scoped to a tenant and namespace, and rechecked with source
+  fingerprints and a server-side verifier. Shadow mode does not serve a hit.
+  The default 0.82 lexical threshold has no error guarantee (Schroeder et al.,
+  vCache, arXiv:2502.03771). A calibrated verifier and poisoning detection are
+  not implemented.
+- Cached response bodies and ledger details are not run through the structured-log
+  redactor. Doing so with the current key list would drop answer text and token
+  counts. Redacting those stores without breaking restore or usage accounting is
+  open.
+
 ## High severity examples
 
 - unauthorized cache reuse;

@@ -23,6 +23,7 @@ class PolicyDecision:
     required_verifiers: List[str] = field(default_factory=list)
     model_allowlist: List[str] = field(default_factory=lambda: ["tiny", "small", "medium", "frontier"])
     require_approval: bool = False
+    semantic_cache_threshold: float | None = None
 
     def to_dict(self) -> Dict[str, Any]:
         return {
@@ -37,6 +38,7 @@ class PolicyDecision:
             "required_verifiers": self.required_verifiers,
             "model_allowlist": self.model_allowlist,
             "require_approval": self.require_approval,
+            "semantic_cache_threshold": self.semantic_cache_threshold,
         }
 
 
@@ -88,7 +90,7 @@ def evaluate_policy(work_unit: WorkUnit, bundle: Dict[str, Any] | None = None) -
     if requested == Contract.SEMANTIC and work_unit.kind in {WorkUnitKind.PROMPT_REQUEST, WorkUnitKind.COMPLETION_RESPONSE, WorkUnitKind.EMBEDDING_REQUEST}:
         allow_semantic_cache = work_unit.policy_context.get("allow_semantic_cache") is True
         allowed = ["normalize_prompt", "exact_cache_lookup", "model_route", "verify", "cache_store", "compute_manifest"]
-        denied = ["cross_tenant_cache", "semantic_summary", "lossy_transcode", "delete"]
+        denied = ["cross_tenant_cache", "semantic_summary", "lossy_transcode", "context_budget_truncate", "delete"]
         if work_unit.kind in {WorkUnitKind.PROMPT_REQUEST, WorkUnitKind.COMPLETION_RESPONSE}:
             allowed.append("context_compile")
         if allow_semantic_cache and work_unit.kind in {WorkUnitKind.PROMPT_REQUEST, WorkUnitKind.COMPLETION_RESPONSE}:
@@ -158,6 +160,8 @@ def _evaluate_bundle(work_unit: WorkUnit, requested: Contract, bundle: Dict[str,
         denied.append("cross_tenant_dedupe")
     if defaults.get("crossTenantCache") == "deny":
         denied.append("cross_tenant_cache")
+    if "context_budget_truncate" not in explicitly_allowed:
+        denied.append("context_budget_truncate")
     model_allowlist = list(defaults.get("modelAllowlist") or ["tiny", "small", "medium", "frontier"])
     for rule in matched:
         if rule.get("modelAllowlist"):
@@ -176,6 +180,7 @@ def _evaluate_bundle(work_unit: WorkUnit, requested: Contract, bundle: Dict[str,
         dedupe_domain=str(defaults.get("dedupeDomain", "tenant")),
         model_allowlist=model_allowlist,
         require_approval=require_approval,
+        semantic_cache_threshold=_semantic_cache_threshold(defaults),
     )
 
 
@@ -198,6 +203,18 @@ def _baseline_policy_controls(work_unit: WorkUnit, contract: Contract) -> tuple[
         denied + ["semantic_cache_lookup"],
         ["sha256_restore"],
     )
+
+
+def _semantic_cache_threshold(defaults: Dict[str, Any]) -> float | None:
+    if "semanticCacheThreshold" not in defaults or defaults.get("semanticCacheThreshold") is None:
+        return None
+    value = defaults["semanticCacheThreshold"]
+    if isinstance(value, bool) or not isinstance(value, (int, float)):
+        raise ValueError("semanticCacheThreshold must be a number between 0 and 1")
+    number = float(value)
+    if not 0 <= number <= 1:
+        raise ValueError("semanticCacheThreshold must be a number between 0 and 1")
+    return number
 
 
 def _canonical_actions(name: str) -> List[str]:

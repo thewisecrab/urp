@@ -41,7 +41,8 @@
               "minItems": 1,
               "uniqueItems": true,
               "items": { "type": "string", "minLength": 1 }
-            }
+            },
+            "semanticCacheThreshold": { "type": "number", "minimum": 0, "maximum": 1 }
           }
         },
         "rules": {

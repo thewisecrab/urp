@@ -2,6 +2,8 @@
 
 URP now has an explicit platform-readiness layer. The local runtime remains the default safe test path, but the product surface is no longer scoped only to local/mock execution.
 
+Helm charts, Terraform modules, and Docker Compose files are validated by lint, template, or validate only. They have never been installed on a cluster or cloud account. Container images are built in CI only and have not been run as a deployment. Contract-ready does not mean live-installed.
+
 ## What "All Platforms" Means
 
 URP treats platform support in two levels:
@@ -144,4 +146,4 @@ The same checks run through the admin readiness API, so deployment/spec drift is
 
 ## Boundary
 
-This work makes URP platform-contract-ready across the major deployment families and adds opt-in live hooks where deterministic local tests can prove the contract, including OpenAI-compatible HTTP, AWS S3 SigV4, Azure Blob, GCP Cloud Storage, and PostgreSQL persistence. Live deployment still requires credentials, cluster access, cloud accounts, and environment-specific plans. The repository exposes those gates directly instead of hiding them behind a "local only" status.
+This work makes URP platform-contract-ready across the major deployment families and adds opt-in live hooks where deterministic local tests can prove the contract, including OpenAI-compatible HTTP, AWS S3 SigV4, Azure Blob, GCP Cloud Storage, and PostgreSQL persistence. Live deployment still requires credentials, cluster access, cloud accounts, and environment-specific plans. The repository exposes those gates directly. No Helm, Terraform, or Compose stack from this repository has been installed on a cluster or cloud account, and the container image has been built in CI only, not run as a deployment.
